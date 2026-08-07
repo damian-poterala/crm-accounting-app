@@ -1,0 +1,200 @@
+<app-navbar></app-navbar>
+<div class="client-container">
+    <div class="client-header">
+        <div>
+            <h1>ABC Sp. z o.o.</h1>
+            <div class="client-subtitle">
+                <span>NIP: 1234567890</span>
+                <span>REGON: 123456789</span>
+                <span>Klient od: 01.03.2026</span>
+            </div>
+        </div>
+        <div class="client-actions">
+            <button pButton icon="pi pi-pencil" severity="info" label="Edytuj"></button>
+            <button pButton icon="pi pi-plus" severity="info" label="Dodaj dokument"></button>
+        </div>
+    </div>
+    <p-tabs value="summary">
+        <p-tablist>
+            <p-tab value="summary">Podsumowanie</p-tab>
+            <p-tab value="details">Szczegóły</p-tab>
+            <p-tab value="documents">Dokumenty</p-tab>
+            <p-tab value="contacts">Kontakty</p-tab>
+            <p-tab value="notes">Notatki</p-tab>
+            <p-tab value="tasks">Zadania</p-tab>
+            <p-tab value="history">Historia</p-tab>
+        </p-tablist>
+        <p-tabpanels>
+            <p-tabpanel value="summary">
+                <div class="summary-layout">
+                    <div class="summary-left">
+                        <h2>Szczegóły współpracy</h2>
+                        <div class="cards">
+                            <div class="card">
+                                <div class="card-header">
+                                    <h3>Umowa</h3>
+                                </div>
+                                <div class="card-content">
+                                    <div class="card-row">
+                                        <span class="label">Numer umowy:</span>
+                                        <span class="value">HT/2026/001</span>
+                                    </div>
+                                    <div class="card-row">
+                                        <span class="label">Data podpisania:</span>
+                                        <span class="value">03.03.2025</span>
+                                    </div>
+                                    <div class="card-row">
+                                        <span class="label">Pierwszy miesiąc obsługi:</span>
+                                        <span class="value">01.04.2025</span>
+                                    </div>
+                                    <div class="card-row">
+                                        <span class="label">Ostatni miesiąc obsługi</span>
+                                        <span class="value">-</span>
+                                    </div>
+                                    <div class="card-row">
+                                        <span class="label">Status współpracy:</span>
+                                        <span class="value">
+                                            <p-tag severity="success" value="Aktywny"></p-tag>
+                                        </span>
+                                    </div>
+                                    <div class="card-row">
+                                        <span class="label">Umowa elektroniczna:</span>
+                                        <span class="value">Tak</span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="card">
+                                <div class="card-header">
+                                    <h3>Rozliczenia</h3>
+                                </div>
+                                <div class="card-content">
+                                    <div class="card-row">
+                                        <span class="label">Wysokość abonamentu:</span>
+                                        <span class="value">650 zł</span>
+                                    </div>
+                                    <div class="card-row">
+                                        <span class="label">Liczba dokumentów w abonamencie:</span>
+                                        <span class="value">120</span>
+                                    </div>
+                                    <div class="card-row">
+                                        <span class="label">Termin płatności:</span>
+                                        <span class="value">10 dzień miesiąca</span>
+                                    </div>
+                                    <div class="card-row">
+                                        <span class="label">Forma płatności:</span>
+                                        <span class="value">Przelew</span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="card">
+                                <div class="card-header">
+                                    <h3>Obsługa księgowa</h3>
+                                </div>
+                                <div class="card-content">
+                                    <div class="card-row">
+                                        <span class="label">Typ księgowości:</span>
+                                        <span class="value">KPiR</span>
+                                    </div>
+                                    <div class="card-row">
+                                        <span class="label">Program księgowy:</span>
+                                        <span class="value">COmatch Optima</span>
+                                    </div>
+                                    <div class="card-row">
+                                        <span class="label">Status VAT:</span>
+                                        <span class="value">VAT UE</span>
+                                    </div>
+                                    <div class="card-row">
+                                        <span class="label">Częstotliwość rozliczeń:</span>
+                                        <span class="value">Miesięczna</span>
+                                    </div>
+                                    <div class="card-row">
+                                        <span class="label">Opiekun klienta:</span>
+                                        <span class="value">Administrator</span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="card">
+                                <div class="card-header">
+                                    <h3>ZUS</h3>
+                                </div>
+                                <div class="card-content">
+                                    <div class="card-row">
+                                        <span class="label">Zgłoszenie w ZUS:</span>
+                                        <span class="value">ZUA</span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="card">
+                                <div class="card-header">
+                                    <h3>Pozyskanie klienta</h3>
+                                </div>
+                                <div class="card-content">
+                                    <div class="card-row">
+                                        <span class="label">Skąd pozyskany klient:</span>
+                                        <span class="value">Polecenie</span>
+                                    </div>
+                                </div>
+
+                            </div>
+                            <div class="card">
+                                <div class="card-header">
+                                    <h3>Uwagi</h3>
+                                </div>
+                                <div class="card-content">
+                                    <div class="card-row">
+                                        <span class="label">:</span>
+                                        <span class="value"></span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="summary-right">
+                        <div class="summary-card">
+                            <h3>Podsumowanie</h3>
+                            <div class="summary-company">
+                                <h4>ABC Sp. z o.o.</h4>
+                                <p-tag severity="success" value="Aktywny"></p-tag>
+                            </div>
+                            <div class="summary-group">
+                                <label>REGON</label>
+                                <span>123456789</span>
+                            </div>
+                            <div class="summary-group">
+                                <label>Klient od</label>
+                                <span>01.03.2026</span>
+                            </div>
+                            <hr>
+                            <h4>Kontakt</h4>
+                            <div class="summary-group">
+                                <label>E-mail</label>
+                                <span>biuro@abc.pl</span>
+                            </div>
+                            <div class="summary-group">
+                                <label>Telefon</label>
+                                <span>+48 600 123 456</span>
+                            </div>
+                            <hr>
+                            <h4>Adres</h4>
+                            <span>
+                                ul. Długa 1<br>
+                                00-001 Warszawa
+                            </span>
+                            <hr>
+                            <h4>Notatka</h4>
+                            <p>
+                                Brak notatki
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </p-tabpanel>
+            <p-tabpanel value="details"></p-tabpanel>
+            <p-tabpanel value="documents"></p-tabpanel>
+            <p-tabpanel value="contacts"></p-tabpanel>
+            <p-tabpanel value="notes"></p-tabpanel>
+            <p-tabpanel value="tasks"></p-tabpanel>
+            <p-tabpanel value="history"></p-tabpanel>
+        </p-tabpanels>
+    </p-tabs>
+</div>

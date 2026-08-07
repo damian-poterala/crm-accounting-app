@@ -1,0 +1,16 @@
+<header class="navbar">
+    <div class="navbar-left">
+        <div class="navbar-logo">
+            <img src="./logo.png" alt="HiveTax">
+        </div>
+    </div>
+    <div class="navbar-right">
+        <div class="navbar-user">
+            <button pButton type="button" class="navbar-user-button" (click)="menu.toggle($event)">
+                {{ user()?.username }}
+                <i class="pi pi-angle-down"></i>
+            </button>
+            <p-menu #menu [popup]="true" [model]="items"></p-menu>
+        </div>
+    </div>
+</header>

@@ -1,0 +1,75 @@
+.dashboard-container {
+    padding: 16px;
+    background-color: var(--color-background);
+}
+
+.dashboard-filter {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 2rem;
+    margin-top: .70rem;
+    margin-bottom: 1.5rem;
+}
+
+.dashboard-filter-left {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    flex-wrap: wrap;
+    flex: 1;
+}
+
+.dashboard-filter-right {
+    display: flex;
+    align-items: center;
+    gap: .75rem;
+}
+
+.filter-checkbox {
+    display: flex;
+    align-items: center;
+    gap: .5rem;
+    white-space: nowrap;
+    margin-left: .5rem;
+}
+
+.filter-checkbox label {
+    font-size: 12px;
+    color: var(--color-text);
+    cursor: pointer;
+}
+
+.dashboard-grid {
+    .table-card {
+        background-color: var(--color-background);
+        border: 1px solid var(--color-border);
+        border-radius: 14px;
+        box-shadow: var(--shadow-xs);
+        overflow: hidden;
+    }
+
+    .table-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 1rem 1.5rem;
+        border-bottom: 1px solid var(--color-divider);
+
+        h2 {
+            margin: 0;
+            font-size: 18px;
+            color: var(--color-text);
+        }
+
+        span {
+            font-size: 13px;
+            color: var(--color-text-secondary);
+        }
+    }
+}
+
+.filter-control {
+    width: 180px;
+}
+

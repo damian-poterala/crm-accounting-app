@@ -1,0 +1,7 @@
+<h2>Ilość rekordów: {{ data().length }}</h2>
+
+@for (user of data(); track user.id) {
+    <div>
+        {{ user.name }}
+    </div>
+}

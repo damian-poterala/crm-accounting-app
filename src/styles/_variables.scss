@@ -1,0 +1,116 @@
+:root {
+
+    /* ==========================================
+       BRAND
+    ========================================== */
+
+    --color-primary: #123b66;
+    --color-primary-hover: #1a4f87;
+    --color-primary-active: #0d2d4d;
+
+    --color-accent: #d4a64f;
+    --color-accent-hover: #e2b761;
+
+    /* ==========================================
+       BACKGROUND
+    ========================================== */
+
+    --color-background: #f5f8fc;
+    --color-surface: #ffffff;
+    --color-surface-secondary: #eef3f8;
+
+    /* ==========================================
+       TEXT
+    ========================================== */
+
+    --color-text: #18324a;
+    --color-text-secondary: #5c6f83;
+    --color-text-disabled: #9ca9b7;
+
+    /* ==========================================
+       BORDER
+    ========================================== */
+
+    --color-border: #d9e3ec;
+    --color-divider: #edf2f7;
+
+    /* ==========================================
+       STATUS
+    ========================================== */
+
+    --color-success: #2e7d32;
+    --color-warning: #f59e0b;
+    --color-danger: #dc2626;
+    --color-info: #2563eb;
+
+    /* ==========================================
+       LAYOUT
+    ========================================== */
+
+    --navbar-height: 64px;
+    --sidebar-width: 260px;
+
+    /* ==========================================
+       INPUTS
+    ========================================== */
+
+    --input-background: #ffffff;
+    --input-border: #d9e3ec;
+    --input-focus: var(--color-primary);
+
+    /* ==========================================
+       TABLE
+    ========================================== */
+
+    --table-header: #f7f9fc;
+    --table-row-hover: #edf5ff;
+    --table-selected: #e4effb;
+
+    /* ==========================================
+       CARDS
+    ========================================== */
+
+    --card-background: #ffffff;
+    --card-border: #d9e3ec;
+
+    /* ==========================================
+       SIDEBAR
+    ========================================== */
+
+    --sidebar-background: var(--color-primary);
+    --sidebar-text: #ffffff;
+    --sidebar-hover: rgba(255,255,255,.08);
+    --sidebar-active: var(--color-accent);
+
+    /* ==========================================
+       NAVBAR
+    ========================================== */
+
+    --navbar-background: #ffffff;
+    --navbar-border: #d9e3ec;
+
+    /* ==========================================
+       BORDER RADIUS
+    ========================================== */
+
+    --radius-sm: 6px;
+    --radius-md: 10px;
+    --radius-lg: 16px;
+    --radius-xl: 24px;
+
+    /* ==========================================
+       SHADOWS
+    ========================================== */
+
+    --shadow-xs: 0 1px 2px rgba(0,0,0,.05);
+    --shadow-sm: 0 2px 6px rgba(0,0,0,.08);
+    --shadow-md: 0 8px 24px rgba(18,59,102,.08);
+    --shadow-lg: 0 18px 48px rgba(18,59,102,.12);
+
+    /* ==========================================
+       TRANSITIONS
+    ========================================== */
+
+    --transition-fast: .15s ease;
+    --transition-normal: .25s ease;
+}

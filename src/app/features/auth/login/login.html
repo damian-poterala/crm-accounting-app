@@ -1,0 +1,24 @@
+<div class="login-page">
+    <div class="overlay">
+        <div class="login-card">
+            <img src="/logo.png" alt="HiveTax" class="logo">
+            <!-- <h2>Zaloguj się</h2> -->
+            <form [formGroup]="loginForm">
+                <div class="form-field">
+                    <p-floatlabel>
+                        <input pInputText id="login" formControlName="login" type="text" class="w-full">
+                        <label for="login">Login</label>
+                    </p-floatlabel>
+                </div>
+                <div class="form-field">
+                    <p-floatlabel>
+                        <p-password id="password" formControlName="password" [feedback]="false" toggleMask="true" fluid="true"></p-password>
+                        <label for="password">Hasło</label>
+                    </p-floatlabel>
+                </div>
+                <p-button (click)="login()" label="Zaloguj się"></p-button>
+            </form>
+        </div>
+    </div>
+</div>
+<p>login works!</p>
