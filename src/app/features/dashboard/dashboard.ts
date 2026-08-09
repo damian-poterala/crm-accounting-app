@@ -151,14 +151,17 @@ export class Dashboard {
 
   // dialogs
 
-  openEditBasicClientDialog(companyName: string) {
+  openEditBasicClientDialog(client: any) {
     this.dialogRef = this.dialogService.open(EditBasicClientDialog, {
-      header      : `Edycja danych klienta: ${ companyName }`,
+      header      : `Edycja danych klienta: ${ client?.company_name }`,
       width       : '600px',
       modal       : true,
       closable    : false,
       maximizable : false,
       draggable   : false,
+      data: {
+        client
+      }
     });
   }
 

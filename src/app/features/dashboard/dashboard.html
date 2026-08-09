@@ -71,7 +71,7 @@
                         </td>
                         <td>{{ item?.created_at | date: 'yyyy-MM-dd' }}</td>
                         <td>
-                            <button pButton (click)="openEditBasicClientDialog(item?.company_name)" icon="pi pi-pencil" severity="warn" text rounded></button>
+                            <button pButton (click)="openEditBasicClientDialog(item)" icon="pi pi-pencil" severity="warn" text rounded></button>
                         </td>
                         <td>
                             <button (click)="redirectToClientDetails(item?.id)" pButton icon="pi pi-chevron-right" text rounded></button>

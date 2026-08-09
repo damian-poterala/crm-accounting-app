@@ -1,6 +1,31 @@
-<p>
-    Klient
-</p>
+<form [formGroup]="editForm">
+    <div class="dialog-content">
+        <div class="form-row">
+            <label for="companyType">Typ firmy:</label>
+            <p-select formControlName="companyType" [options]="companyTypeList()" optionLabel="label" optionValue="value" inputId="companyType" placeholder="Wybierz typ firmy"></p-select>
+        </div>
+        <div class="form-row">
+            <label for="">Nr. telefonu:</label>
+            <input formControlName="phone" pInputText placeholder="Wpisz numer telefonu" type="text">
+        </div>
+        <div class="form-row">
+            <label for="">E-mail:</label>
+            <input formControlName="email" pInputText placeholder="Wpisz adres e-mail" type="text">
+        </div>
+        <div class="form-row">
+            <label for="isVatPayer">Płatnik VAT:</label>
+            <p-toggleswitch formControlName="isVatPayer" inputId="isVatPayer"></p-toggleswitch>
+        </div>
+        <div class="form-row">
+            <label for="isActive">Aktywny:</label>
+            <p-toggleswitch formControlName="isActive" inputId="isActive"></p-toggleswitch>
+        </div>
+        <div class="form-row-full">
+            <label for="notes">Notatki:</label>
+            <textarea pTextarea formControlName="notes" rows="5" placeholder="Dodaj notatki dotyczące klienta" id="notes"></textarea>
+        </div>
+    </div>
+</form>
 <div class="dialog-footer">
     <button pButton label="Anuluj" (click)="close()" severity="danger"></button>
     <button pButton label="Zapisz" severity="info"></button>
