@@ -1,8 +1,18 @@
 <form [formGroup]="editForm">
     <div class="dialog-content">
         <div class="form-row">
-            <label for="companyType">Typ firmy:</label>
-            <p-select formControlName="companyType" [options]="companyTypeList()" optionLabel="label" optionValue="value" inputId="companyType" placeholder="Wybierz typ firmy"></p-select>
+            <label for="cooperationStatus">Status współpracy:</label>
+            <p-select formControlName="cooperationStatus" [options]="cooperationStatuList()" optionLabel="label" optionValue="value" inputId="cooperationStatus" placeholder="Wybierz status współpracy"></p-select>
+        </div>
+        @if(editForm.controls.cooperationStatus.value == 'cooperation_ended') {
+            <div class="form-row">
+                <label for="cooperationEnded">Data zakończenia współpracy:</label>
+                <p-datepicker formControlName="cooperationEndedDate" inputId="cooperationEnded" dateFormat="yy-mm-dd" placeholder="Wybierz format" [showIcon]="true"></p-datepicker>
+            </div>
+        }
+        <div class="form-row">
+            <label for="accountManager">Opiekun:</label>
+            <p-select formControlName="accountManager" inputId="accountManager" placeholder="Wybierz opiekuna klienta"></p-select>
         </div>
         <div class="form-row">
             <label for="">Nr. telefonu:</label>
@@ -15,10 +25,6 @@
         <div class="form-row">
             <label for="isVatPayer">Płatnik VAT:</label>
             <p-toggleswitch formControlName="isVatPayer" inputId="isVatPayer"></p-toggleswitch>
-        </div>
-        <div class="form-row">
-            <label for="isActive">Aktywny:</label>
-            <p-toggleswitch formControlName="isActive" inputId="isActive"></p-toggleswitch>
         </div>
         <div class="form-row-full">
             <label for="notes">Notatki:</label>

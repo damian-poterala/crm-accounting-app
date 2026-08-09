@@ -8,6 +8,7 @@ import {
   NipAutocomplete, 
   OwnerAutocomplete, 
   CompanyTypeSelect,
+  CooperationStatus,
   Client 
 } from '../../core/models';
 
@@ -63,17 +64,18 @@ export class Dashboard {
   private dialogRef ?: DynamicDialogRef | null = null;
 
   filterForm = this.fb.group({
-    companyType : [null as CompanyTypeSelect | null],
-    companyName : [null as CompanyAutocomplete | null],
-    nip         : [null as NipAutocomplete | null],
-    owner       : [null as OwnerAutocomplete | null],
-    active      : [true]
+    companyType       : [null as CompanyTypeSelect | null],
+    companyName       : [null as CompanyAutocomplete | null],
+    nip               : [null as NipAutocomplete | null],
+    owner             : [null as OwnerAutocomplete | null],
+    cooperationStatus : [null as CooperationStatus | null],
   });
 
   clientsList      = signal<Client[]>([]); 
   dictionariesList = signal<any>({});
 
-  companyTypeList: any = [];
+  companyTypeList   : any = [];
+  cooperationStatus : any = [];
 
   nipList         = signal<NipAutocomplete[]>    ([]);
   ownerList       = signal<OwnerAutocomplete[]>  ([]);
@@ -90,7 +92,9 @@ export class Dashboard {
       console.log(this.dictionariesList());
 
       this.companyTypeList = this.dictionariesList().company_type ?? [];
-      console.log(this.companyTypeList);
+      this.cooperationStatus = this.dictionariesList().cooperation_status ?? [];
+      console.log('Company type list: ', this.companyTypeList);
+      console.log('Cooperation status: ', this.cooperationStatus);
     })
   }
 
@@ -122,11 +126,11 @@ export class Dashboard {
     const filters = this.filterForm.getRawValue();
 
     let obj = {
-      is_active    : filters.active,
-      company_name : filters.companyName?.company_name,
-      company_type : filters.companyType?.value,
-      nip          : filters.nip?.nip,
-      owner        : filters.owner?.owner
+      cooperation_status : filters.cooperationStatus?.value,
+      company_name       : filters.companyName?.company_name,
+      company_type       : filters.companyType?.value,
+      nip                : filters.nip?.nip,
+      owner              : filters.owner?.owner
     }
     const request = removeEmptyProperties(obj);
     console.log(request);
@@ -138,11 +142,11 @@ export class Dashboard {
 
   resetFilters() {
     this.filterForm.reset({
-      active      : null,
-      companyName : null,
-      companyType : null,
-      nip         : null,
-      owner       : null,
+      cooperationStatus : null,
+      companyName       : null,
+      companyType       : null,
+      nip               : null,
+      owner             : null,
     });
 
     this.search();

@@ -1,4 +1,4 @@
-import { Component, computed, inject, signal } from '@angular/core';
+import { Component, DestroyRef, computed, inject, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormBuilder, ReactiveFormsModule } from '@angular/forms';
 
@@ -14,6 +14,8 @@ import { ToggleSwitchModule } from 'primeng/toggleswitch';
 import { SelectModule } from 'primeng/select';
 import { InputTextModule } from 'primeng/inputtext';
 import { TextareaModule } from 'primeng/textarea';
+import { DatePickerModule } from 'primeng/datepicker';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 
 @Component({
   selector: 'app-edit-basic-client-dialog',
@@ -27,26 +29,30 @@ import { TextareaModule } from 'primeng/textarea';
     SelectModule,
     InputTextModule,
     TextareaModule,
+    DatePickerModule,
   ],
   templateUrl: './edit-basic-client-dialog.html',
   styleUrl: './edit-basic-client-dialog.scss',
 })
 export class EditBasicClientDialog {
-  private readonly dialogRef = inject(DynamicDialogRef);
-  private readonly config    = inject(DynamicDialogConfig);
-  private fb                 = inject(FormBuilder);
-  private dictionaryService = inject(DictionaryService);
+  private readonly dialogRef  = inject(DynamicDialogRef);
+  private readonly config     = inject(DynamicDialogConfig);
+  private readonly destroyRef = inject(DestroyRef)
+
+  private fb                  = inject(FormBuilder);
+  private dictionaryService   = inject(DictionaryService);
 
   readonly dictionariesList = signal<any>({});
-  readonly companyTypeList = computed(() => this.dictionariesList().company_type ?? []);
+  readonly cooperationStatuList = computed(() => this.dictionariesList().cooperation_status ?? []);
 
   editForm = this.fb.nonNullable.group({
-    companyType : '',
-    phone       : '',
-    email       : '',
-    isVatPayer  : false,
-    isActive    : false,
-    notes       : ''
+    cooperationStatus    : '',
+    cooperationEndedDate : this.fb.control<Date | null>(null),
+    accountManager       : '',
+    phone                : '',
+    email                : '',
+    isVatPayer           : false,
+    notes                : ''
   });
 
   ngOnInit(): void {    
@@ -56,20 +62,26 @@ export class EditBasicClientDialog {
       return;
     } 
 
-    this.dictionaryService.getDictionary().subscribe((response: any) => {
+    this.dictionaryService.getDictionary().pipe(takeUntilDestroyed(this.destroyRef)).subscribe((response: any) => {
       this.dictionariesList.set(response);
       this.fillForm(client);
+    });
+
+    this.editForm.controls.cooperationStatus.valueChanges.pipe(takeUntilDestroyed(this.destroyRef)).subscribe((status: any) => {
+      if(status !== 'cooperation_ended') {
+        this.editForm.controls.cooperationEndedDate.setValue(null);
+      }
     });
   }
 
   private fillForm(client: any): void {
     this.editForm.patchValue({
-      companyType : client.company_type ?? '', 
-      phone       : client.phone ?? '', 
-      email       : client.email ?? '', 
-      isVatPayer  : client.is_vat_payer === 1, 
-      isActive    : client.is_active === 1,
-      notes       : client.notes ?? ''
+      cooperationStatus : client.cooperation_status ?? '',
+      accountManager    : client.account_manager ?? '',
+      phone             : client.phone ?? '', 
+      email             : client.email ?? '', 
+      isVatPayer        : client.is_vat_payer === 1, 
+      notes             : client.notes ?? ''
     });
   }
 
