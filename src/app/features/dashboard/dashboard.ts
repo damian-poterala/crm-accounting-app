@@ -14,7 +14,6 @@ import {
 
 import { removeEmptyProperties } from '../../core/utils/object.utils';
 
-import { Navbar } from '../../layout/navbar/navbar';
 import { EditBasicClientDialog } from '../clients/dialogs/edit-basic-client-dialog/edit-basic-client-dialog';
 
 import { ClientService } from '../../core/services/client.service';
@@ -33,8 +32,6 @@ import { DialogService, DynamicDialogRef, DynamicDialogModule } from 'primeng/dy
   selector: 'app-dashboard',
   standalone: true,
   imports: [
-    Navbar,
-
     DatePipe,
     ReactiveFormsModule,
 

@@ -1,8 +1,6 @@
 import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
 
-import { Navbar } from '../../../layout/navbar/navbar';
-
 import { TabsModule } from 'primeng/tabs';
 import { ButtonModule } from 'primeng/button';
 import { TagModule } from 'primeng/tag';
@@ -11,8 +9,6 @@ import { TagModule } from 'primeng/tag';
   selector: 'app-client-details',
   standalone: true,
   imports: [
-    Navbar,
-
     CommonModule,
 
     TabsModule,
