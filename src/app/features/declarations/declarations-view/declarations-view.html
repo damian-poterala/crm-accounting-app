@@ -1,0 +1,41 @@
+<div class="declarations-container">
+    <div class="declarations-header">
+        <div>
+            <h1>Deklaracje</h1>
+        </div>
+
+        <form [formGroup]="declarationsForm">
+            <div class="declarations-actions">
+                <label for="">Rok</label>
+                <p-select [options]="years" formControlName="year" (onChange)="changeYear($event.value)" optionLabel="label" optionValue="value"></p-select>
+                <button pButton label="Zapisz wszystko" icon="pi pi-save" severity="info"></button>
+            </div>
+        </form>
+    </div>
+    <div class="declarations-content">
+        <div class="declarations-tabs">
+            <p-tabs value="dra">
+                <p-tablist>
+                    <p-tab value="dra">DRA</p-tab>
+                    <p-tab value="jpk">JPK</p-tab>
+                    <p-tab value="vat_ue">VAT UE</p-tab>
+                </p-tablist>
+                <p-tabpanels>
+                    <p-tabpanel value="dra">
+                        <app-declarations-table declarationType="DRA" [year]="declarationsForm.controls.year.value"></app-declarations-table>
+                    </p-tabpanel>
+                    <p-tabpanel value="jpk">
+                        <div class="table-placeholder">
+                            <app-declarations-table declarationType="JPK" [year]="declarationsForm.controls.year.value"></app-declarations-table>
+                        </div>
+                    </p-tabpanel>
+                    <p-tabpanel value="vat_ue">
+                        <div class="table-placeholder">
+                            <app-declarations-table declarationType="VAT_UE" [year]="declarationsForm.controls.year.value"></app-declarations-table>
+                        </div>
+                    </p-tabpanel>
+                </p-tabpanels>
+            </p-tabs>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,50 @@
+<form [formGroup]="declarationsForm">
+    <div class="declarations-table-wrapper">
+        <div class="declarations-table">
+            <colgroup>
+                <col class="col-client">
+                <col class="col-manager">
+
+                @for(month of months; track month.number) {
+                    <col class="col-month">
+                }
+            </colgroup>
+
+            <thead>
+                <tr>
+                    <th class="client-column">Klient</th>
+                    <th class="manager-column">Opiekun</th>
+
+                    @for(month of months; track month.number) {
+                        <th class="month-column">{{ month.shortcut }}</th>
+                    }
+                </tr>
+            </thead>
+
+            <tbody formArrayName="rows">
+                @for(row of rows.controls; track $index) {
+                    <tr [formGroupName]="$index">
+                        <td class="client-cell">{{ row.get('companyName')?.value }}</td>
+                        <td class="manager-cell">
+                            <p-select formControlName="accountManagerId" [options]="accountManagers" optionLabel="label" optionValue="value" styleClass="manager-select"></p-select>
+                        </td>
+
+                        @for(month of months; track month.number) {
+                            <td class="month-cell">
+                                <div class="month-editor">
+                                    <div class="month-datepicker-wrapper">
+                                        <p-datepicker [formControlName]="'month'+month.number+'Date'" dateFormat="mm-dd" placeholder="-" appendTo="body" styleClass="month-datepicker"></p-datepicker>
+                                    </div>
+                                    <button pButton class="comment-button" (click)="openCommentDialog(getRow(row), month.number)" [pTooltip]="getRow(row).get('month'+month.number+'Comment')?.value" tooltipPosition="top">
+                                        <i class="pi" [class.pi-comment]="!hasComment(getRow(row), month.number)" [class.pi-comment-fill]="hasComment(getRow(row), month.number)"></i>
+                                    </button>
+                                </div>
+                            </td>
+                        }
+                    </tr>
+                }
+            </tbody>
+
+        </div>
+    </div>
+</form>

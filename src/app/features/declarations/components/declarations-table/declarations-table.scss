@@ -1,0 +1,124 @@
+.declarations-table-wrapper {
+    overflow-x: auto;
+}
+
+.declarations-table {
+    width: 100%;
+    table-layout: fixed;
+    border-collapse: collapse;
+}
+
+.col-client {
+    width: 180px;
+}
+
+.col-manager {
+    width: 120px;
+}
+
+.col-month {
+    width: calc((100% - 300px) / 12);
+}
+
+.declarations-table th {
+    background: #f8fafc;
+    color: var(--color-primary);
+    font-size: 12px;
+    font-weight: 700;
+    padding: 12px;
+    border-bottom: 1px solid var(--color-border);
+    text-align: center;
+}
+
+.declarations-table td {
+    font-size: 12px;
+    padding: 10px;
+    border-bottom: 1px solid var(--color-divider);
+}
+
+.client-column {
+    text-align: left !important;
+}
+
+.client-cell {
+    font-size: 12px;
+}
+
+.manager-column {
+    text-align: left !important;
+}
+
+.manager-cell {
+    font-size: 12px;
+}
+
+// .month-column {
+//     width: calc((100% - 300px) / 12);
+// }
+
+.manager-select {
+    width: 100%;
+}
+
+.manager-select .p-select-label {
+    font-size: 12px;
+}
+
+.client-cell {
+    font-weight: 600;
+    color: var(--color-text);
+}
+
+.comment-button {
+    width: 28px;
+    height: 28px;
+    flex: 0 0 28px;
+    border: none;
+    background: transparent;
+    color: var(--color-text-secondary);
+    cursor: pointer;
+    border-radius: 6px;
+    // transition: var(--transition-fast);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.comment-button:hover {
+    background: #f4f7fb;
+    color: var(--color-primary);
+}
+
+.comment-button .pi-comment-fill {
+    color: var(--color-accent);
+}
+
+.month-input {
+    width: 110px;
+    height: 36px;
+    border: 1px solid var(--color-border);
+    border-radius: 8px;
+    padding: 0 8px;
+    font-size: 12px;
+    background: #fff;
+}
+
+.month-editor {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    width: 100%;
+}
+
+.month-datepicker-wrapper {
+    flex: 1;
+    min-width: 0;
+}
+
+.month-datepicker {
+    width: 100%;
+}
+
+.declarations-table tbody tr:hover {
+    background: #fafbfd;
+}
