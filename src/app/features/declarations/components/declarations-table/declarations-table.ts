@@ -10,6 +10,7 @@ import { SelectModule } from 'primeng/select';
 import { TooltipModule } from 'primeng/tooltip';
 import { ButtonModule } from 'primeng/button';
 import { PopoverModule, Popover } from 'primeng/popover';  
+import { TextareaModule } from 'primeng/textarea';
 
 @Component({
   selector: 'app-declarations-table',
@@ -24,6 +25,7 @@ import { PopoverModule, Popover } from 'primeng/popover';
     TooltipModule,
     ButtonModule,
     PopoverModule,
+    TextareaModule,
   ],
   templateUrl: './declarations-table.html',
   styleUrl: './declarations-table.scss',
@@ -45,6 +47,10 @@ export class DeclarationsTable implements OnInit, OnChanges {
   selectedRow   : FormGroup | null = null;
   selectedMonth : number    | null = null;
   selectedDate  : Date      | null = null;
+
+  selectedComment = '';
+  private selectedCommentRow !: FormGroup;
+  private selectedCommentMonth !: number;
 
   accountManagers: { label: string; value: number }[] = [];
 
@@ -197,6 +203,19 @@ export class DeclarationsTable implements OnInit, OnChanges {
       this.selectedRow.get(`month${ this.selectedMonth }Date`)?.setValue(this.selectedDate);
     }
 
+    popover.hide();
+  }
+
+  openCommentPopover(event: Event, row: FormGroup, month: number, popover: Popover): void {
+    this.selectedCommentRow = row;
+    this.selectedCommentMonth = month;
+    this.selectedComment = row.get(`month${ month }Comment`)?.value || '';
+
+    popover.toggle(event);
+  }
+
+  saveComment(popover: Popover): void {
+    this.selectedCommentRow.get(`month${ this.selectedCommentMonth}Comment`)?.setValue(this.selectedComment);
     popover.hide();
   }
 

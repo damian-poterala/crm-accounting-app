@@ -1,6 +1,6 @@
 <form [formGroup]="declarationsForm">
     <div class="declarations-table-wrapper">
-        <div class="declarations-table">
+        <table class="declarations-table">
             <colgroup>
                 <col class="col-client">
                 <col class="col-manager">
@@ -22,34 +22,40 @@
             </thead>
 
             <tbody formArrayName="rows">
-                <!-- @for(row of rows.controls; track $index) { -->
-                    <tr *ngFor="let row of rows.controls; let i = index" [formGroupName]="i">
-                        <td class="client-cell">{{ row.get('companyName')?.value }}</td>
-                        <td class="manager-cell">
-                            <p-select formControlName="accountManagerId" [options]="accountManagers" optionLabel="label" optionValue="value" styleClass="manager-select"></p-select>
-                        </td>
+                <tr *ngFor="let row of rows.controls; let i = index" [formGroupName]="i">
+                    <td class="client-cell">{{ row.get('companyName')?.value }}</td>
+                    <td class="manager-cell">
+                        <p-select formControlName="accountManagerId" [options]="accountManagers" optionLabel="label" optionValue="value" styleClass="manager-select"></p-select>
+                    </td>
 
-                        @for(month of months; track month.number) {
-                            <td class="month-cell">
-                                <div class="month-editor">
-                                    <span class="date-display" (click)="openDatePicker($event, getRow(row), month.number, calendarPopover)">{{ formatDate(row.get('month'+month.number+'Date')?.value) }}</span>  
-                                    <!-- <span class="date-display">{{ formatDate(row.get('month'+month.number+'Date')?.value) }}</span>   -->
-                                    <button pButton class="comment-button" (click)="openCommentDialog(getRow(row), month.number)" [pTooltip]="getRow(row).get('month'+month.number+'Comment')?.value" tooltipPosition="top">
-                                        <i class="pi" [class.pi-comment]="!hasComment(getRow(row), month.number)" [class.pi-comment-fill]="hasComment(getRow(row), month.number)"></i>
-                                    </button>
-                                </div>
-                            </td>
-                        }
-                    </tr>
-                <!-- } -->
+                    @for(month of months; track month.number) {
+                        <td class="month-cell">
+                            <div class="month-editor">
+                                <span class="date-display" (click)="openDatePicker($event, getRow(row), month.number, calendarPopover)">{{ formatDate(row.get('month'+month.number+'Date')?.value) }}</span>  
+                                <button pButton class="comment-button" (click)="openCommentPopover($event, getRow(row), month.number, commentPopover)" [pTooltip]="getRow(row).get('month'+month.number+'Comment')?.value" tooltipPosition="top">
+                                    <i class="pi" [class.pi-comment]="!hasComment(getRow(row), month.number)" [class.pi-comments]="hasComment(getRow(row), month.number)"></i>
+                                </button>
+                            </div>
+                        </td>
+                    }
+                </tr>
             </tbody>
-            <div class="table-actions">
-                <button pButton label="Zapisz wszystko" icon="pi pi-save" severity="info" (click)="saveDeclarations()"></button>
-            </div>
+        </table>
+        <div class="table-actions">
+            <button pButton label="Zapisz wszystko" icon="pi pi-save" severity="info" (click)="saveDeclarations()"></button>
         </div>
     </div>
 </form>
 
 <p-popover #calendarPopover>
     <p-datepicker [(ngModel)]="selectedDate" (onSelect)="saveSelectedDate(calendarPopover)" [showIcon]="false" appendTo="body" dateFormat="yy-mm-dd" (onSelect)="saveSelectedDate(calendarPopover)"> </p-datepicker>
+</p-popover>
+
+<p-popover #commentPopover>
+    <div class="comment-popover">
+        <textarea pTextarea [(ngModel)]="selectedComment" rows="4" placeholder="Wpisz komentarz..."></textarea>
+        <div class="comment-actions">
+            <button pButton label="Zapisz" size="small" (click)="saveComment(commentPopover)"></button>
+        </div>
+    </div>
 </p-popover>

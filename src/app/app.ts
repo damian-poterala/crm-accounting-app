@@ -11,9 +11,6 @@ import { AuthService } from './core/services/auth.service';
   standalone: true,
   imports: [
     RouterOutlet,
-  
-    Navbar,
-    Sidebar,
   ],
   templateUrl: './app.html',
   styleUrl: './app.scss'

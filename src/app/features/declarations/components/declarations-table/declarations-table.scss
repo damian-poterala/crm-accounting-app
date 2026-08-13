@@ -1,19 +1,21 @@
 .declarations-table-wrapper {
     overflow-x: auto;
+    padding: 20px 20px 16px;
 }
 
 .declarations-table {
     width: 100%;
     table-layout: fixed;
     border-collapse: collapse;
+    background: #fff;
 }
 
 .col-client {
-    width: 180px;
+    width: 160px;
 }
 
 .col-manager {
-    width: 120px;
+    width: 140px;
 }
 
 .col-month {
@@ -52,10 +54,6 @@
     font-size: 12px;
 }
 
-// .month-column {
-//     width: calc((100% - 300px) / 12);
-// }
-
 .manager-select {
     width: 100%;
 }
@@ -70,9 +68,9 @@
 }
 
 .comment-button {
-    width: 28px;
-    height: 28px;
-    flex: 0 0 28px;
+    width: 20px;
+    height: 20px;
+    flex: 0 0 20px;
     border: none;
     background: transparent;
     color: var(--color-text-secondary);
@@ -106,7 +104,8 @@
 .month-editor {
     display: flex;
     align-items: center;
-    gap: 6px;
+    justify-content: space-between;
+    gap: 4px;
     width: 100%;
 }
 
@@ -133,12 +132,12 @@
 
 .date-display {
     flex: 1;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
     cursor: pointer;
     font-size: 12px;
     color: var(--color-text);
-    padding: 4px 6px;
-    border-radius: 6px;
-    transition: background-color .15s;
     user-select: none;
 }
 
@@ -150,4 +149,19 @@
     display: flex;
     justify-content: flex-end;
     margin-top: 16px;
+}
+
+.comment-popover {
+    width: 260px;
+}
+
+.comment-popover textarea {
+    width: 100%;
+    resize: vertical;
+}
+
+.comment-actions {
+    display: flex;
+    justify-content: flex-end;
+    margin-top: 12px;
 }
