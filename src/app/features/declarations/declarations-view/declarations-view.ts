@@ -1,4 +1,4 @@
-import { Component, inject, signal } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ReactiveFormsModule, FormBuilder } from '@angular/forms';
 
@@ -27,6 +27,10 @@ import { DeclarationsTable } from '../components/declarations-table/declarations
 export class DeclarationsView {
   private readonly fb = inject(FormBuilder);
 
+  constructor() {
+    this.changeDeclarationType('DRA');
+  }
+
   readonly years = [
     { label: '2024', value: 2024 },
     { label: '2025', value: 2025 },
@@ -35,12 +39,18 @@ export class DeclarationsView {
 
   readonly declarationsForm = this.fb.nonNullable.group({
     year: new Date().getFullYear(),
-  }); 
+  });  
+
+  activeDeclarationType: 'DRA' | 'JPK' | 'VAT_UE' = 'DRA';
 
   changeYear(year: number): void {
     this.declarationsForm.patchValue({
       year
     });
+  }
+
+  changeDeclarationType(type: any): void {
+    this.activeDeclarationType = type as 'DRA' | 'JPK' | 'VAT_UE';
   }
 
   saveDeclarations(): void {
