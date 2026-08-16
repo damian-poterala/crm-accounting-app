@@ -8,6 +8,7 @@ import { DynamicDialogConfig } from 'primeng/dynamicdialog';
 import { DynamicDialogRef } from 'primeng/dynamicdialog';
 
 import { DictionaryService } from '../../../../core/services/dictionary.service';
+import { UserService       } from '../../../../core/services/user.service';
 
 import { ButtonModule } from 'primeng/button';
 import { ToggleSwitchModule } from 'primeng/toggleswitch';
@@ -41,8 +42,10 @@ export class EditBasicClientDialog {
 
   private fb                  = inject(FormBuilder);
   private dictionaryService   = inject(DictionaryService);
+  private userService         = inject(UserService);
 
   readonly dictionariesList = signal<any>({});
+  readonly usersList = signal<any>([]);
   readonly cooperationStatuList = computed(() => this.dictionariesList().cooperation_status ?? []);
 
   editForm = this.fb.nonNullable.group({
@@ -61,6 +64,19 @@ export class EditBasicClientDialog {
     if(!client) {
       return;
     } 
+
+    this.userService.getUsers().subscribe({
+      next: (response: any) => {
+        this.usersList.set(response);
+        console.log('Lista opiekunów: ', this.usersList());
+      },
+      error: (error: any) => {
+        console.log('Błąd pobierania listy opiekunów: ', error);
+      },
+      complete: () => {
+
+      }
+    });
 
     this.dictionaryService.getDictionary().pipe(takeUntilDestroyed(this.destroyRef)).subscribe((response: any) => {
       this.dictionariesList.set(response);
@@ -87,5 +103,9 @@ export class EditBasicClientDialog {
 
   close(): void {
     this.dialogRef.close();
+  }
+
+  save(): void {
+    console.log(this.editForm.getRawValue());
   }
 }

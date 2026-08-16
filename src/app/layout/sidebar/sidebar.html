@@ -33,5 +33,11 @@
                 <span>Deklaracje</span>
             }
         </a>
+        <a routerLink="/reports" routerLinkActive="active" class="nav-item">
+            <i class="pi pi-file-excel" pTooltip="Raporty"></i>
+            @if(!collapsed()) {
+                <span>Raporty</span>
+            }
+        </a>
     </nav>
 </aside>

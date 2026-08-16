@@ -12,7 +12,7 @@
         }
         <div class="form-row">
             <label for="accountManager">Opiekun:</label>
-            <p-select formControlName="accountManager" inputId="accountManager" placeholder="Wybierz opiekuna klienta"></p-select>
+            <p-select formControlName="accountManager" [options]="usersList()" optionLabel="username" optionValue="id" inputId="accountManager" placeholder="Wybierz opiekuna klienta"></p-select>
         </div>
         <div class="form-row">
             <label for="">Nr. telefonu:</label>
@@ -34,5 +34,5 @@
 </form>
 <div class="dialog-footer">
     <button pButton label="Anuluj" (click)="close()" severity="danger"></button>
-    <button pButton label="Zapisz" severity="info"></button>
+    <button pButton label="Zapisz" (click)="save()" severity="info"></button>
 </div>

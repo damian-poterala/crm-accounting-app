@@ -16,16 +16,17 @@ import { removeEmptyProperties } from '../../core/utils/object.utils';
 
 import { EditBasicClientDialog } from '../clients/dialogs/edit-basic-client-dialog/edit-basic-client-dialog';
 
-import { ClientService } from '../../core/services/client.service';
+import { ClientService     } from '../../core/services/client.service';
 import { DictionaryService } from '../../core/services/dictionary.service';
+import { LoadingService    } from '../../core/services/loader.service';
 
-import { TableModule        } from 'primeng/table';
-import { FloatLabel         } from 'primeng/floatlabel';
-import { AutoCompleteModule } from 'primeng/autocomplete';
-import { SelectModule       } from 'primeng/select';
-import { ButtonModule       } from 'primeng/button';
-import { TagModule          } from 'primeng/tag';
-import { CheckboxModule     } from 'primeng/checkbox';
+import { TableModule                                          } from 'primeng/table';
+import { FloatLabel                                           } from 'primeng/floatlabel';
+import { AutoCompleteModule                                   } from 'primeng/autocomplete';
+import { SelectModule                                         } from 'primeng/select';
+import { ButtonModule                                         } from 'primeng/button';
+import { TagModule                                            } from 'primeng/tag';
+import { CheckboxModule                                       } from 'primeng/checkbox';
 import { DialogService, DynamicDialogRef, DynamicDialogModule } from 'primeng/dynamicdialog';
 
 @Component({
@@ -53,6 +54,7 @@ import { DialogService, DynamicDialogRef, DynamicDialogModule } from 'primeng/dy
 export class Dashboard {
   private clientService     = inject(ClientService);
   private dictionaryService = inject(DictionaryService);
+  private loadingService    = inject(LoadingService);
   private router            = inject(Router);
   private fb                = inject(FormBuilder);
 
@@ -79,20 +81,35 @@ export class Dashboard {
   companyNameList = signal<CompanyAutocomplete[]>([]);
 
   ngOnInit() {
-    this.clientService.getClients().subscribe((response: any) => {
-      this.clientsList.set(response);
-      console.log(this.clientsList());
+    this.loadingService.show();
+    this.loadingService.show();
+
+    this.clientService.getClients().subscribe({
+      next: (response: any) => {
+        this.clientsList.set(response);
+      }, 
+      error: (error: any) => {
+        console.log('Błąd podczas pobierania klientów: ', error);
+      },
+      complete: () => {
+        this.loadingService.hide();
+      }
     });
 
-    this.dictionaryService.getDictionary().subscribe((response: any) => {
-      this.dictionariesList.set(response);
-      console.log(this.dictionariesList());
+    this.dictionaryService.getDictionary().subscribe({
+      next: (response: any) => {
+        this.dictionariesList.set(response);
 
-      this.companyTypeList = this.dictionariesList().company_type ?? [];
-      this.cooperationStatus = this.dictionariesList().cooperation_status ?? [];
-      console.log('Company type list: ', this.companyTypeList);
-      console.log('Cooperation status: ', this.cooperationStatus);
-    })
+        this.companyTypeList   = this.dictionariesList().company_type ?? [];
+        this.cooperationStatus = this.dictionariesList().cooperation_status ?? [];
+      }, 
+      error: (error: any) => {
+        console.log('Błąd podczas pobierania słowniku: ', error);
+      },
+      complete: () => {
+        this.loadingService.hide();
+      }
+    });
   }
 
 
@@ -120,6 +137,8 @@ export class Dashboard {
   // filters
 
   search() {
+    this.loadingService.show();
+
     const filters = this.filterForm.getRawValue();
 
     let obj = {
@@ -129,12 +148,20 @@ export class Dashboard {
       nip                : filters.nip?.nip,
       owner              : filters.owner?.owner
     }
-    const request = removeEmptyProperties(obj);
-    console.log(request);
 
-    this.clientService.search(request).subscribe((response: any) => {
-      this.clientsList.set(response);
-    });
+    const request = removeEmptyProperties(obj);
+
+    this.clientService.search(request).subscribe({
+      next: (response: any) => {
+        this.clientsList.set(response);
+      },
+      error: (error: any) => {
+        console.log('Błąd pobierania danych: ', error);
+      },
+      complete: () => {
+        this.loadingService.hide();
+      }
+    })
   }
 
   resetFilters() {
