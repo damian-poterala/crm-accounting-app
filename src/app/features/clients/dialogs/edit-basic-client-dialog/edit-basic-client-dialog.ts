@@ -9,6 +9,7 @@ import { DynamicDialogRef } from 'primeng/dynamicdialog';
 
 import { DictionaryService } from '../../../../core/services/dictionary.service';
 import { UserService       } from '../../../../core/services/user.service';
+import { ClientService     } from '../../../../core/services/client.service';
 
 import { ButtonModule } from 'primeng/button';
 import { ToggleSwitchModule } from 'primeng/toggleswitch';
@@ -43,9 +44,11 @@ export class EditBasicClientDialog {
   private fb                  = inject(FormBuilder);
   private dictionaryService   = inject(DictionaryService);
   private userService         = inject(UserService);
+  private clientService       = inject(ClientService);
 
   readonly dictionariesList = signal<any>({});
-  readonly usersList = signal<any>([]);
+  readonly usersList        = signal<any>([]);
+
   readonly cooperationStatuList = computed(() => this.dictionariesList().cooperation_status ?? []);
 
   editForm = this.fb.nonNullable.group({
@@ -107,5 +110,14 @@ export class EditBasicClientDialog {
 
   save(): void {
     console.log(this.editForm.getRawValue());
+
+    this.clientService.update(5, this.editForm.getRawValue()).subscribe({
+      next: (response: any) => {
+        console.log(response);
+      },
+      error: (error: any) => {
+        console.log('Błąd podczas aktualizacji danych: ', error);
+      }
+    })
   }
 }

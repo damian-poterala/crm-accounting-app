@@ -23,4 +23,8 @@ export class ClientService {
     search(request: any) {
         return this.http.post<any[]>(`${ environment.apiUrl }/clients/search`, request);
     }
+
+    update(id: number, data: any) {
+        return this.http.put<any>(`${ environment.apiUrl }/clients/${ id }`, data);
+    }
 }
