@@ -1,0 +1,67 @@
+.dialog-footer {
+    margin-top: 24px;
+    display: flex;
+    justify-content: flex-end;
+    gap: 12px;
+}
+
+.dialog-content {
+    display: flex;
+    flex-direction: column;
+    gap: 18px;
+    padding: 8px 0;
+}
+
+.form-section {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.section-header {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 2px;
+}
+
+.section-header::after {
+    content: '';
+    flex: 1;
+    height: 1px;
+    background: var(--color-border);
+}
+
+.section-title {
+    font-size: 14px;
+    font-weight: 700;
+    color: var(--color-primary);
+    white-space: nowrap;
+}
+
+.form-row {
+    display: grid;
+    grid-template-columns: 80px minmax(0, 1fr);
+    align-items: center;
+    gap: 20px;
+}
+
+.form-row label,
+.form-row-full label {
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--color-text);
+}
+
+.form-row-full {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    margin-top: 8px;
+}
+
+.form-row-full textarea {
+    width: 100%;
+    min-height: 120px;
+    resize: vertical;
+}

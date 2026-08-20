@@ -1,0 +1,74 @@
+<form [formGroup]="createForm">
+    <div class="dialog-content">
+        <section class="form-section">
+            <div class="section-header">
+                <span class="section-title">Dane firmy</span>
+            </div>
+            <div class="form-row">
+                <label for="">Typ firmy:</label>
+                <p-select formControlName="companyType" [options]="dictionariesList().company_type" optionLabel="label" optionValue="value" placeholder="Wybierz typ firmy"></p-select>
+            </div>
+            <div class="form-row">
+                <label for="">Nazwa firmy:</label>
+                <input formControlName="companyName" pInputText type="text" placeholder="Wpisz nazwę firmy">
+            </div>
+            <div class="form-row">
+                <label for="">NIP:</label>
+                <input formControlName="nip" pInputText type="text" placeholder="Wpisz NIP">
+            </div>
+            <div class="form-row">
+                <label for="">REGON:</label>
+                <input formControlName="regon" pInputText type="text" placeholder="Wpisz REGON">
+            </div>
+            <div class="form-row">
+                <label for="">KRS:</label>
+                <input formControlName="krs" pInputText type="text" placeholder="Wpisz KRS">
+            </div>
+            <div class="form-row">
+                <label for="">Płatnik VAT:</label>
+                <p-toggleswitch formControlName="isVatPayer"></p-toggleswitch>
+            </div>
+            <div class="form-row">
+                <label for="">Opiekun:</label>
+                <p-select formControlName="accountManager" [options]="usersList()" optionLabel="username" optionValue="id" placeholder="Wybierz opiekuna klienta"></p-select>
+            </div>
+        </section>
+        <section class="form-section">
+            <div class="section-header">
+                <span class="section-title">Dane właściciela</span>
+            </div>
+            <div class="form-row">
+                <label for="">Imię:</label>
+                <input formControlName="firstName" pInputText type="text" placeholder="Wpisz imię">
+            </div>
+            <div class="form-row">
+                <label for="">Nazwisko:</label>
+                <input formControlName="lastName" pInputText type="text" placeholder="Wpisz nazwisko">
+            </div>
+            <div class="form-row">
+                <label for="">Pesel:</label>
+                <input formControlName="pesel" pInputText type="text" placeholder="Wpisz pesel">
+            </div>
+            <div class="form-row">
+                <label for="">Email:</label>
+                <input formControlName="email" pInputText type="text" placeholder="Wpisz adres e-mail">
+            </div>
+            <div class="form-row">
+                <label for="">Nr. telefonu:</label>
+                <input formControlName="phone" pInputText type="text" placeholder="Wpisz numer telefonu">
+            </div>
+        </section>
+        <section class="form-section">
+            <div class="section-header">
+                <span class="section-title">Uwagi</span>
+            </div>
+            <div class="form-row-full">
+                <textarea formControlName="notes" pTextarea rows="5" placeholder="Dodaj notatkę dotyczącą klienta"></textarea>
+            </div>
+        </section>
+    </div>
+</form>
+<div class="dialog-footer">
+    <button pButton label="Anuluj" (click)="close()" severity="danger"></button>
+    <button pButton label="Zapisz" (click)="save()" severity="info"></button>
+</div>

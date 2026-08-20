@@ -2,8 +2,6 @@ import { Component, DestroyRef, computed, inject, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormBuilder, ReactiveFormsModule } from '@angular/forms';
 
-import { CompanyTypeSelect } from '../../../../core/models';
-
 import { DynamicDialogConfig } from 'primeng/dynamicdialog';
 import { DynamicDialogRef } from 'primeng/dynamicdialog';
 
@@ -109,8 +107,6 @@ export class EditBasicClientDialog {
   }
 
   save(): void {
-    console.log(this.editForm.getRawValue());
-
     this.clientService.update(5, this.editForm.getRawValue()).subscribe({
       next: (response: any) => {
         console.log(response);

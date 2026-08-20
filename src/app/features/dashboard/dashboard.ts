@@ -14,7 +14,8 @@ import {
 
 import { removeEmptyProperties } from '../../core/utils/object.utils';
 
-import { EditBasicClientDialog } from '../clients/dialogs/edit-basic-client-dialog/edit-basic-client-dialog';
+import { EditBasicClientDialog   } from '../clients/dialogs/edit-basic-client-dialog/edit-basic-client-dialog';
+import { CreateBasicClientDialog } from '../clients/dialogs/create-basic-client-dialog/create-basic-client-dialog';
 
 import { ClientService     } from '../../core/services/client.service';
 import { DictionaryService } from '../../core/services/dictionary.service';
@@ -190,6 +191,17 @@ export class Dashboard {
       data: {
         client
       }
+    });
+  }
+
+  openCreateBasicClientDialog() {
+    this.dialogRef = this.dialogService.open(CreateBasicClientDialog, {
+      header      : 'Dodaj nowego klienta',
+      width       : '800px',
+      modal       : true,
+      closable    : false,
+      maximizable : false,
+      draggable   : false,
     });
   }
 
