@@ -14,15 +14,30 @@
             </div>
             <div class="form-row">
                 <label for="">NIP:</label>
-                <input formControlName="nip" pInputText type="text" placeholder="Wpisz NIP">
+                <p-iconfield>
+                    <input formControlName="nip" pInputText type="text" placeholder="Wpisz NIP">
+                    @if(createForm.controls.nip.invalid) {
+                        <p-inputicon styleClass="pi pi-exclamation-circle" pTooltip="Nieprawidłowy numer NIP" tooltipPosition="left"></p-inputicon>
+                    }
+                </p-iconfield>
             </div>
             <div class="form-row">
                 <label for="">REGON:</label>
-                <input formControlName="regon" pInputText type="text" placeholder="Wpisz REGON">
+                <p-iconfield>
+                    <input formControlName="regon" pInputText type="text" placeholder="Wpisz REGON">
+                    @if(createForm.controls.regon.invalid) {
+                        <p-inputicon styleClass="pi pi-exclamation-circle" pTooltip="Nieprawidłowy numer REGON" tooltipPosition="left"></p-inputicon>
+                    }
+                </p-iconfield>
             </div>
             <div class="form-row">
                 <label for="">KRS:</label>
-                <input formControlName="krs" pInputText type="text" placeholder="Wpisz KRS">
+                <p-iconfield>
+                    <input formControlName="krs" pInputText type="text" placeholder="Wpisz KRS">
+                    @if(createForm.controls.krs.invalid) {
+                        <p-inputicon styleClass="pi pi-exclamation-circle" pTooltip="Nieprawidłowy numer KRS" tooltip="left"></p-inputicon>
+                    }
+                </p-iconfield>
             </div>
             <div class="form-row">
                 <label for="">Płatnik VAT:</label>

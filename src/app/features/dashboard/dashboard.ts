@@ -1,6 +1,6 @@
-import { Component, inject, signal } from '@angular/core';
-import { DatePipe } from '@angular/common';
-import { Router } from '@angular/router';
+import { Component, inject, signal        } from '@angular/core';
+import { DatePipe                         } from '@angular/common';
+import { Router                           } from '@angular/router';
 import { FormBuilder, ReactiveFormsModule } from '@angular/forms';
 
 import { 
@@ -21,7 +21,10 @@ import { ClientService     } from '../../core/services/client.service';
 import { DictionaryService } from '../../core/services/dictionary.service';
 import { LoadingService    } from '../../core/services/loader.service';
 
+import { MessageService } from 'primeng/api';
+
 import { TableModule                                          } from 'primeng/table';
+import { ToastModule                                          } from 'primeng/toast';
 import { FloatLabel                                           } from 'primeng/floatlabel';
 import { AutoCompleteModule                                   } from 'primeng/autocomplete';
 import { SelectModule                                         } from 'primeng/select';
@@ -38,6 +41,7 @@ import { DialogService, DynamicDialogRef, DynamicDialogModule } from 'primeng/dy
     ReactiveFormsModule,
 
     TableModule,
+    ToastModule,
     FloatLabel,
     AutoCompleteModule,
     SelectModule,
@@ -47,7 +51,8 @@ import { DialogService, DynamicDialogRef, DynamicDialogModule } from 'primeng/dy
     DynamicDialogModule,
   ],
   providers: [
-    DialogService
+    DialogService,
+    MessageService
   ],
   templateUrl: './dashboard.html',
   styleUrl: './dashboard.scss',
@@ -59,7 +64,8 @@ export class Dashboard {
   private router            = inject(Router);
   private fb                = inject(FormBuilder);
 
-  private readonly dialogService = inject(DialogService);
+  private readonly dialogService  = inject(DialogService);
+  private readonly messageService = inject(MessageService);
 
   private dialogRef ?: DynamicDialogRef | null = null;
 
@@ -88,6 +94,7 @@ export class Dashboard {
     this.clientService.getClients().subscribe({
       next: (response: any) => {
         this.clientsList.set(response);
+        console.log(this.clientsList());
       }, 
       error: (error: any) => {
         console.log('Błąd podczas pobierania klientów: ', error);
@@ -192,6 +199,16 @@ export class Dashboard {
         client
       }
     });
+
+    this.dialogRef?.onClose.subscribe((result: any) => {
+      if(!result) {
+        return;
+      }
+
+      this.messageService.add({ key: 'edit-client', severity: 'success', summary: 'Komunikat', detail: result.message });
+
+      this.search();
+    });
   }
 
   openCreateBasicClientDialog() {
@@ -202,6 +219,16 @@ export class Dashboard {
       closable    : false,
       maximizable : false,
       draggable   : false,
+    });
+
+    this.dialogRef?.onClose.subscribe((result: any) => {
+      if(!result) {
+        return;
+      }
+
+      this.messageService.add({ key: 'create-client', severity: 'success', summary: 'Komunikat', detail: result.message });
+
+      this.search();
     });
   }
 

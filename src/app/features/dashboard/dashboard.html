@@ -48,6 +48,7 @@
                         <th>Email</th>
                         <th>Nr. telefonu</th>
                         <th>Aktywny</th>
+                        <th>Opiekun</th>
                         <th>Data utworzenia</th>
                         <th>Edytuj</th>
                         <th></th>
@@ -63,6 +64,7 @@
                         <td>{{ item?.email }}</td>
                         <td>{{ item?.phone }}</td>
                         <td>{{ item?.cooperation_status }}</td>
+                        <td>{{ item?.account_manager }}</td>
                         <td>{{ item?.created_at | date: 'yyyy-MM-dd' }}</td>
                         <td>
                             <button pButton (click)="$event.stopPropagation(); openEditBasicClientDialog(item)" icon="pi pi-pencil" severity="warn" text rounded></button>
@@ -76,3 +78,6 @@
         </div>
     </div>
 </div>
+
+<p-toast key="create-client"></p-toast>
+<p-toast key="edit-client"  ></p-toast>

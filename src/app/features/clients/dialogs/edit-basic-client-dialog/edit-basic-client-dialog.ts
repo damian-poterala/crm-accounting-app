@@ -61,6 +61,7 @@ export class EditBasicClientDialog {
 
   ngOnInit(): void {    
     const client = this.config.data?.client;
+    console.log(client);
 
     if(!client) {
       return;
@@ -94,7 +95,7 @@ export class EditBasicClientDialog {
   private fillForm(client: any): void {
     this.editForm.patchValue({
       cooperationStatus : client.cooperation_status ?? '',
-      accountManager    : client.account_manager ?? '',
+      accountManager    : client.account_manager_id ?? '',
       phone             : client.phone ?? '', 
       email             : client.email ?? '', 
       isVatPayer        : client.is_vat_payer === 1, 
@@ -107,9 +108,9 @@ export class EditBasicClientDialog {
   }
 
   save(): void {
-    this.clientService.update(5, this.editForm.getRawValue()).subscribe({
+    this.clientService.update(this.config.data?.client?.id, this.editForm.getRawValue()).subscribe({
       next: (response: any) => {
-        console.log(response);
+        this.dialogRef.close(response);
       },
       error: (error: any) => {
         console.log('Błąd podczas aktualizacji danych: ', error);

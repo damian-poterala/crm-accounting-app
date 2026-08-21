@@ -1,15 +1,18 @@
-import { Component, inject, signal } from '@angular/core';
-import { CommonModule } from '@angular/common';
-import { FormBuilder, ReactiveFormsModule } from '@angular/forms';
+import { Component, inject, signal        } from '@angular/core';
+import { CommonModule                     } from '@angular/common';
+import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 
 import { DynamicDialogConfig } from 'primeng/dynamicdialog';
-import { DynamicDialogRef } from 'primeng/dynamicdialog';
+import { DynamicDialogRef    } from 'primeng/dynamicdialog';
 
-import { SelectModule } from 'primeng/select';
-import { InputTextModule } from 'primeng/inputtext';
+import { SelectModule       } from 'primeng/select';
+import { InputTextModule    } from 'primeng/inputtext';
 import { ToggleSwitchModule } from 'primeng/toggleswitch';
-import { TextareaModule } from 'primeng/textarea';
-import { ButtonModule } from 'primeng/button';
+import { TextareaModule     } from 'primeng/textarea';
+import { ButtonModule       } from 'primeng/button';
+import { TooltipModule      } from 'primeng/tooltip';
+import { IconFieldModule          } from 'primeng/iconfield';
+import { InputIconModule          } from 'primeng/inputicon';
 
 import { DictionaryService } from '../../../../core/services/dictionary.service';
 import { UserService       } from '../../../../core/services/user.service';
@@ -25,7 +28,10 @@ import { ClientService     } from '../../../../core/services/client.service';
     InputTextModule,
     ToggleSwitchModule,
     TextareaModule,
-    ButtonModule
+    ButtonModule,
+    TooltipModule,
+    IconFieldModule,
+    InputIconModule,
   ],
   templateUrl: './create-basic-client-dialog.html',
   styleUrl: './create-basic-client-dialog.scss',
@@ -46,9 +52,9 @@ export class CreateBasicClientDialog {
   createForm = this.fb.nonNullable.group({
     companyType    : '',
     companyName    : '',
-    nip            : '',
-    regon          : '',
-    krs            : '',
+    nip            : ['', [ Validators.pattern(/^\d{10}$/) ]],
+    regon          : ['', [ Validators.pattern(/^\d{9}(\d{5})?$/) ]],
+    krs            : ['', [ Validators.pattern(/^\d{10}$/) ]],
     isVatPayer     : false,
     accountManager : '',
     firstName      : '',
@@ -86,8 +92,7 @@ export class CreateBasicClientDialog {
 
     this.clientService.create(this.createForm.getRawValue()).subscribe({
       next: (response: any) => {
-        console.log(response);
-        this.close();
+        this.dialogRef.close(response);
       },
       error: (error: any) => {
         console.log('Błąd podczas zapisu nowego klienta: ', error);
