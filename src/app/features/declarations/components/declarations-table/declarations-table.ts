@@ -1,16 +1,20 @@
 import { Component, inject, Input, signal, OnChanges, SimpleChanges, ChangeDetectorRef, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { finalize } from 'rxjs';
 import { FormArray, FormBuilder, ReactiveFormsModule, FormGroup, AbstractControl, FormsModule } from '@angular/forms';
 
 import { DeclarationService } from '../../../../core/services/declaration.service';
-import { UserService } from '../../../../core/services/user.service';
+import { UserService        } from '../../../../core/services/user.service';
 
-import { DatePickerModule } from 'primeng/datepicker';
-import { SelectModule } from 'primeng/select';
-import { TooltipModule } from 'primeng/tooltip';
-import { ButtonModule } from 'primeng/button';
+import { MessageService } from 'primeng/api';
+
+import { DatePickerModule       } from 'primeng/datepicker';
+import { SelectModule           } from 'primeng/select';
+import { TooltipModule          } from 'primeng/tooltip';
+import { ButtonModule           } from 'primeng/button';
 import { PopoverModule, Popover } from 'primeng/popover';  
-import { TextareaModule } from 'primeng/textarea';
+import { TextareaModule         } from 'primeng/textarea';
+import { ToastModule            } from 'primeng/toast';
 
 @Component({
   selector: 'app-declarations-table',
@@ -26,6 +30,10 @@ import { TextareaModule } from 'primeng/textarea';
     ButtonModule,
     PopoverModule,
     TextareaModule,
+    ToastModule,
+  ],
+  providers: [
+    MessageService
   ],
   templateUrl: './declarations-table.html',
   styleUrl: './declarations-table.scss',
@@ -33,10 +41,12 @@ import { TextareaModule } from 'primeng/textarea';
 export class DeclarationsTable implements OnInit, OnChanges {
   private readonly fb                 = inject(FormBuilder);
   private readonly declarationService = inject(DeclarationService);
-  private userService = inject(UserService);
   private readonly cdr                = inject(ChangeDetectorRef);
+  private userService                 = inject(UserService);
+  private messageService              = inject(MessageService);
 
-  readonly editingCell      = signal<{ clientId: number; month: number } | null>(null);
+  readonly editingCell = signal<{ clientId: number; month: number } | null>(null);
+  saving = signal(false);
 
   private lastLoadedYear: number | null = null;
   private lastLoadedType: 'DRA' | 'JPK' | 'VAT_UE' | null = null;
@@ -257,6 +267,8 @@ export class DeclarationsTable implements OnInit, OnChanges {
   }
 
   saveDeclarations(): void {
+    this.saving.set(true);
+
     const payload = {
       year: this.year,
       type: this.declarationType,
@@ -264,25 +276,24 @@ export class DeclarationsTable implements OnInit, OnChanges {
         const row = control.value;
 
         return {
-          clientId: row.clientId,
-          accountManagerId: row.accountManagerId,
+          clientId         : row.clientId,
+          accountManagerId : row.accountManagerId,
           months: this.months.map(month => ({
-            month: month.number,
-            date: this.formatDateForApi(row[`month${ month.number }Date`]) || null,
-            comment: row[`month${ month.number }Comment`] || ''
+            month   : month.number,
+            date    : this.formatDateForApi(row[`month${ month.number }Date`]) || null,
+            comment : row[`month${ month.number }Comment`] || ''
           }))
         };
       })
     };
 
-    console.log(payload);
-
-    this.declarationService.saveDeclarations(payload).subscribe({
-      next: () => {
-        console.log('Deklaracje zapisane');
+    this.declarationService.saveDeclarations(payload).pipe(finalize(() => this.saving.set(false))).subscribe({
+      next: (response: any) => {
+        console.log(response);
+        this.messageService.add({ key: 'save-declaration', severity: 'success', summary: 'Komunikat', detail: 'Udało się zapisać deklaracje.' });
       },
       error: (error) => {
-        console.log('Błąd zapisu deklaracji', error);
+        this.messageService.add({ key: 'save-declaration', severity: 'error', summary: 'Komunikat', detail: 'Wystąpił błąd podczas zapisywania deklaracji.' });
       }
     })
   }

@@ -1,0 +1,21 @@
+<div class="files-section">
+    <div class="section-header">
+        <div>
+            <h2>Pliki</h2>
+            <span>Dostępne dokumenty do pobrania</span>
+        </div>
+    </div>
+    <div class="files-grid">
+        @for(file of files; track file.id) {
+            <div class="file-card">
+                <div class="file-icon">
+                    <i class="pi" [class]="file.icon"></i>
+                </div>
+                <div class="file-name">
+                    {{ file.name }}
+                </div>
+                <button pButton label="Pobierz" icon="pi pi-download" severity="info" class="download-button"></button>
+            </div>
+        }
+    </div>
+</div>

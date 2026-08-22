@@ -42,7 +42,7 @@
             </tbody>
         </table>
         <div class="table-actions">
-            <button pButton label="Zapisz wszystko" icon="pi pi-save" severity="info" (click)="saveDeclarations()"></button>
+            <button pButton label="Zapisz wszystko" icon="pi pi-save" [loading]="saving()" [disabled]="saving()" severity="info" (click)="saveDeclarations()"></button>
         </div>
     </div>
 </form>
@@ -59,3 +59,5 @@
         </div>
     </div>
 </p-popover>
+
+<p-toast key="save-declaration"></p-toast>

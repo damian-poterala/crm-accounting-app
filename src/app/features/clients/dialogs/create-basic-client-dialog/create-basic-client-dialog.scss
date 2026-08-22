@@ -66,3 +66,10 @@
     resize: vertical;
 }
 
+:host ::ng-deep input.ng-invalid.ng-touched {
+    border-color: #ef4444 !important;
+}
+
+:host ::ng-deep p-select.ng-invalid.ng-touched {
+    border-color: #ef4444 !important;
+}

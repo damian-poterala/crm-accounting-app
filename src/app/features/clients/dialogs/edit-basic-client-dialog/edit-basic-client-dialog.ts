@@ -2,6 +2,8 @@ import { Component, DestroyRef, computed, inject, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormBuilder, ReactiveFormsModule } from '@angular/forms';
 
+import { finalize } from 'rxjs';
+
 import { DynamicDialogConfig } from 'primeng/dynamicdialog';
 import { DynamicDialogRef } from 'primeng/dynamicdialog';
 
@@ -46,6 +48,7 @@ export class EditBasicClientDialog {
 
   readonly dictionariesList = signal<any>({});
   readonly usersList        = signal<any>([]);
+  saving                    = signal(false);
 
   readonly cooperationStatuList = computed(() => this.dictionariesList().cooperation_status ?? []);
 
@@ -108,7 +111,9 @@ export class EditBasicClientDialog {
   }
 
   save(): void {
-    this.clientService.update(this.config.data?.client?.id, this.editForm.getRawValue()).subscribe({
+    this.saving.set(true);
+    
+    this.clientService.update(this.config.data?.client?.id, this.editForm.getRawValue()).pipe(finalize(() => this.saving.set(false))).subscribe({
       next: (response: any) => {
         this.dialogRef.close(response);
       },

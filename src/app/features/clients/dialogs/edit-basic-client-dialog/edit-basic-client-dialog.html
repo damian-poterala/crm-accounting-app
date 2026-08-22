@@ -33,6 +33,6 @@
     </div>
 </form>
 <div class="dialog-footer">
-    <button pButton label="Anuluj" (click)="close()" severity="danger"></button>
-    <button pButton label="Zapisz" (click)="save()" severity="info"></button>
+    <button pButton label="Anuluj" icon="pi pi-times" (click)="close()" severity="danger"></button>
+    <button pButton label="Zapisz" icon="pi pi-save" [loading]="saving()" [disabled]="saving()" (click)="save()" severity="info"></button>
 </div>
