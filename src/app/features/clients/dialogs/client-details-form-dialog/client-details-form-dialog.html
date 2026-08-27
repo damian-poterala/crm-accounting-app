@@ -1,0 +1,115 @@
+<p-steps [model]="steps" [readonly]="true" [activeIndex]="activeIndex" (activeIndexChange)="onActiveIndexChange($event)"></p-steps>
+<div>
+    <form>
+        <div class="" *ngIf="activeIndex == 0" class="step-content">
+            <div class="dialog-content">
+                <div class="form-row">
+                    <label for="">Data podpisania umowy:</label>
+                    <p-datepicker dateFormat="yy-mm-dd" placeholder="Wybierz datę"></p-datepicker>
+                </div>
+                <div class="form-row">
+                    <label for="">Data rozpoczęcia obsługi:</label>
+                    <p-datepicker dateFormat="yy-mm-dd" placeholder="Wybierz datę"></p-datepicker>
+                </div>
+                <div class="form-row">
+                    <label for="">Data zakończenia obsługi:</label>
+                    <p-datepicker dateFormat="yy-mm-dd" placeholder="Wybierz datę"></p-datepicker>
+                </div>
+                <div class="form-row">
+                    <label for="">Numer umowy:</label>
+                    <input pInputText type="text" placeholder="Wpisz">
+                </div>
+                <div class="form-row">
+                    <label for="">Umowa elektroniczna:</label>
+                    <p-checkbox [binary]="true"></p-checkbox>
+                </div>
+                <div class="form-row">
+                    <label for="">Źródło pozyskania klienta:</label>
+                    <p-select [options]="dictionaries().lead_source" optionLabel="label" optionValue="value" placeholder="Wybierz"></p-select>
+                </div>
+                <div class="form-row">
+                    <label for="">Opiekun klienta:</label>
+                    <p-select placeholder="Wybierz"></p-select>
+                </div>
+                <div class="form-row">
+                    <label for="">Kwota abonamentu:</label>
+                    <input pInputText type="text" placeholder="Wpisz">
+                </div>
+                <div class="form-row">
+                    <label for="">Termin płatności:</label>
+                    <input pInputText type="text" placeholder="Wpisz">
+                </div>
+                <div class="form-row">
+                    <label for="">Sposób płatności:</label>
+                    <p-select placeholder="Wybierz"></p-select>
+                </div>
+            </div>
+        </div>
+        <div class="" *ngIf="activeIndex == 1" class="step-content">
+            <section class="form-section">
+                <div class="dialog-content">
+                    <div class="form-row">
+                        <label for="">Limit dokumentów:</label>
+                        <input pInputText type="text" placeholder="Wpisz">
+                    </div>
+                    <div class="services-types">
+                        <div class="service-row">
+                            <p-checkbox [binary]="true"></p-checkbox>
+                            <span class="service-name">KPiR</span>
+                            <p-select [options]="dictionaries().accounting_program" optionLabel="label" optionValue="value" placeholder="Wybierz"></p-select>
+                        </div>
+                        <div class="service-row">
+                            <p-checkbox [binary]="true"></p-checkbox>
+                            <span class="service-name">KH</span>
+                        </div>
+                        <div class="service-row">
+                            <p-checkbox [binary]="true"></p-checkbox>
+                            <span class="service-name">UEPiK</span>
+                        </div>
+                        <div class="service-row">
+                            <p-checkbox [binary]="true"></p-checkbox>
+                            <span class="service-name">Kadry</span>
+                            <p-select [options]="dictionaries().accounting_program" optionLabel="label" optionValue="value" placeholder="Wybierz"></p-select>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </div>
+        <div class="" *ngIf="activeIndex == 2">
+            <div class="dialog-content">
+                <div class="form-row">
+                    <label for="">Status VAT:</label>
+                    <p-multiselect appendTo="body" [options]="dictionaries().vat_status" optionLabel="label" optionValue="value" placeholder="Wybierz"></p-multiselect>
+                </div>
+                <div class="form-row">
+                    <label for="">Podatek VAT:</label>
+                    <p-select appendTo="body" [options]="dictionaries().settlement_frequency" optionLabel="label" optionValue="value" placeholder="Wybierz"></p-select>
+                </div>
+                <div class="form-row">
+                    <label for="">Podatek dochodowy</label>
+                    <p-select appendTo="body" [options]="dictionaries().settlement_frequency" optionLabel="label" optionValue="value" placeholder="Wybierz"></p-select>
+                </div>
+            </div>
+        </div>
+        <div class="" *ngIf="activeIndex == 3">
+
+        </div>
+        <div class="" *ngIf="activeIndex == 4">
+            <div class="form-row-full">
+                <textarea pTextarea rows="5" placeholder="Dodaj uwagi dotyczące klienta" id="notes"></textarea>
+            </div>
+        </div>
+        <div class="" *ngIf="activeIndex == 5">
+
+        </div>
+    </form>
+    <div [ngClass]="{ 'single-btn': activeIndex == steps.length - 1 || activeIndex == 0 }" class="dialog-footer">
+        <button pButton icon="pi pi-arrow-left" label="Wstecz" (click)="prev()" class="back-btn" *ngIf="activeIndex > 0"></button>
+        <button pButton icon="pi pi-arrow-right" label="Następna strona" (click)="next()" *ngIf="activeIndex < steps.length - 1"></button>
+    </div>
+</div>
+
+<!-- <div class="dialog-footer">
+    <button pButton label="Anuluj" icon="pi pi-times" (click)="close()" severity="danger"></button>
+    <button pButton label="Zapisz" icon="pi pi-save" [loading]="saving()" [disabled]="saving()" (click)="save()" severity="info"></button>
+</div> -->

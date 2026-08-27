@@ -18,22 +18,22 @@ export class FilesView {
   files = [
     {
         id: 1,
-        name: 'Lista klientów',
+        name: 'UPL 1',
         icon: 'pi-file'
     },
     {
         id: 2,
-        name: 'Deklaracje',
+        name: 'PEL',
         icon: 'pi-file'
     },
     {
         id: 3,
-        name: 'Faktury',
+        name: 'VAT-R',
         icon: 'pi-file'
     },
     {
         id: 4,
-        name: 'Cennik usług',
+        name: 'PCC',
         icon: 'pi-file'
     }
   ];

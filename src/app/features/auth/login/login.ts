@@ -14,7 +14,6 @@ import { FloatLabel } from 'primeng/floatlabel';
   selector: 'app-login',
   imports: [
     ReactiveFormsModule,
-    // RouterLink,
 
     InputTextModule,
     PasswordModule,
