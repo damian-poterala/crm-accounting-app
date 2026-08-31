@@ -1,47 +1,43 @@
 <p-steps [model]="steps" [readonly]="true" [activeIndex]="activeIndex" (activeIndexChange)="onActiveIndexChange($event)"></p-steps>
 <div>
-    <form>
+    <form [formGroup]="form">
         <div class="" *ngIf="activeIndex == 0" class="step-content">
             <div class="dialog-content">
                 <div class="form-row">
                     <label for="">Data podpisania umowy:</label>
-                    <p-datepicker dateFormat="yy-mm-dd" placeholder="Wybierz datę"></p-datepicker>
+                    <p-datepicker formControlName="contractSignedAt" dateFormat="yy-mm-dd" placeholder="Wybierz datę" [invalid]="form.controls.contractSignedAt.invalid && form.controls.contractSignedAt.touched"></p-datepicker>
                 </div>
                 <div class="form-row">
                     <label for="">Data rozpoczęcia obsługi:</label>
-                    <p-datepicker dateFormat="yy-mm-dd" placeholder="Wybierz datę"></p-datepicker>
+                    <p-datepicker formControlName="serviceStartDate" dateFormat="yy-mm-dd" placeholder="Wybierz datę"[invalid]="form.controls.serviceStartDate.invalid && form.controls.serviceStartDate.touched"></p-datepicker>
                 </div>
                 <div class="form-row">
                     <label for="">Data zakończenia obsługi:</label>
-                    <p-datepicker dateFormat="yy-mm-dd" placeholder="Wybierz datę"></p-datepicker>
+                    <p-datepicker formControlName="serviceEndDate" dateFormat="yy-mm-dd" placeholder="Wybierz datę"[invalid]="form.controls.serviceEndDate.invalid && form.controls.serviceEndDate.touched"></p-datepicker>
                 </div>
                 <div class="form-row">
                     <label for="">Numer umowy:</label>
-                    <input pInputText type="text" placeholder="Wpisz">
+                    <input formControlName="contractNumber" [invalid]="form.controls.contractNumber.invalid && form.controls.contractNumber.touched" pInputText type="text" placeholder="Wpisz">
                 </div>
                 <div class="form-row">
                     <label for="">Umowa elektroniczna:</label>
-                    <p-checkbox [binary]="true"></p-checkbox>
+                    <p-checkbox formControlName="electronicContract" [binary]="true"></p-checkbox>
                 </div>
                 <div class="form-row">
                     <label for="">Źródło pozyskania klienta:</label>
-                    <p-select [options]="dictionaries().lead_source" optionLabel="label" optionValue="value" placeholder="Wybierz"></p-select>
-                </div>
-                <div class="form-row">
-                    <label for="">Opiekun klienta:</label>
-                    <p-select placeholder="Wybierz"></p-select>
+                    <p-select formControlName="leadSource" [options]="dictionaries().lead_source" optionLabel="label" optionValue="id" placeholder="Wybierz"></p-select>
                 </div>
                 <div class="form-row">
                     <label for="">Kwota abonamentu:</label>
-                    <input pInputText type="text" placeholder="Wpisz">
+                    <input formControlName="monthlyFee" [invalid]="form.controls.monthlyFee.invalid && form.controls.monthlyFee.touched" pInputText type="text" placeholder="Wpisz">
                 </div>
                 <div class="form-row">
                     <label for="">Termin płatności:</label>
-                    <input pInputText type="text" placeholder="Wpisz">
+                    <input formControlName="paymentDueDate" [invalid]="form.controls.paymentDueDate.invalid && form.controls.paymentDueDate.touched" pInputText type="text" placeholder="Wpisz">
                 </div>
                 <div class="form-row">
                     <label for="">Sposób płatności:</label>
-                    <p-select placeholder="Wybierz"></p-select>
+                    <p-select formControlName="paymentMethod" [options]="dictionaries().payment_method" optionLabel="label" optionValue="id" [invalid]="form.controls.paymentMethod.invalid && form.controls.paymentMethod.touched" placeholder="Wybierz"></p-select>
                 </div>
             </div>
         </div>
@@ -50,26 +46,26 @@
                 <div class="dialog-content">
                     <div class="form-row">
                         <label for="">Limit dokumentów:</label>
-                        <input pInputText type="text" placeholder="Wpisz">
+                        <input pInputText formControlName="documentsLimit" [invalid]="form.controls.documentsLimit.invalid && form.controls.documentsLimit.touched" type="text" placeholder="Wpisz">
                     </div>
                     <div class="services-types">
-                        <div class="service-row">
-                            <p-checkbox [binary]="true"></p-checkbox>
+                        <div formGroupName="kpir" class="service-row">
+                            <p-checkbox formControlName="enabled" [binary]="true"></p-checkbox>
                             <span class="service-name">KPiR</span>
-                            <p-select [options]="dictionaries().accounting_program" optionLabel="label" optionValue="value" placeholder="Wybierz"></p-select>
+                            <p-select formControlName="programId" [options]="dictionaries().accounting_program" optionLabel="label" optionValue="value" [invalid]="form.controls.kpir.controls.programId.invalid && form.controls.kpir.controls.programId.touched" placeholder="Wybierz"></p-select>
                         </div>
-                        <div class="service-row">
-                            <p-checkbox [binary]="true"></p-checkbox>
+                        <div formGroupName="kh" class="service-row">
+                            <p-checkbox formControlName="enabled" [binary]="true"></p-checkbox>
                             <span class="service-name">KH</span>
                         </div>
-                        <div class="service-row">
-                            <p-checkbox [binary]="true"></p-checkbox>
+                        <div formGroupName="uepik" class="service-row">
+                            <p-checkbox formControlName="enabled" [binary]="true"></p-checkbox>
                             <span class="service-name">UEPiK</span>
                         </div>
-                        <div class="service-row">
-                            <p-checkbox [binary]="true"></p-checkbox>
+                        <div formGroupName="kadry" class="service-row">
+                            <p-checkbox formControlName="enabled" [binary]="true"></p-checkbox>
                             <span class="service-name">Kadry</span>
-                            <p-select [options]="dictionaries().accounting_program" optionLabel="label" optionValue="value" placeholder="Wybierz"></p-select>
+                            <p-select formControlName="programId" [options]="dictionaries().accounting_program" optionLabel="label" optionValue="value" [invalid]="form.controls.kadry.controls.programId.invalid && form.controls.kadry.controls.programId.touched" placeholder="Wybierz"></p-select>
                         </div>
                     </div>
                 </div>
@@ -83,20 +79,77 @@
                 </div>
                 <div class="form-row">
                     <label for="">Podatek VAT:</label>
-                    <p-select appendTo="body" [options]="dictionaries().settlement_frequency" optionLabel="label" optionValue="value" placeholder="Wybierz"></p-select>
+                    <p-select formControlName="vatPeriod" appendTo="body" [options]="dictionaries().settlement_frequency" optionLabel="label" optionValue="id" placeholder="Wybierz" [invalid]="form.controls.vatPeriod.invalid && form.controls.vatPeriod.touched"></p-select>
                 </div>
                 <div class="form-row">
                     <label for="">Podatek dochodowy</label>
-                    <p-select appendTo="body" [options]="dictionaries().settlement_frequency" optionLabel="label" optionValue="value" placeholder="Wybierz"></p-select>
+                    <p-select formControlName="incomeTaxPeriod" appendTo="body" [options]="dictionaries().settlement_frequency" optionLabel="label" optionValue="id" placeholder="Wybierz" [invalid]="form.controls.incomeTaxPeriod.invalid && form.controls.incomeTaxPeriod.touched"></p-select>
                 </div>
             </div>
         </div>
         <div class="" *ngIf="activeIndex == 3">
-
+            <div class="dialog-content">
+                <div class="form-row-checkbox">
+                    <p-checkbox formControlName="zusNotApplicable" [binary]="true"></p-checkbox>
+                    <label for="">Nie dotyczy</label>
+                </div>
+                <div class="form-row-checkbox">
+                    <p-checkbox formControlName="zusPayer" [binary]="true"></p-checkbox>
+                    <label for="">Płatnik składek</label>
+                </div>
+                <div formGroupName="relief" class="form-row-zus">
+                    <p-checkbox formControlName="enabled" [binary]="true"></p-checkbox>
+                    <label for="">Ulga</label>
+                    <label for="">Data od</label>
+                    <p-datepicker formControlName="validFrom" appendTo="body" dateFormat="yy-mm-dd" placeholder="Wybierz datę"></p-datepicker>
+                    <label for="">Data do</label>
+                    <p-datepicker formControlName="validTo" appendTo="body" dateFormat="yy-mm-dd" placeholder="Wybierz datę"></p-datepicker>
+                    <label for="">Skł. społeczne</label>
+                    <p-checkbox formControlName="socialContribution" [binary]="true"></p-checkbox>
+                    <label for="">Skł. zdrowotne</label>
+                    <p-checkbox formControlName="healthContribution" [binary]="true"></p-checkbox>
+                </div>
+                <div formGroupName="preferential" class="form-row-zus">
+                    <p-checkbox formControlName="enabled" [binary]="true"></p-checkbox>
+                    <label for="">Preferencyjny</label>
+                    <label for="">Data od</label>
+                    <p-datepicker formControlName="validFrom" appendTo="body" dateFormat="yy-mm-dd" placeholder="Wybierz datę"></p-datepicker>
+                    <label for="">Data do</label>
+                    <p-datepicker formControlName="validTo" appendTo="body" dateFormat="yy-mm-dd" placeholder="Wybierz datę"></p-datepicker>
+                    <label for="">Skł. społeczne</label>
+                    <p-checkbox formControlName="socialContribution" [binary]="true"></p-checkbox>
+                    <label for="">Skł. zdrowotne</label>
+                    <p-checkbox formControlName="healthContribution" [binary]="true"></p-checkbox>
+                </div>
+                <div formGroupName="full" class="form-row-zus">
+                    <p-checkbox formControlName="enabled" [binary]="true"></p-checkbox>
+                    <label for="">Pełny ZUS</label>
+                    <label for="">Data od</label>
+                    <p-datepicker formControlName="validFrom" appendTo="body" dateFormat="yy-mm-dd" placeholder="Wybierz datę"></p-datepicker>
+                    <label for="">Data do</label>
+                    <p-datepicker formControlName="validTo" appendTo="body" dateFormat="yy-mm-dd" placeholder="Wybierz datę"></p-datepicker>
+                    <label for="">Skł. społeczne</label>
+                    <p-checkbox formControlName="socialContribution" [binary]="true"></p-checkbox>
+                    <label for="">Skł. zdrowotne</label>
+                    <p-checkbox formControlName="healthContribution" [binary]="true"></p-checkbox>
+                </div>
+                <div formGroupName="smallPlus" class="form-row-zus">
+                    <p-checkbox formControlName="enabled" [binary]="true"></p-checkbox>
+                    <label for="">Mały ZUS Plus</label>
+                    <label for="">Data od</label>
+                    <p-datepicker formControlName="validFrom" appendTo="body" dateFormat="yy-mm-dd" placeholder="Wybierz datę"></p-datepicker>
+                    <label for="">Data do</label>
+                    <p-datepicker formControlName="validTo" appendTo="body" dateFormat="yy-mm-dd" placeholder="Wybierz datę"></p-datepicker>
+                    <label for="">Skł. społeczne</label>
+                    <p-checkbox formControlName="socialContribution" [binary]="true"></p-checkbox>
+                    <label for="">Skł. zdrowotne</label>
+                    <p-checkbox formControlName="healthContribution" [binary]="true"></p-checkbox>
+                </div>
+            </div>
         </div>
         <div class="" *ngIf="activeIndex == 4">
-            <div class="form-row-full">
-                <textarea pTextarea rows="5" placeholder="Dodaj uwagi dotyczące klienta" id="notes"></textarea>
+            <div formGroupName="notes" class="form-row-full">
+                <textarea formControlName="content" pTextarea rows="5" placeholder="Dodaj uwagi dotyczące klienta" id="notes"></textarea>
             </div>
         </div>
         <div class="" *ngIf="activeIndex == 5">
@@ -104,8 +157,9 @@
         </div>
     </form>
     <div [ngClass]="{ 'single-btn': activeIndex == steps.length - 1 || activeIndex == 0 }" class="dialog-footer">
-        <button pButton icon="pi pi-arrow-left" label="Wstecz" (click)="prev()" class="back-btn" *ngIf="activeIndex > 0"></button>
-        <button pButton icon="pi pi-arrow-right" label="Następna strona" (click)="next()" *ngIf="activeIndex < steps.length - 1"></button>
+        <button pButton icon="pi pi-arrow-left" label="Wstecz" (click)="prev()" severity="info" class="back-btn" *ngIf="activeIndex > 0"></button>
+        <button pButton icon="pi pi-arrow-right" label="Następna strona" (click)="next()" severity="info" *ngIf="activeIndex < steps.length - 1"></button>
+        <button pButton icon="pi pi-save" label="Zapisz" (click)="save()" severity="success" *ngIf="activeIndex == steps.length - 1"></button>
     </div>
 </div>
 
@@ -113,3 +167,5 @@
     <button pButton label="Anuluj" icon="pi pi-times" (click)="close()" severity="danger"></button>
     <button pButton label="Zapisz" icon="pi pi-save" [loading]="saving()" [disabled]="saving()" (click)="save()" severity="info"></button>
 </div> -->
+
+<p-toast key="invalid"></p-toast>

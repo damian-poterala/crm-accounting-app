@@ -1,5 +1,6 @@
 import { Component, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { ActivatedRoute } from '@angular/router';
 
 import { TabsModule                                           } from 'primeng/tabs';
 import { ButtonModule                                         } from 'primeng/button';
@@ -23,10 +24,14 @@ import { ClientDetailsFormDialog } from '../../clients/dialogs/client-details-fo
 })
 export class ClientDetails {
   private readonly dialogService  = inject(DialogService);
+  private  route = inject(ActivatedRoute);
+
+  clientId = this.route.snapshot.paramMap.get('id');
 
   private dialogRef ?: DynamicDialogRef | null = null;
 
   openClientDetailsFormDialog() {
+    console.log(this.clientId);
     this.dialogRef = this.dialogService.open(ClientDetailsFormDialog, {
       header      : 'Uzupełnij dane klienta',
       width       : '1000px',
@@ -34,6 +39,9 @@ export class ClientDetails {
       closable    : false,
       maximizable : false,
       draggable   : false,
+      data: {
+        clientId: this.clientId,
+      }
     });
 
     this.dialogRef?.onClose.subscribe((result: any) => {

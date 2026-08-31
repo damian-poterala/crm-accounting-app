@@ -31,6 +31,20 @@
     gap: 20px;
 }
 
+.form-row-checkbox {
+    display: grid;
+    grid-template-columns: 20px 1fr;
+    align-items: center;
+    gap: 20px;
+}
+
+.form-row-zus {
+    display: grid;
+    grid-template-columns: 20px 100px 60px 130px 60px 130px 110px 20px 110px 20px;
+    align-items: center;
+    gap: 20px;
+}
+
 .form-row label {
     font-size: 12px;
     font-weight: bold;
@@ -111,4 +125,8 @@
     font-weight: 700;
     color: var(--color-primary);
     white-space: nowrap;
+}
+
+.field-invalid {
+    border-color: #ef4444 !important;
 }

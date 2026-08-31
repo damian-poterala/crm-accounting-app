@@ -31,4 +31,8 @@ export class ClientService {
     create(data: any) {
         return this.http.post<any>(`${ environment.apiUrl }/clients`, data);
     }
+
+    updateDetails(data: any) {
+        return this.http.put<any>(`${ environment.apiUrl }/clients/${ data.clientId }/details`, data);
+    }
 }
