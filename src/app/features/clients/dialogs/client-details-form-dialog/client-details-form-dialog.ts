@@ -1,6 +1,6 @@
 import { Component, DestroyRef, inject, signal } from '@angular/core';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
-import { CommonModule } from '@angular/common';
+import { CommonModule, formatDate } from '@angular/common';
 
 import { DynamicDialogConfig } from 'primeng/dynamicdialog';
 import { DynamicDialogRef } from 'primeng/dynamicdialog';
@@ -119,6 +119,31 @@ export class ClientDetailsFormDialog {
     }),
     notes: this.fb.group({
       content: ['']
+    }),
+    vatPayer: this.fb.group({
+      enabled  : [false], 
+      dateFrom : [null],
+      dateTo   : [null],
+    }),
+    vatUe: this.fb.group({
+      enabled  : [false], 
+      dateFrom : [null],
+      dateTo   : [null],
+    }),
+    vatExemptSubject: this.fb.group({
+      enabled  : [false], 
+      dateFrom : [null],
+      dateTo   : [null],
+    }),
+    vatExemptEntity: this.fb.group({
+      enabled  : [false], 
+      dateFrom : [null],
+      dateTo   : [null],
+    }),
+    vat9m: this.fb.group({
+      enabled  : [false], 
+      dateFrom : [null],
+      dateTo   : [null],
     })
   });
 
@@ -142,6 +167,16 @@ export class ClientDetailsFormDialog {
       next: (response: any) => {
         this.dictionaries.set(response);
         console.log('Dictionaries: ', this.dictionaries());
+
+        this.clientService.getClientDetails(this.config.data.clientId).subscribe({
+          next: (response: any) => {
+            console.log(response);
+            this.form.patchValue(response);
+          },
+          error: (error: any) => {
+            console.log(error);
+          }
+        });
       }
     });
 
@@ -150,7 +185,7 @@ export class ClientDetailsFormDialog {
         this.users.set(response);
         console.log(this.users());
       }
-    })
+    });
   }
 
   onActiveIndexChange(event: any) {
@@ -184,7 +219,8 @@ export class ClientDetailsFormDialog {
 
   save(): void {
     this.saving.set(true);
-    console.log(this.config.data.clientId);
+
+    console.log(this.form.getRawValue());
 
     let obj = {
       clientId           : this.config.data.clientId, 
@@ -201,20 +237,175 @@ export class ClientDetailsFormDialog {
       vatPeriodId        : this.form.controls.vatPeriod.value,
       incomeTaxPeriodId  : this.form.controls.incomeTaxPeriod.value,
       zusNotApplicable   : this.form.controls.zusNotApplicable.value,
-      zusContributor     : this.form.controls.zusPayer.value
+      zusContributor     : this.form.controls.zusPayer.value,
+      comment            : this.form.controls.notes.controls.content.value,
+      services           : this.getServices(),
+      registrations      : this.getZusRegistration(),
+      vatStatuses        : this.getVatStatus(),
     }
 
-    console.log(obj);
+    // console.log(obj);
     
-    this.clientService.updateDetails(obj).subscribe({
-      next: (response: any) => {
-        console.log(response);
-      },
-      error: (error: any) => {
-        console.log(error);
-      }
-    })
+    // this.clientService.updateDetails(obj).subscribe({
+    //   next: (response: any) => {
+    //     console.log(response);
+    //   },
+    //   error: (error: any) => {
+    //     console.log(error);
+    //   }
+    // });
   }
 
+  private getAccountingServiceId(valueKey: string): number | null {
+    const dictionary = this.dictionaries().accounting_type;
 
+    const item = dictionary.find((item: any) => item.value == valueKey);
+    return item?.id ?? null;
+  }
+
+  private getRegistrationTypeId(valueKey: string): any {
+    const dictionary = this.dictionaries().registration_type;
+
+    const item = dictionary.find((item: any) => item.value == valueKey);
+    return item?.id ?? null;
+  }
+
+  private getVatStatusId(valueKey: string): any {
+    const dictionary = this.dictionaries().vat_status;
+
+    const item = dictionary.find((item: any) => item.value == valueKey);
+    return item?.id ?? null;
+  }
+
+  private getServices() {
+    const form = this.form.getRawValue();
+
+    const services = [];
+
+    if(form.kpir.enabled) {
+      services.push({
+        serviceId: this.getAccountingServiceId('kpir'),
+        programId: form.kpir.programId,
+      });
+    }
+
+    if(form.kh.enabled) {
+      services.push({
+        serviceId: this.getAccountingServiceId('kh'),
+        programId: null,
+      });
+    }
+
+    if(form.uepik.enabled) {
+      services.push({
+        serviceId: this.getAccountingServiceId('uepik'),
+        programId: null
+      });
+    }
+
+    if(form.kadry.enabled) {
+      services.push({
+        serviceId: this.getAccountingServiceId('hr'),
+        programId: form.kadry.programId,
+      });
+    }
+
+    return services;
+  }
+
+  private getZusRegistration() {
+    const form  = this.form.getRawValue();
+
+    const registrations = [];
+
+    if(form.relief.enabled) {
+      registrations.push({
+        registrationTypeId : this.getRegistrationTypeId('0540'),
+        dateFrom           : formatDateToYmd(form.relief.validFrom),
+        dateTo             : formatDateToYmd(form.relief.validTo),
+        healthContribution : form.relief.healthContribution,
+        socialContribution : form.relief.socialContribution,
+      });
+    }
+
+    if(form.preferential.enabled) {
+      registrations.push({
+        registrationTypeId : this.getRegistrationTypeId('0570'),
+        dateFrom           : formatDateToYmd(form.preferential.validFrom),
+        dateTo             : formatDateToYmd(form.preferential.validTo),
+        healthContribution : form.preferential.healthContribution,
+        socialContribution : form.preferential.socialContribution,
+      });
+    }
+
+    if(form.full.enabled) {
+      registrations.push({
+        registrationTypeId : this.getRegistrationTypeId('0510'),
+        dateFrom           : formatDateToYmd(form.full.validFrom),
+        dateTo             : formatDateToYmd(form.full.validTo),
+        healthContribution : form.full.healthContribution,
+        socialContribution : form.full.socialContribution,
+      });
+    }
+
+    if(form.smallPlus.enabled) {
+      registrations.push({
+        registrationTypeId : this.getRegistrationTypeId('0580'),
+        dateFrom           : formatDateToYmd(form.smallPlus.validFrom),
+        dateTo             : formatDateToYmd(form.smallPlus.validTo),
+        healthContribution : form.smallPlus.healthContribution,
+        socialContribution : form.smallPlus.socialContribution,
+      });
+    }
+
+    return registrations;
+  }
+
+  private getVatStatus() {
+    const form = this.form.getRawValue();
+
+    const vatStatuses = [];
+
+    if(form.vatPayer.enabled) {
+      vatStatuses.push({
+        vatStatusId : this.getVatStatusId('vat_registered'),
+        dateFrom    : formatDateToYmd(form.vatPayer.dateFrom),
+        dateTo      : formatDateToYmd(form.vatPayer.dateTo),
+      });
+    }
+
+    if(form.vatUe.enabled) {
+      vatStatuses.push({
+        vatStatusId : this.getVatStatusId('vat_eu'),
+        dateFrom    : formatDateToYmd(form.vatUe.dateFrom),
+        dateTo      : formatDateToYmd(form.vatUe.dateTo),
+      });
+    }
+
+    if(form.vatExemptSubject.enabled) {
+      vatStatuses.push({
+        vatStatusId : this.getVatStatusId('vat_subject_exempt'),
+        dateFrom    : formatDateToYmd(form.vatExemptSubject.dateFrom),
+        dateTo      : formatDateToYmd(form.vatExemptSubject.dateTo),
+      });
+    }
+
+    if(form.vatExemptEntity.enabled) {
+      vatStatuses.push({
+        vatStatusId : this.getVatStatusId('vat_entity_exempt'),
+        dateFrom    : formatDateToYmd(form.vatExemptEntity.dateFrom),
+        dateTo      : formatDateToYmd(form.vatExemptEntity.dateTo),
+      });
+    }
+
+    if(form.vat9m.enabled) {
+      vatStatuses.push({
+        vatStatusId : this.getVatStatusId('vat_9m'),
+        dateFrom    : formatDateToYmd(form.vat9m.dateFrom),
+        dateTo      : formatDateToYmd(form.vat9m.dateTo),
+      });
+    }
+
+    return vatStatuses;
+  }
 }

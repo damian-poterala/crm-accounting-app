@@ -52,7 +52,7 @@
                         <div formGroupName="kpir" class="service-row">
                             <p-checkbox formControlName="enabled" [binary]="true"></p-checkbox>
                             <span class="service-name">KPiR</span>
-                            <p-select formControlName="programId" [options]="dictionaries().accounting_program" optionLabel="label" optionValue="value" [invalid]="form.controls.kpir.controls.programId.invalid && form.controls.kpir.controls.programId.touched" placeholder="Wybierz"></p-select>
+                            <p-select formControlName="programId" [options]="dictionaries().accounting_program" optionLabel="label" optionValue="id" [invalid]="form.controls.kpir.controls.programId.invalid && form.controls.kpir.controls.programId.touched" placeholder="Wybierz"></p-select>
                         </div>
                         <div formGroupName="kh" class="service-row">
                             <p-checkbox formControlName="enabled" [binary]="true"></p-checkbox>
@@ -65,7 +65,7 @@
                         <div formGroupName="kadry" class="service-row">
                             <p-checkbox formControlName="enabled" [binary]="true"></p-checkbox>
                             <span class="service-name">Kadry</span>
-                            <p-select formControlName="programId" [options]="dictionaries().accounting_program" optionLabel="label" optionValue="value" [invalid]="form.controls.kadry.controls.programId.invalid && form.controls.kadry.controls.programId.touched" placeholder="Wybierz"></p-select>
+                            <p-select formControlName="programId" [options]="dictionaries().accounting_program" optionLabel="label" optionValue="id" [invalid]="form.controls.kadry.controls.programId.invalid && form.controls.kadry.controls.programId.touched" placeholder="Wybierz"></p-select>
                         </div>
                     </div>
                 </div>
@@ -73,9 +73,33 @@
         </div>
         <div class="" *ngIf="activeIndex == 2">
             <div class="dialog-content">
-                <div class="form-row">
-                    <label for="">Status VAT:</label>
-                    <p-multiselect appendTo="body" [options]="dictionaries().vat_status" optionLabel="label" optionValue="value" placeholder="Wybierz"></p-multiselect>
+                <div formGroupName="vatPayer" class="form-row-vat">
+                    <p-checkbox formControlName="enabled" [binary]="true"></p-checkbox>
+                    <label for="">Czynny podatnik VAT</label>
+                    <label for="">Data od</label>
+                    <p-datepicker formControlName="dateFrom" dateFormat="yy-mm-dd" placeholder="Wybierz datę"></p-datepicker>
+                    <label for="">Data do</label>
+                    <p-datepicker formControlName="dateTo" dateFormat="yy-mm-dd" placeholder="Wybierz datę"></p-datepicker>
+                </div>
+                <div formGroupName="vatUe" class="form-row-vat">
+                    <p-checkbox formControlName="enabled" [binary]="true"></p-checkbox>
+                    <label for="">VAT UE</label>
+                    <label for="">Data od</label>
+                    <p-datepicker formControlName="dateFrom" dateFormat="yy-mm-dd" placeholder="Wybierz datę"></p-datepicker>
+                    <label for="">Data do</label>
+                    <p-datepicker formControlName="dateTo" dateFormat="yy-mm-dd" placeholder="Wybierz datę"></p-datepicker>
+                </div>
+                <div formGroupName="vatExemptSubject" class="form-row-vat">
+                    <p-checkbox formControlName="enabled" [binary]="true"></p-checkbox>
+                    <label for="">Zwolnienie przedmiotowe VAT</label>
+                </div>
+                <div formGroupName="vatExemptEntity" class="form-row-vat">
+                    <p-checkbox formControlName="enabled" [binary]="true"></p-checkbox>
+                    <label for="">Zwolnienie podmiotowe VAT</label>
+                </div>
+                <div formGroupName="vat9m" class="form-row-vat">
+                    <p-checkbox formControlName="enabled" [binary]="true"></p-checkbox>
+                    <label for="">VAT 9M</label>
                 </div>
                 <div class="form-row">
                     <label for="">Podatek VAT:</label>

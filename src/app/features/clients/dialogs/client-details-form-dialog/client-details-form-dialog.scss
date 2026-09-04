@@ -38,6 +38,13 @@
     gap: 20px;
 }
 
+.form-row-vat {
+    display: grid;
+    grid-template-columns: 20px 250px 60px 130px 60px 130px;
+    align-items: center;
+    gap: 20px;
+}
+
 .form-row-zus {
     display: grid;
     grid-template-columns: 20px 100px 60px 130px 60px 130px 110px 20px 110px 20px;
