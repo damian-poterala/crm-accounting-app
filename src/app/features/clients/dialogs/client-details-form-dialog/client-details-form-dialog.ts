@@ -163,15 +163,24 @@ export class ClientDetailsFormDialog {
   ];
 
   ngOnInit(): void {
+    this.disableZusField('relief');
+    this.disableZusField('preferential');
+    this.disableZusField('full');
+    this.disableZusField('smallPlus');
+
     this.dictionaryService.getDictionary().subscribe({
       next: (response: any) => {
         this.dictionaries.set(response);
         console.log('Dictionaries: ', this.dictionaries());
 
-        this.clientService.getClientDetails(this.config.data.clientId).subscribe({
+        this.clientService.getFormData(this.config.data.clientId).subscribe({
           next: (response: any) => {
             console.log(response);
             this.form.patchValue(response);
+            this.setZusGroupState('relief');
+            this.setZusGroupState('preferential')
+            this.setZusGroupState('full');
+            this.setZusGroupState('smallPlus');
           },
           error: (error: any) => {
             console.log(error);
@@ -246,14 +255,54 @@ export class ClientDetailsFormDialog {
 
     // console.log(obj);
     
-    // this.clientService.updateDetails(obj).subscribe({
-    //   next: (response: any) => {
-    //     console.log(response);
-    //   },
-    //   error: (error: any) => {
-    //     console.log(error);
-    //   }
-    // });
+    this.clientService.updateDetails(obj).subscribe({
+      next: (response: any) => {
+        console.log(response);
+      },
+      error: (error: any) => {
+        console.log(error);
+      }
+    });
+  }
+
+  // validators
+
+  toggleZusGroup(groupName: 'relief' | 'preferential' | 'full' | 'smallPlus', enabled: boolean): void {
+    const group = this.form.controls[groupName];
+
+    const controls = [
+      group.controls.validFrom,
+      group.controls.validTo,
+      group.controls.socialContribution,
+      group.controls.healthContribution,
+    ];
+
+    controls.forEach(control => enabled ? control.enable() : control.disable());
+  }
+
+  disableZusField(groupName: 'relief' | 'preferential' | 'full' | 'smallPlus'): void {
+    const group = this.form.controls[groupName];
+
+    group.controls.validFrom.disable();
+    group.controls.validTo.disable();
+    group.controls.socialContribution.disable();
+    group.controls.healthContribution.disable();
+  }
+
+  setZusGroupState(groupName: 'relief' | 'preferential' | 'full' | 'smallPlus'): void {
+    const group = this.form.controls[groupName];
+
+    if(group.controls.enabled.value) {
+      group.controls.validFrom.enable();
+      group.controls.validTo.enable();
+      group.controls.socialContribution.enable();
+      group.controls.healthContribution.enable();
+    } else {
+      group.controls.validFrom.disable();
+      group.controls.validTo.disable();
+      group.controls.socialContribution.disable();
+      group.controls.healthContribution.disable();
+    }
   }
 
   private getAccountingServiceId(valueKey: string): number | null {

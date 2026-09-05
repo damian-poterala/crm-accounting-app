@@ -36,19 +36,19 @@
                                 <div class="card-content">
                                     <div class="card-row">
                                         <span class="label">Numer umowy:</span>
-                                        <span class="value">HT/2026/001</span>
+                                        <span class="value">{{ details().contract_number }}</span>
                                     </div>
                                     <div class="card-row">
                                         <span class="label">Data podpisania:</span>
-                                        <span class="value">03.03.2025</span>
+                                        <span class="value">{{ details().contract_signed_at }}</span>
                                     </div>
                                     <div class="card-row">
                                         <span class="label">Pierwszy miesiąc obsługi:</span>
-                                        <span class="value">01.04.2025</span>
+                                        <span class="value">{{ details().service_start_date }}</span>
                                     </div>
                                     <div class="card-row">
                                         <span class="label">Ostatni miesiąc obsługi</span>
-                                        <span class="value">-</span>
+                                        <span class="value">{{ details().service_end_date }}</span>
                                     </div>
                                     <div class="card-row">
                                         <span class="label">Status współpracy:</span>
@@ -58,7 +58,7 @@
                                     </div>
                                     <div class="card-row">
                                         <span class="label">Umowa elektroniczna:</span>
-                                        <span class="value">Tak</span>
+                                        <span class="value">{{ details().electronic_contract }}</span>
                                     </div>
                                 </div>
                             </div>
@@ -69,47 +69,46 @@
                                 <div class="card-content">
                                     <div class="card-row">
                                         <span class="label">Wysokość abonamentu:</span>
-                                        <span class="value">650 zł</span>
+                                        <span class="value">{{ details().monthly_fee }} zł</span>
                                     </div>
                                     <div class="card-row">
                                         <span class="label">Liczba dokumentów w abonamencie:</span>
-                                        <span class="value">120</span>
+                                        <span class="value">{{ details().documents_limit }}</span>
                                     </div>
                                     <div class="card-row">
                                         <span class="label">Termin płatności:</span>
-                                        <span class="value">10 dzień miesiąca</span>
+                                        <span class="value">{{ details().payment_due_date }} dzień miesiąca</span>
                                     </div>
                                     <div class="card-row">
                                         <span class="label">Forma płatności:</span>
-                                        <span class="value">Przelew</span>
+                                        <span class="value">{{ details().payment_method }}</span>
                                     </div>
                                 </div>
                             </div>
                             <div class="card">
                                 <div class="card-header">
-                                    <h3>Obsługa księgowa</h3>
+                                    <h3>Księgowość</h3>
                                 </div>
                                 <div class="card-content">
-                                    <div class="card-row">
-                                        <span class="label">Typ księgowości:</span>
-                                        <span class="value">KPiR</span>
-                                    </div>
-                                    <div class="card-row">
-                                        <span class="label">Program księgowy:</span>
-                                        <span class="value">COmatch Optima</span>
-                                    </div>
-                                    <div class="card-row">
-                                        <span class="label">Status VAT:</span>
-                                        <span class="value">VAT UE</span>
-                                    </div>
-                                    <div class="card-row">
-                                        <span class="label">Częstotliwość rozliczeń:</span>
-                                        <span class="value">Miesięczna</span>
-                                    </div>
-                                    <div class="card-row">
-                                        <span class="label">Opiekun klienta:</span>
-                                        <span class="value">Administrator</span>
-                                    </div>
+                                    @for(item of details().services; track item.id) {
+                                        <div class="card-row">
+                                            <span class="label">{{ item?.accounting_service }}</span>
+                                            <span class="value">{{ item?.accounting_program }}</span>
+                                        </div>
+                                    }
+                                </div>
+                            </div>
+                            <div class="card">
+                                <div class="card-header">
+                                    <h3>VAT</h3>
+                                </div>
+                                <div class="card-content">
+                                    @for(item of details().vat; track item.id) {
+                                        <div class="card-row">
+                                            <span class="label">{{ item?.vat_status }}</span>
+                                            <span class="value">{{ item?.date_from }} - {{ item?.date_to }}</span>
+                                        </div>
+                                    }
                                 </div>
                             </div>
                             <div class="card">
@@ -130,7 +129,7 @@
                                 <div class="card-content">
                                     <div class="card-row">
                                         <span class="label">Skąd pozyskany klient:</span>
-                                        <span class="value">Polecenie</span>
+                                        <span class="value">{{ details().lead_source }}</span>
                                     </div>
                                 </div>
 
@@ -141,8 +140,8 @@
                                 </div>
                                 <div class="card-content">
                                     <div class="card-row">
-                                        <span class="label">:</span>
-                                        <span class="value"></span>
+                                        <!-- <span class="label">:</span> -->
+                                        <span class="value">{{ details().notes?.content }}</span>
                                     </div>
                                 </div>
                             </div>

@@ -16,8 +16,12 @@ export class ClientService {
         return this.http.get<Client[]>(`${ environment.apiUrl }/clients`)
     }
 
-    getClientDetails(id: number) {
+    getDetails(id: any) {
         return this.http.get<any>(`${ environment.apiUrl }/clients/${ id }/details`);
+    }
+
+    getFormData(id: number) {
+        return this.http.get<any>(`${ environment.apiUrl }/clients/${ id }/form-data`);
     }
 
     autocomplete(field: string, query: string) {
