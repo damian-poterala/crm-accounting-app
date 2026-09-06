@@ -112,16 +112,63 @@
                                 </div>
                             </div>
                             <div class="card">
-                                <div class="card-header">
-                                    <h3>ZUS</h3>
-                                </div>
-                                <div class="card-content">
-                                    <div class="card-row">
-                                        <span class="label">Zgłoszenie w ZUS:</span>
-                                        <span class="value">ZUA</span>
-                                    </div>
-                                </div>
+                            <div class="card-header">
+                                <h3>ZUS</h3>
                             </div>
+
+                            <div class="card-content">
+
+                                @if (details().zus?.length) {
+
+                                    <div class="zus-list">
+
+                                        <div class="zus-row zus-header">
+                                            <div>Zgłoszenie</div>
+                                            <div>Okres</div>
+                                            <div>Społ.</div>
+                                            <div>Zdrow.</div>
+                                        </div>
+
+                                        @for (zus of details().zus; track zus.registration_type_id) {
+                                            <div class="zus-row">
+                                                <div class="zus-type">
+                                                    {{ zus.registration_type }}
+                                                </div>
+                                                <div class="zus-period">
+                                                    {{ zus.date_from }} – {{ zus.date_to }}
+                                                </div>
+                                                <div
+                                                    class="zus-contribution"
+                                                    [class.is-yes]="zus.social_contribution === 'Tak'"
+                                                    [class.is-no]="zus.social_contribution === 'Nie'"
+                                                >
+                                                    <i
+                                                        class="pi"
+                                                        [class.pi-check]="zus.social_contribution === 'Tak'"
+                                                        [class.pi-times]="zus.social_contribution === 'Nie'"
+                                                    ></i>
+                                                </div>
+                                                <div
+                                                    class="zus-contribution"
+                                                    [class.is-yes]="zus.health_contribution === 'Tak'"
+                                                    [class.is-no]="zus.health_contribution === 'Nie'"
+                                                >
+                                                    <i
+                                                        class="pi"
+                                                        [class.pi-check]="zus.health_contribution === 'Tak'"
+                                                        [class.pi-times]="zus.health_contribution === 'Nie'"
+                                                    ></i>
+                                                </div>
+                                            </div>
+                                        }
+                                    </div>
+                                } @else {
+                                    <div class="card-empty">
+                                        Brak danych ZUS
+                                    </div>
+                                }
+                            </div>
+                        </div>
                             <div class="card">
                                 <div class="card-header">
                                     <h3>Pozyskanie klienta</h3>

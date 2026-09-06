@@ -173,3 +173,114 @@ span, p {
     font-weight: 600;
     text-align: right;
 }
+
+.zus-list {
+    width: 100%;
+}
+
+
+/* wspólny układ nagłówka i wierszy */
+.zus-row {
+    display: grid;
+
+    grid-template-columns:
+        minmax(0, 1fr)
+        150px
+        42px
+        52px;
+
+    align-items: center;
+
+    column-gap: 8px;
+}
+
+
+/* nagłówek */
+.zus-header {
+    min-height: 26px;
+
+    padding: 0 12px;
+
+    color: #94a3b8;
+
+    font-size: 12px;
+    font-weight: 600;
+}
+
+.zus-header > div:nth-child(n + 2) {
+    text-align: center;
+}
+
+
+/* dane */
+.zus-row:not(.zus-header) {
+    min-height: 38px;
+
+    padding: 0 12px;
+
+    border-top: 1px solid #edf1f5;
+}
+
+
+/* typ zgłoszenia */
+.zus-type {
+    min-width: 0;
+
+    color: #334155;
+
+    font-size: 12px;
+    font-weight: 500;
+
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+
+/* okres */
+.zus-period {
+    color: #64748b;
+
+    font-size: 12px;
+
+    text-align: center;
+
+    white-space: nowrap;
+}
+
+
+/* ikony */
+.zus-contribution {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    width: 24px;
+    height: 24px;
+
+    margin: 0 auto;
+
+    font-size: 12px;
+}
+
+
+/* składka opłacana */
+.zus-contribution.is-yes {
+    color: #22a06b;
+}
+
+
+/* składka nieopłacana */
+.zus-contribution.is-no {
+    color: #c3cbd5;
+}
+
+
+/* brak danych */
+.card-empty {
+    padding: 4px 12px;
+
+    color: #94a3b8;
+
+    font-size: 11px;
+}
