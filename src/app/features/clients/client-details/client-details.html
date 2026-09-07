@@ -16,9 +16,8 @@
     <p-tabs value="summary">
         <p-tablist>
             <p-tab value="summary">Podsumowanie</p-tab>
-            <p-tab value="details">Szczegóły</p-tab>
             <p-tab value="documents">Dokumenty</p-tab>
-            <p-tab value="contacts">Kontakty</p-tab>
+            <p-tab value="contacts">Kontakty i lokalizacja</p-tab>
             <p-tab value="notes">Notatki</p-tab>
             <p-tab value="tasks">Zadania</p-tab>
             <p-tab value="history">Historia</p-tab>
@@ -112,63 +111,63 @@
                                 </div>
                             </div>
                             <div class="card">
-                            <div class="card-header">
-                                <h3>ZUS</h3>
-                            </div>
+                                <div class="card-header">
+                                    <h3>ZUS</h3>
+                                </div>
 
-                            <div class="card-content">
+                                <div class="card-content">
 
-                                @if (details().zus?.length) {
+                                    @if (details().zus?.length) {
 
-                                    <div class="zus-list">
+                                        <div class="zus-list">
 
-                                        <div class="zus-row zus-header">
-                                            <div>Zgłoszenie</div>
-                                            <div>Okres</div>
-                                            <div>Społ.</div>
-                                            <div>Zdrow.</div>
-                                        </div>
-
-                                        @for (zus of details().zus; track zus.registration_type_id) {
-                                            <div class="zus-row">
-                                                <div class="zus-type">
-                                                    {{ zus.registration_type }}
-                                                </div>
-                                                <div class="zus-period">
-                                                    {{ zus.date_from }} – {{ zus.date_to }}
-                                                </div>
-                                                <div
-                                                    class="zus-contribution"
-                                                    [class.is-yes]="zus.social_contribution === 'Tak'"
-                                                    [class.is-no]="zus.social_contribution === 'Nie'"
-                                                >
-                                                    <i
-                                                        class="pi"
-                                                        [class.pi-check]="zus.social_contribution === 'Tak'"
-                                                        [class.pi-times]="zus.social_contribution === 'Nie'"
-                                                    ></i>
-                                                </div>
-                                                <div
-                                                    class="zus-contribution"
-                                                    [class.is-yes]="zus.health_contribution === 'Tak'"
-                                                    [class.is-no]="zus.health_contribution === 'Nie'"
-                                                >
-                                                    <i
-                                                        class="pi"
-                                                        [class.pi-check]="zus.health_contribution === 'Tak'"
-                                                        [class.pi-times]="zus.health_contribution === 'Nie'"
-                                                    ></i>
-                                                </div>
+                                            <div class="zus-row zus-header">
+                                                <div>Zgłoszenie</div>
+                                                <div>Okres</div>
+                                                <div>Społ.</div>
+                                                <div>Zdrow.</div>
                                             </div>
-                                        }
-                                    </div>
-                                } @else {
-                                    <div class="card-empty">
-                                        Brak danych ZUS
-                                    </div>
-                                }
+
+                                            @for (zus of details().zus; track zus.registration_type_id) {
+                                                <div class="zus-row">
+                                                    <div class="zus-type">
+                                                        {{ zus.registration_type }}
+                                                    </div>
+                                                    <div class="zus-period">
+                                                        {{ zus.date_from }} – {{ zus.date_to }}
+                                                    </div>
+                                                    <div
+                                                        class="zus-contribution"
+                                                        [class.is-yes]="zus.social_contribution === 'Tak'"
+                                                        [class.is-no]="zus.social_contribution === 'Nie'"
+                                                    >
+                                                        <i
+                                                            class="pi"
+                                                            [class.pi-check]="zus.social_contribution === 'Tak'"
+                                                            [class.pi-times]="zus.social_contribution === 'Nie'"
+                                                        ></i>
+                                                    </div>
+                                                    <div
+                                                        class="zus-contribution"
+                                                        [class.is-yes]="zus.health_contribution === 'Tak'"
+                                                        [class.is-no]="zus.health_contribution === 'Nie'"
+                                                    >
+                                                        <i
+                                                            class="pi"
+                                                            [class.pi-check]="zus.health_contribution === 'Tak'"
+                                                            [class.pi-times]="zus.health_contribution === 'Nie'"
+                                                        ></i>
+                                                    </div>
+                                                </div>
+                                            }
+                                        </div>
+                                    } @else {
+                                        <div class="card-empty">
+                                            Brak danych ZUS
+                                        </div>
+                                    }
+                                </div>
                             </div>
-                        </div>
                             <div class="card">
                                 <div class="card-header">
                                     <h3>Pozyskanie klienta</h3>
@@ -234,9 +233,55 @@
                     </div>
                 </div>
             </p-tabpanel>
-            <p-tabpanel value="details"></p-tabpanel>
             <p-tabpanel value="documents"></p-tabpanel>
-            <p-tabpanel value="contacts"></p-tabpanel>
+            <p-tabpanel value="contacts">
+                <div class="summary-layout sl-additional-info">
+                    <div class="summary-left">
+                        <h2>Kontakty i lokalizacja</h2>
+                        <div class="cards c-additional-info">
+                            <div class="card">
+                                <div class="card-header">
+                                    <h3>Kontakty</h3>
+                                </div>
+                                <div class="card-content">
+                                    <p-table [value]="contacts()">
+                                        <ng-template pTemplate="header">
+                                            <tr>
+                                                <th>Imię i nazwisko</th>
+                                                <th>Stanowisko</th>
+                                                <th>E-mail</th>
+                                                <th>Numer telefonu</th>
+                                                <th>Uwagi</th>
+                                                <th>Data utworzenia</th>
+                                                <th></th>
+                                            </tr>
+                                        </ng-template>
+                                        <ng-template pTemplate="body" let-item>
+                                            <tr>
+                                                <td>{{ item?.first_name }} {{ item?.last_name }}</td>
+                                                <td>{{ item?.position }}</td>
+                                                <td>{{ item?.email }}</td>
+                                                <td>{{ item?.phone }}</td>
+                                                <td>{{ item?.notes }}</td>
+                                                <td>{{ item?.created_at }}</td>
+                                                <td></td>
+                                            </tr>
+                                        </ng-template>
+                                    </p-table>
+                                </div>
+                            </div>
+                            <div class="card">
+                                <div class="card-header">
+                                    <h3>Lokalizacja</h3>
+                                </div>
+                                <div class="card-content">
+
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </p-tabpanel>
             <p-tabpanel value="notes"></p-tabpanel>
             <p-tabpanel value="tasks"></p-tabpanel>
             <p-tabpanel value="history"></p-tabpanel>

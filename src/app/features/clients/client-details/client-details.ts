@@ -6,8 +6,10 @@ import { TabsModule                                           } from 'primeng/ta
 import { ButtonModule                                         } from 'primeng/button';
 import { TagModule                                            } from 'primeng/tag';
 import { DialogService, DynamicDialogRef, DynamicDialogModule } from 'primeng/dynamicdialog';
+import { TableModule } from 'primeng/table';
 
 import { ClientService } from '../../../core/services/client.service';
+import { ContactService } from '../../../core/services/contact.service';
 
 import { ClientDetailsFormDialog } from '../../clients/dialogs/client-details-form-dialog/client-details-form-dialog';
 
@@ -20,6 +22,7 @@ import { ClientDetailsFormDialog } from '../../clients/dialogs/client-details-fo
     TabsModule,
     ButtonModule,
     TagModule,
+    TableModule,
   ],
   templateUrl: './client-details.html',
   styleUrl: './client-details.scss',
@@ -27,23 +30,34 @@ import { ClientDetailsFormDialog } from '../../clients/dialogs/client-details-fo
 export class ClientDetails {
   private readonly dialogService  = inject(DialogService);
   private readonly clientService = inject(ClientService);
+  private readonly contactService = inject(ContactService);
 
   private  route = inject(ActivatedRoute);
 
   clientId = this.route.snapshot.paramMap.get('id');
 
   details = signal<any>({});
+  contacts = signal<any>([]);
 
   private dialogRef ?: DynamicDialogRef | null = null;
 
   ngOnInit() {
     this.clientService.getDetails(this.clientId).subscribe({
       next: (response: any) => {
-        console.log(response);
         this.details.set(response);
-        console.log(this.details());
+        console.log('Details: ', this.details());
       },
       error: (error: any) => {
+        console.log(error);
+      }
+    });
+
+    this.contactService.getContactsPerClient(this.clientId).subscribe({
+      next: (response) => {
+        this.contacts.set(response);
+        console.log('Contacts list: ', this.contacts());
+      },
+      error: (error) => {
         console.log(error);
       }
     })
