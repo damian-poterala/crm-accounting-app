@@ -275,7 +275,34 @@
                                     <h3>Lokalizacja</h3>
                                 </div>
                                 <div class="card-content">
-
+                                    <p-table [value]="locations()">
+                                        <ng-template pTemplate="header">
+                                            <tr>
+                                                <th>Typ lokalizacji</th>
+                                                <th>Adres</th>
+                                                <th>Numer budynku</th>
+                                                <th>Numer mieszkania</th>
+                                                <th>Kod pocztowy</th>
+                                                <th>Miasto</th>
+                                                <th>Kraj</th>
+                                                <th>Data utworzenia</th>
+                                                <th></th>
+                                            </tr>
+                                        </ng-template>
+                                        <ng-template pTemplate="body" let-item>
+                                            <tr>
+                                                <td>{{ item?.address_type }}</td>
+                                                <td>{{ item?.street }}</td>
+                                                <td>{{ item?.building_number }}</td>
+                                                <td>{{ item?.apartment_number }}</td>
+                                                <td>{{ item?.postal_code }}</td>
+                                                <td>{{ item?.city }}</td>
+                                                <td>{{ item?.country }}</td>
+                                                <td>{{ item?.created_at }}</td>
+                                                <td></td>
+                                            </tr>
+                                        </ng-template>
+                                    </p-table>
                                 </div>
                             </div>
                         </div>

@@ -10,6 +10,7 @@ import { TableModule } from 'primeng/table';
 
 import { ClientService } from '../../../core/services/client.service';
 import { ContactService } from '../../../core/services/contact.service';
+import { LocationService } from '../../../core/services/location.service';
 
 import { ClientDetailsFormDialog } from '../../clients/dialogs/client-details-form-dialog/client-details-form-dialog';
 
@@ -31,6 +32,7 @@ export class ClientDetails {
   private readonly dialogService  = inject(DialogService);
   private readonly clientService = inject(ClientService);
   private readonly contactService = inject(ContactService);
+  private readonly locationService = inject(LocationService);
 
   private  route = inject(ActivatedRoute);
 
@@ -38,6 +40,7 @@ export class ClientDetails {
 
   details = signal<any>({});
   contacts = signal<any>([]);
+  locations = signal<any>([]);
 
   private dialogRef ?: DynamicDialogRef | null = null;
 
@@ -56,6 +59,16 @@ export class ClientDetails {
       next: (response) => {
         this.contacts.set(response);
         console.log('Contacts list: ', this.contacts());
+      },
+      error: (error) => {
+        console.log(error);
+      }
+    });
+
+    this.locationService.getLocationsPerClient(this.clientId).subscribe({
+      next: (response) => {
+        this.locations.set(response);
+        console.log('Locations list: ', this.locations());
       },
       error: (error) => {
         console.log(error);
