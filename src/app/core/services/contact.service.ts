@@ -13,4 +13,12 @@ export class ContactService {
     getContactsPerClient(id: any) {
         return this.http.get<any>(`${ environment.apiUrl }/contact/${ id }`);
     }
+
+    create(id: any, data: any) {
+        return this.http.post<any>(`${ environment.apiUrl }/contact/${ id }/create`, data);
+    }
+
+    remove(id: number) {
+        return this.http.delete<any>(`${ environment.apiUrl }/contact/${ id }/remove`);
+    }
 }

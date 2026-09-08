@@ -1,0 +1,53 @@
+.dialog-content {
+    display: flex;
+    flex-direction: column;
+    padding: 8px 0;
+}
+
+.dialog-footer {
+    margin-top: 24px;
+    display: flex;
+    justify-content: flex-end;
+    gap: 12px;
+}
+
+.form-section {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.form-row {
+    display: grid;
+    grid-template-columns: 80px minmax(0, 1fr);
+    align-items: center;
+    gap: 20px;
+}
+
+.form-row label,
+.form-row-full label {
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--color-text);
+}
+
+.form-row-full {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    margin-top: 8px;
+}
+
+.form-row-full textarea {
+    width: 100%;
+    min-height: 120px;
+    resize: vertical;
+}
+
+:host ::ng-deep input.ng-invalid.ng-touched {
+    border-color: #ef4444 !important;
+}
+
+:host ::ng-deep p-select.ng-invalid.ng-touched {
+    border-color: #ef4444 !important;
+}

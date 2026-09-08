@@ -24,6 +24,7 @@ import { ClientService     } from '../../../../core/services/client.service';
 
 @Component({
   selector: 'app-create-basic-client-dialog',
+  standalone: true,
   imports: [
     CommonModule,
     ReactiveFormsModule,

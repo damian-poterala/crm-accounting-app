@@ -1,18 +1,24 @@
 import { Component, inject, signal } from '@angular/core';
-import { CommonModule } from '@angular/common';
-import { ActivatedRoute } from '@angular/router';
+import { CommonModule              } from '@angular/common';
+import { ActivatedRoute            } from '@angular/router';
 
-import { TabsModule                                           } from 'primeng/tabs';
-import { ButtonModule                                         } from 'primeng/button';
-import { TagModule                                            } from 'primeng/tag';
-import { DialogService, DynamicDialogRef, DynamicDialogModule } from 'primeng/dynamicdialog';
-import { TableModule } from 'primeng/table';
+import { TabsModule                      } from 'primeng/tabs';
+import { ButtonModule                    } from 'primeng/button';
+import { TagModule                       } from 'primeng/tag';
+import { DialogService, DynamicDialogRef } from 'primeng/dynamicdialog';
+import { TableModule                     } from 'primeng/table';
+import { TooltipModule                   } from 'primeng/tooltip';
+import { ToastModule                     } from 'primeng/toast';
 
-import { ClientService } from '../../../core/services/client.service';
-import { ContactService } from '../../../core/services/contact.service';
+import { ClientService   } from '../../../core/services/client.service';
+import { ContactService  } from '../../../core/services/contact.service';
 import { LocationService } from '../../../core/services/location.service';
 
-import { ClientDetailsFormDialog } from '../../clients/dialogs/client-details-form-dialog/client-details-form-dialog';
+import { MessageService } from 'primeng/api';
+
+import { ClientDetailsFormDialog  } from '../../clients/dialogs/client-details-form-dialog/client-details-form-dialog';
+import { ClientContactFormDialog  } from '../dialogs/client-contact-form-dialog/client-contact-form-dialog';
+import { ClientLocationFormDialog } from '../dialogs/client-location-form-dialog/client-location-form-dialog';
 
 @Component({
   selector: 'app-client-details',
@@ -24,22 +30,28 @@ import { ClientDetailsFormDialog } from '../../clients/dialogs/client-details-fo
     ButtonModule,
     TagModule,
     TableModule,
+    TooltipModule,
+    ToastModule,
+  ],
+  providers: [
+    MessageService
   ],
   templateUrl: './client-details.html',
   styleUrl: './client-details.scss',
 })
 export class ClientDetails {
-  private readonly dialogService  = inject(DialogService);
-  private readonly clientService = inject(ClientService);
-  private readonly contactService = inject(ContactService);
+  private readonly dialogService   = inject(DialogService);
+  private readonly clientService   = inject(ClientService);
+  private readonly contactService  = inject(ContactService);
   private readonly locationService = inject(LocationService);
+  private readonly messageService  = inject(MessageService);
 
   private  route = inject(ActivatedRoute);
 
   clientId = this.route.snapshot.paramMap.get('id');
 
-  details = signal<any>({});
-  contacts = signal<any>([]);
+  details   = signal<any>({});
+  contacts  = signal<any>([]);
   locations = signal<any>([]);
 
   private dialogRef ?: DynamicDialogRef | null = null;
@@ -55,6 +67,11 @@ export class ClientDetails {
       }
     });
 
+    this.loadContacts();
+    this.loadLocations();
+  }
+
+  private loadContacts(): void {
     this.contactService.getContactsPerClient(this.clientId).subscribe({
       next: (response) => {
         this.contacts.set(response);
@@ -64,7 +81,9 @@ export class ClientDetails {
         console.log(error);
       }
     });
+  }
 
+  private loadLocations(): void {
     this.locationService.getLocationsPerClient(this.clientId).subscribe({
       next: (response) => {
         this.locations.set(response);
@@ -73,7 +92,7 @@ export class ClientDetails {
       error: (error) => {
         console.log(error);
       }
-    })
+    });
   }
 
   openClientDetailsFormDialog() {
@@ -94,5 +113,55 @@ export class ClientDetails {
         return;
       }
     });
+  }
+
+  openClientContactFormDialog(data ?: any) {
+    let contactObj = {};
+    if(data) {
+      contactObj = {
+        firstName: data.first_name,
+        lastName: data?.last_name,
+        positionId: data?.position_id,
+        email: data?.email,
+        phone: data?.phone
+      }
+    }
+
+    this.dialogRef = this.dialogService.open(ClientContactFormDialog, {
+      header      : 'Uzupełnij dane kontaktowe',
+      width       : '500px',
+      modal       : true,
+      closable    : true,
+      maximizable : false,
+      draggable   : false,
+      data: {
+        clientId : this.clientId,
+        data     : contactObj,
+      }
+    });
+
+    this.dialogRef?.onClose.subscribe((result: any) => {
+      if(!result) {
+        return;
+      }
+
+      this.loadContacts();
+    });
+  }
+
+  removeContact(id: number) {
+    this.contactService.remove(id).subscribe({
+      next: (response) => {
+        this.messageService.add({ key: 'remove-contact', severity: 'success', summary: 'Komunikat', detail: response?.message });
+        this.loadContacts();
+      },
+      error: (error) => {
+        this.messageService.add({ key: 'remove-contact', severity: 'error', summary: 'Komunikat', detail: error?.message });
+      }
+    })
+  }
+
+  openClientLocationFormDialog() {
+
   }
 }

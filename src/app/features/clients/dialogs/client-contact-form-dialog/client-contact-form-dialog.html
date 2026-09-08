@@ -1,0 +1,32 @@
+<form [formGroup]="form">
+    <div class="dialog-content">
+        <section class="form-section">
+            <div class="form-row">
+                <label for="">Imię:</label>
+                <input formControlName="firstName" pInputText type="text" placeholder="Wpisz imię">
+            </div>
+            <div class="form-row">
+                <label for="">Nazwisko:</label>
+                <input formControlName="lastName" pInputText type="text" placeholder="Wpisz nazwisko">
+            </div>
+            <div class="form-row">
+                <label for="">Stanowisko:</label>
+                <p-select appendTo="body" formControlName="positionId" [options]="dictionariesList()" optionLabel="label" optionValue="id" placeholder="Wybierz stanowisko"></p-select>
+            </div>
+            <div class="form-row">
+                <label for="">E-mail:</label>
+                <input formControlName="email" pInputText type="text" placeholder="Wpisz adres e-mail">
+            </div>
+            <div class="form-row">
+                <label for="">Telefon:</label>
+                <input formControlName="phone" pInputText type="text" placeholder="Wpisz numer telefonu">
+            </div>
+        </section>
+    </div>
+</form>
+<div class="dialog-footer">
+    <button pButton label="Anuluj" icon="pi pi-times" (click)="close()" severity="danger"></button>
+    <button pButton label="Zapisz" icon="pi pi-save" [loading]="saving()" [disabled]="saving()" (click)="save()" severity="info"></button>
+</div>
+
+<p-toast key="save"></p-toast>
