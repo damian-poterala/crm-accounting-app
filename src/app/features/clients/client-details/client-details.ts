@@ -14,6 +14,7 @@ import { MessageModule                   } from 'primeng/message';
 import { ClientService   } from '../../../core/services/client.service';
 import { ContactService  } from '../../../core/services/contact.service';
 import { LocationService } from '../../../core/services/location.service';
+import { FileService     } from '../../../core/services/file.service';
 
 import { MessageService } from 'primeng/api';
 
@@ -46,6 +47,7 @@ export class ClientDetails {
   private readonly clientService   = inject(ClientService);
   private readonly contactService  = inject(ContactService);
   private readonly locationService = inject(LocationService);
+  private readonly fileService     = inject(FileService);
   private readonly messageService  = inject(MessageService);
 
   private  route = inject(ActivatedRoute);
@@ -55,6 +57,7 @@ export class ClientDetails {
   details   = signal<any>({});
   contacts  = signal<any>([]);
   locations = signal<any>([]);
+  files     = signal<any>([]);
 
   private dialogRef ?: DynamicDialogRef | null = null;
 
@@ -71,6 +74,19 @@ export class ClientDetails {
 
     this.loadContacts();
     this.loadLocations();
+    this.loadFiles();
+  }
+
+  private loadFiles() {
+    this.fileService.getFiles(this.clientId).subscribe({
+      next: (response: any) => {
+        this.files.set(response);
+        console.log('Files: ', this.files());
+      },
+      error: (error: any) => {
+        console.log(error);
+      }
+    });
   }
 
   private loadContacts(): void {
@@ -215,6 +231,45 @@ export class ClientDetails {
         this.messageService.add({ key: 'remove-location', severity: 'error', summary: 'Komunikat', detail: error?.message });
       }
     });
+  }
+
+  openAddDocumentDialog() {
+
+  }
+
+  getFileIcon(file: any) {
+    const mimeType = file.mime_type?.toLowerCase();
+
+    switch (mimeType) {
+      case 'application/pdf':
+        return 'pi-file-pdf';
+
+      case 'application/msword':
+      case 'application/vnd.openxmlformats-officedocument.wordprocessingml.document':
+        return 'pi-file-word';
+
+      case 'application/vnd.ms-excel':
+      case 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet':
+        return 'pi-file-excel';
+
+      case 'image/jpeg':
+      case 'image/jpg':
+      case 'image/png':
+      case 'image/gif':
+      case 'image/webp':
+        return 'pi-image';
+
+      default:
+        return 'pi-file';
+    }
+  }
+
+  downloadFile(file: any) {
+
+  }
+
+  removeFile(file: any) {
+    
   }
 
 }

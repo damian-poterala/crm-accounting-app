@@ -269,7 +269,59 @@
                     </div>
                 </div>
             </p-tabpanel>
-            <p-tabpanel value="documents"></p-tabpanel>
+            <p-tabpanel value="documents">
+                <div>
+                    <div class="summary-layout documents-header">
+                        <div class="summary-left">
+                            <h2>Dokumenty klienta</h2>
+                        </div>
+                        <div class="summary-right">
+                            <button pButton label="Dodaj dokument" icon="pi pi-plus" class="add-document-button" (click)="openAddDocumentDialog()"></button>
+                        </div>
+                    </div>
+                    @if(files().length > 0) {
+                        <div class="documents-grid">
+                            @for(file of files(); track file.id) {
+                                <div class="document-card">
+                                    <div class="document-card-header">
+                                        <div class="file-icon">
+                                            <i class="pi" [ngClass]="getFileIcon(file)"></i>
+                                        </div>
+                                    </div>
+                                    <div class="document-name" [pTooltip]="file.original_name" tooltipPosition="top">
+                                        {{ file.original_name }}
+                                    </div>
+                                    <div class="document-meta">
+                                        <div class="meta-row">
+                                            <i class="pi pi-calendar"></i>
+                                            <span>{{ file.created_at }}</span>
+                                        </div>
+                                        <div class="meta-row">
+                                            <i class="pi pi-user"></i>
+                                            <span>Dodał: {{ file.uploaded_by }}</span>
+                                        </div>
+                                    </div>
+                                    <div class="document-actions">
+                                        <button pButton label="Pobierz" icon="pi pi-download" class="download-button" (click)="downloadFile(file)"></button>
+                                        <button pButton label="Usuń" icon="pi pi-trash" severity="danger" class="delete-button" (click)="removeFile(file)"></button>
+                                    </div>
+                                </div>
+                            }
+                        </div>
+                    } @else {
+                        <div class="empty-documents">
+                            <div class="empty-icon">
+                                <i class="pi pi-folder-open"></i>
+                            </div>
+                            <div class="empty-content">
+                                <strong>Brak dokumentów</strong>
+                                <span>Nie dodano jeszcze żadnych dokumentów do klienta.</span>
+                            </div>
+                            <button pButton label="Dodaj pierwszy dokument" icon="pi pi-plus" severity="info" (click)="openAddDocumentDialog()"></button>
+                        </div>
+                    }
+                </div>
+            </p-tabpanel>
             <p-tabpanel value="contacts">
                 <div class="summary-layout sl-additional-info">
                     <div class="summary-left">
