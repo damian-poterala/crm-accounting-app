@@ -1,16 +1,16 @@
 <div class="client-container">
     <div class="client-header">
         <div>
-            <h1>ABC Sp. z o.o.</h1>
+            <h1>{{ details().company_name }}</h1>
             <div class="client-subtitle">
-                <span>NIP: 1234567890</span>
-                <span>REGON: 123456789</span>
-                <span>Klient od: 01.03.2026</span>
+                <span>Typ działaności: {{ details().company_type }}</span>
+                <span>NIP: {{ details().nip }}</span>
+                <span>REGON: {{ details().regon }}</span>
+                <span>Klient od: {{ details().contract_signed_at }}</span>
             </div>
         </div>
         <div class="client-actions">
             <button pButton (click)="openClientDetailsFormDialog()" icon="pi pi-pencil" severity="info" label="Edytuj"></button>
-            <button pButton icon="pi pi-plus" severity="info" label="Dodaj dokument"></button>
         </div>
     </div>
     <p-tabs value="summary">
@@ -52,7 +52,17 @@
                                     <div class="card-row">
                                         <span class="label">Status współpracy:</span>
                                         <span class="value">
-                                            <p-tag severity="success" value="Aktywny"></p-tag>
+                                            @if(details().cooperation_status_key == 'active') {
+                                                <p-tag severity="success" [value]="details().cooperation_status"></p-tag>
+                                            } @else if (details().cooperation_status_key == 'services_suspended') {
+                                                <p-tag severity="danger" [value]="details().cooperation_status"></p-tag>
+                                            } @else if(details().cooperation_status_key == 'cooperation_ended') {
+                                                <p-tag severity="secondary" [value]="details().cooperation_status"></p-tag>
+                                            } @else if(details().cooperation_status_key == 'notice_period') {
+                                                <p-tag severity="warn" [value]="details().cooperation_status"></p-tag>
+                                            } @else {
+                                                <p-tag severity="info" [value]="details().cooperation_status"></p-tag>
+                                            }
                                         </span>
                                     </div>
                                     <div class="card-row">
@@ -197,26 +207,52 @@
                         <div class="summary-card">
                             <h3>Podsumowanie</h3>
                             <div class="summary-company">
-                                <h4>ABC Sp. z o.o.</h4>
-                                <p-tag severity="success" value="Aktywny"></p-tag>
+                                <h4>{{ details().company_name }}</h4>
+                                @if(details().cooperation_status_key == 'active') {
+                                    <p-tag severity="success" [value]="details().cooperation_status"></p-tag>
+                                } @else if (details().cooperation_status_key == 'services_suspended') {
+                                    <p-tag severity="danger" [value]="details().cooperation_status"></p-tag>
+                                } @else if(details().cooperation_status_key == 'cooperation_ended') {
+                                    <p-tag severity="secondary" [value]="details().cooperation_status"></p-tag>
+                                } @else if(details().cooperation_status_key == 'notice_period') {
+                                    <p-tag severity="warn" [value]="details().cooperation_status"></p-tag>
+                                } @else {
+                                    <p-tag severity="info" [value]="details().cooperation_status"></p-tag>
+                                }
+                            </div>
+                            <div class="summary-group">
+                                <label>Typ działaności</label>
+                                <span>{{ details().company_type }}</span>
+                            </div>
+                            <div class="summary-group">
+                                <label>NIP</label>
+                                <span>{{ details().nip }}</span>
                             </div>
                             <div class="summary-group">
                                 <label>REGON</label>
-                                <span>123456789</span>
+                                <span>{{ details().regon }}</span>
+                            </div>
+                            <div class="summary-group">
+                                <label>KRS</label>
+                                <span>{{ details().krs }}</span>
                             </div>
                             <div class="summary-group">
                                 <label>Klient od</label>
-                                <span>01.03.2026</span>
+                                <span>{{ details().contract_signed_at }}</span>
                             </div>
                             <hr>
                             <h4>Kontakt</h4>
                             <div class="summary-group">
+                                <label>Imię i nazwisko:</label>
+                                <span>{{ details().full_name }}</span>
+                            </div>
+                            <div class="summary-group">
                                 <label>E-mail</label>
-                                <span>biuro@abc.pl</span>
+                                <span>{{ details().email }}</span>
                             </div>
                             <div class="summary-group">
                                 <label>Telefon</label>
-                                <span>+48 600 123 456</span>
+                                <span>{{ details().phone }}</span>
                             </div>
                             <hr>
                             <h4>Adres</h4>
@@ -227,7 +263,7 @@
                             <hr>
                             <h4>Notatka</h4>
                             <p>
-                                Brak notatki
+                                {{ details().comment }}
                             </p>
                         </div>
                     </div>
@@ -244,33 +280,38 @@
                                     <h3>Kontakty</h3>
                                 </div>
                                 <div class="card-content">
-                                    <p-table [value]="contacts()" styleClass="app-table">
-                                        <ng-template pTemplate="header">
-                                            <tr>
-                                                <th>Osoba</th>
-                                                <th>Stanowisko</th>
-                                                <th>E-mail</th>
-                                                <th>Numer telefonu</th>
-                                                <th>Data utworzenia</th>
-                                                <th>
-                                                    <button (click)="openClientContactFormDialog('create')" pButton icon="pi pi-plus" severity="success" pTooltip="Dodaj nowy kontakt" tooltipPosition="left"></button>
-                                                </th>
-                                            </tr>
-                                        </ng-template>
-                                        <ng-template pTemplate="body" let-item>
-                                            <tr>
-                                                <td>{{ item?.first_name }} {{ item?.last_name }}</td>
-                                                <td>{{ item?.position }}</td>
-                                                <td>{{ item?.email }}</td>
-                                                <td>{{ item?.phone }}</td>
-                                                <td>{{ item?.created_at }}</td>
-                                                <td>
-                                                    <button pButton (click)="openClientContactFormDialog('update', item)" icon="pi pi-pencil" severity="danger" text rounded pTooltip="Edytuj" tooltipPosition="left"></button>
-                                                    <button pButton (click)="removeContact(item?.id)" icon="pi pi-trash" severity="warn" text rounded pTooltip="Usuń" tooltipPosition="left"></button>
-                                                </td>
-                                            </tr>
-                                        </ng-template>
-                                    </p-table>
+                                    <ng-container *ngIf="contacts().length > 0">
+                                        <p-table [value]="contacts()" styleClass="app-table">
+                                            <ng-template pTemplate="header">
+                                                <tr>
+                                                    <th>Osoba</th>
+                                                    <th>Stanowisko</th>
+                                                    <th>E-mail</th>
+                                                    <th>Numer telefonu</th>
+                                                    <th>Data utworzenia</th>
+                                                    <th>
+                                                        <button (click)="openClientContactFormDialog('create')" pButton icon="pi pi-plus" severity="success" pTooltip="Dodaj nowy kontakt" tooltipPosition="left"></button>
+                                                    </th>
+                                                </tr>
+                                            </ng-template>
+                                            <ng-template pTemplate="body" let-item>
+                                                <tr>
+                                                    <td>{{ item?.first_name }} {{ item?.last_name }}</td>
+                                                    <td>{{ item?.position }}</td>
+                                                    <td>{{ item?.email }}</td>
+                                                    <td>{{ item?.phone }}</td>
+                                                    <td>{{ item?.created_at }}</td>
+                                                    <td>
+                                                        <button pButton (click)="openClientContactFormDialog('update', item)" icon="pi pi-pencil" severity="danger" text rounded pTooltip="Edytuj" tooltipPosition="left"></button>
+                                                        <button pButton (click)="removeContact(item?.id)" icon="pi pi-trash" severity="warn" text rounded pTooltip="Usuń" tooltipPosition="left"></button>
+                                                    </td>
+                                                </tr>
+                                            </ng-template>
+                                        </p-table>
+                                    </ng-container>
+                                    <ng-container *ngIf="contacts().length == 0">
+                                        <p-message text="Nie zapisano kontaktów dla tego klienta" severity="warn" [style]="{ width: '100%' }"></p-message>
+                                    </ng-container>
                                 </div>
                             </div>
                             <div class="card">
@@ -278,43 +319,48 @@
                                     <h3>Lokalizacja</h3>
                                 </div>
                                 <div class="card-content">
-                                    <p-table [value]="locations()" styleClass="app-table">
-                                        <ng-template pTemplate="header">
-                                            <tr>
-                                                <th>Lokalizacja</th>
-                                                <th>Adres</th>
-                                                <th>Kod pocztowy</th>
-                                                <th>Miasto</th>
-                                                <th>Kraj</th>
-                                                <th>Data utworzenia</th>
-                                                <th>
-                                                    <button (click)="openClientLocationFormDialog('create')" pButton icon="pi pi-plus" severity="success" pTooltip="Dodaj nową lokalizację" tooltipPosition="left"></button>
-                                                </th>
-                                            </tr>
-                                        </ng-template>
-                                        <ng-template pTemplate="body" let-item>
-                                            <tr>
-                                                <td>{{ item?.address_type }}</td>
-                                                <td>
-                                                    {{ item?.street }}
-                                                    @if(item?.building_number) {
-                                                        <span> {{ item?.building_number }}</span>
-                                                    }
-                                                    @if(item?.apartment_number) {
-                                                        <span> / {{ item?.apartment_number }}</span>
-                                                    }
-                                                </td>
-                                                <td>{{ item?.postal_code }}</td>
-                                                <td>{{ item?.city }}</td>
-                                                <td>{{ item?.country }}</td>
-                                                <td>{{ item?.created_at }}</td>
-                                                <td>
-                                                    <button pButton (click)="openClientLocationFormDialog('update', item)" icon="pi pi-pencil" severity="danger" pTooltip="Edytuj" tooltipPosition="left" text rounded></button>
-                                                    <button pButton (click)="removeLocation(item?.id)" icon="pi pi-trash" severity="warn" pTooltip="Usuń" tooltip="left" text rounded></button>
-                                                </td>
-                                            </tr>
-                                        </ng-template>
-                                    </p-table>
+                                    <ng-container *ngIf="locations().length > 0">
+                                        <p-table [value]="locations()" styleClass="app-table">
+                                            <ng-template pTemplate="header">
+                                                <tr>
+                                                    <th>Lokalizacja</th>
+                                                    <th>Adres</th>
+                                                    <th>Kod pocztowy</th>
+                                                    <th>Miasto</th>
+                                                    <th>Kraj</th>
+                                                    <th>Data utworzenia</th>
+                                                    <th>
+                                                        <button (click)="openClientLocationFormDialog('create')" pButton icon="pi pi-plus" severity="success" pTooltip="Dodaj nową lokalizację" tooltipPosition="left"></button>
+                                                    </th>
+                                                </tr>
+                                            </ng-template>
+                                            <ng-template pTemplate="body" let-item>
+                                                <tr>
+                                                    <td>{{ item?.address_type }}</td>
+                                                    <td>
+                                                        {{ item?.street }}
+                                                        @if(item?.building_number) {
+                                                            <span> {{ item?.building_number }}</span>
+                                                        }
+                                                        @if(item?.apartment_number) {
+                                                            <span> / {{ item?.apartment_number }}</span>
+                                                        }
+                                                    </td>
+                                                    <td>{{ item?.postal_code }}</td>
+                                                    <td>{{ item?.city }}</td>
+                                                    <td>{{ item?.country }}</td>
+                                                    <td>{{ item?.created_at }}</td>
+                                                    <td>
+                                                        <button pButton (click)="openClientLocationFormDialog('update', item)" icon="pi pi-pencil" severity="danger" pTooltip="Edytuj" tooltipPosition="left" text rounded></button>
+                                                        <button pButton (click)="removeLocation(item?.id)" icon="pi pi-trash" severity="warn" pTooltip="Usuń" tooltip="left" text rounded></button>
+                                                    </td>
+                                                </tr>
+                                            </ng-template>
+                                        </p-table>
+                                    </ng-container>
+                                    <ng-container *ngIf="locations().length == 0">
+                                        <p-message text="Nie zapisano lokalizacji dla tego klienta" severity="warn" [style]="{ width: '100%' }"></p-message>
+                                    </ng-container>
                                 </div>
                             </div>
                         </div>

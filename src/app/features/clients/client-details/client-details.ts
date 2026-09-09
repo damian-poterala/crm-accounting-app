@@ -9,6 +9,7 @@ import { DialogService, DynamicDialogRef } from 'primeng/dynamicdialog';
 import { TableModule                     } from 'primeng/table';
 import { TooltipModule                   } from 'primeng/tooltip';
 import { ToastModule                     } from 'primeng/toast';
+import { MessageModule                   } from 'primeng/message';
 
 import { ClientService   } from '../../../core/services/client.service';
 import { ContactService  } from '../../../core/services/contact.service';
@@ -32,6 +33,7 @@ import { ClientLocationFormDialog } from '../dialogs/client-location-form-dialog
     TableModule,
     TooltipModule,
     ToastModule,
+    MessageModule,
   ],
   providers: [
     MessageService
