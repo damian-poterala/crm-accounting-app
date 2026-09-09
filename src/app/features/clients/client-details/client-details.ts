@@ -115,15 +115,17 @@ export class ClientDetails {
     });
   }
 
-  openClientContactFormDialog(data ?: any) {
+  openClientContactFormDialog(type: string, data ?: any) {
     let contactObj = {};
+
     if(data) {
       contactObj = {
-        firstName: data.first_name,
-        lastName: data?.last_name,
-        positionId: data?.position_id,
-        email: data?.email,
-        phone: data?.phone
+        id         : data.id,
+        firstName  : data.first_name,
+        lastName   : data?.last_name,
+        positionId : data?.position_id,
+        email      : data?.email,
+        phone      : data?.phone
       }
     }
 
@@ -137,6 +139,7 @@ export class ClientDetails {
       data: {
         clientId : this.clientId,
         data     : contactObj,
+        type     : type
       }
     });
 
@@ -158,10 +161,58 @@ export class ClientDetails {
       error: (error) => {
         this.messageService.add({ key: 'remove-contact', severity: 'error', summary: 'Komunikat', detail: error?.message });
       }
-    })
+    });
   }
 
-  openClientLocationFormDialog() {
+  openClientLocationFormDialog(type: string, data ?: any) {
+    let locationObj = {};
 
+    if(data) {
+      locationObj = {
+        id              : data?.id,
+        addressTypeId   : data?.address_type_id,
+        street          : data?.street,
+        buildingNumber  : data?.building_number,
+        apartmentNumber : data?.apartment_number,
+        postalCode      : data?.postal_code,
+        city            : data?.city,
+        country         : data?.country
+      }
+    }
+
+    this.dialogRef = this.dialogService.open(ClientLocationFormDialog, {
+      header      : 'Uzupełnij dane lokalizacji',
+      width       : '500px',
+      modal       : true,
+      closable    : true,
+      maximizable : false,
+      draggable   : false,
+      data: {
+        clientId : this.clientId,
+        data     : locationObj,
+        type     : type
+      }
+    });
+
+    this.dialogRef?.onClose.subscribe((result: any) => {
+      if(!result) {
+        return;
+      }
+
+      this.loadLocations();
+    });
   }
+
+  removeLocation(id: number) {
+    this.locationService.remove(id).subscribe({
+      next: (response: any) => {
+        this.messageService.add({ key: 'remove-location', severity: 'success', summary: 'Komunikat', detail: response?.message });
+        this.loadLocations();
+      },
+      error: (error) => {
+        this.messageService.add({ key: 'remove-location', severity: 'error', summary: 'Komunikat', detail: error?.message });
+      }
+    });
+  }
+
 }

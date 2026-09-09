@@ -38,11 +38,11 @@ import { ContactService } from '../../../../core/services/contact.service';
 })
 export class ClientContactFormDialog {
   private readonly dialogRef = inject(DynamicDialogRef);
-  private readonly config = inject(DynamicDialogConfig);
+  private readonly config    = inject(DynamicDialogConfig);
 
   private dictionaryService = inject(DictionaryService);
-  private contactService = inject(ContactService);
-  private messageService = inject(MessageService);
+  private contactService    = inject(ContactService);
+  private messageService    = inject(MessageService);
 
   private fb = inject(FormBuilder);
 
@@ -64,9 +64,9 @@ export class ClientContactFormDialog {
         this.dictionariesList.set(response.position);
         console.log('Position list: ', this.dictionariesList());
 
-        console.log(this.config.data?.data);
+        console.log(this.config.data?.type);
 
-        if(this.config.data?.data) {
+        if(this.config.data?.type == 'update') {
           this.form.patchValue(this.config.data?.data);
         }
       }
@@ -83,21 +83,39 @@ export class ClientContactFormDialog {
 
     this.saving.set(true);
 
-    this.contactService.create(this.config.data?.clientId, this.form.getRawValue()).subscribe({
-      next: (response: any) => {
-        this.saving.set(false);
+    if(this.config.data?.type == 'create') {
+      this.contactService.create(this.config.data?.clientId, this.form.getRawValue()).subscribe({
+        next: (response: any) => {
+          this.saving.set(false);
 
-        this.messageService.add({ key: 'save', severity: 'success', summary: 'Komunikat', detail: response?.message, life: 2000 });
+          this.messageService.add({ key: 'save', severity: 'success', summary: 'Komunikat', detail: response?.message, life: 2000 });
 
-        setTimeout(() => {
-          this.dialogRef.close(response);
-        }, 2000);
-      },
-      error: (error) => {
-        this.saving.set(false);
-        this.messageService.add({ key: 'save', severity: 'error', summary: 'Komunikat', detail: error.message });
-      }
-    })
+          setTimeout(() => {
+            this.dialogRef.close(response);
+          }, 2000);
+        },
+        error: (error) => {
+          this.saving.set(false);
+          this.messageService.add({ key: 'save', severity: 'error', summary: 'Komunikat', detail: error.message });
+        }
+      });
+    } else {
+      this.contactService.update(this.config.data?.data?.id, this.form.getRawValue()).subscribe({
+        next: (response: any) => {
+          this.saving.set(false);
+
+          this.messageService.add({ key: 'save', severity: 'success', summary: 'Komunikat', detail: response?.message, life: 2000 });
+
+          setTimeout(() => {
+            this.dialogRef.close(response);
+          }, 2000);
+        },
+        error: (error: any) => {
+          this.saving.set(false);
+          this.messageService.add({ key: 'save', severity: 'error', summary: 'Komunikat', detail: error.message });
+        }
+      })
+    }
   }
 
   close() {

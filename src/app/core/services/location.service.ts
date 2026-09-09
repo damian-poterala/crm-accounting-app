@@ -13,4 +13,16 @@ export class LocationService {
     getLocationsPerClient(id: any) {
         return this.http.get<any>(`${ environment.apiUrl }/location/${ id }`);
     }
+
+    create(id: any, data: any) {
+        return this.http.post<any>(`${ environment.apiUrl }/location/${ id }/create`, data);
+    }
+
+    update(id: any, data: any) {
+        return this.http.put<any>(`${ environment.apiUrl }/location/${ id }/update`, data);
+    }
+
+    remove(id: number) {
+        return this.http.delete<any>(`${ environment.apiUrl }/location/${ id }/remove`);
+    }
 }

@@ -253,7 +253,7 @@
                                                 <th>Numer telefonu</th>
                                                 <th>Data utworzenia</th>
                                                 <th>
-                                                    <button (click)="openClientContactFormDialog()" pButton icon="pi pi-plus" severity="success" pTooltip="Dodaj nowy kontakt" tooltipPosition="left"></button>
+                                                    <button (click)="openClientContactFormDialog('create')" pButton icon="pi pi-plus" severity="success" pTooltip="Dodaj nowy kontakt" tooltipPosition="left"></button>
                                                 </th>
                                             </tr>
                                         </ng-template>
@@ -265,8 +265,8 @@
                                                 <td>{{ item?.phone }}</td>
                                                 <td>{{ item?.created_at }}</td>
                                                 <td>
-                                                    <button pButton (click)="openClientContactFormDialog(item)" icon="pi pi-pencil" severity="warn" pTooltip="Edytuj" tooltipPosition="left"></button>
-                                                    <button pButton (click)="removeContact(item?.id)" icon="pi pi-trash" severity="warn" pTooltip="Usuń" tooltipPosition="left"></button>
+                                                    <button pButton (click)="openClientContactFormDialog('update', item)" icon="pi pi-pencil" severity="danger" text rounded pTooltip="Edytuj" tooltipPosition="left"></button>
+                                                    <button pButton (click)="removeContact(item?.id)" icon="pi pi-trash" severity="warn" text rounded pTooltip="Usuń" tooltipPosition="left"></button>
                                                 </td>
                                             </tr>
                                         </ng-template>
@@ -287,7 +287,9 @@
                                                 <th>Miasto</th>
                                                 <th>Kraj</th>
                                                 <th>Data utworzenia</th>
-                                                <th></th>
+                                                <th>
+                                                    <button (click)="openClientLocationFormDialog('create')" pButton icon="pi pi-plus" severity="success" pTooltip="Dodaj nową lokalizację" tooltipPosition="left"></button>
+                                                </th>
                                             </tr>
                                         </ng-template>
                                         <ng-template pTemplate="body" let-item>
@@ -307,8 +309,8 @@
                                                 <td>{{ item?.country }}</td>
                                                 <td>{{ item?.created_at }}</td>
                                                 <td>
-                                                    <button pButton icon="pi pi-pencil" severity="warn" pTooltip="Edytuj" tooltipPosition="left"></button>
-                                                    <button pButton icon="pi pi-trash" severity="warn" pTooltip="Usuń" tooltip="left"></button>
+                                                    <button pButton (click)="openClientLocationFormDialog('update', item)" icon="pi pi-pencil" severity="danger" pTooltip="Edytuj" tooltipPosition="left" text rounded></button>
+                                                    <button pButton (click)="removeLocation(item?.id)" icon="pi pi-trash" severity="warn" pTooltip="Usuń" tooltip="left" text rounded></button>
                                                 </td>
                                             </tr>
                                         </ng-template>

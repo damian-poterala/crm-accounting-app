@@ -18,6 +18,10 @@ export class ContactService {
         return this.http.post<any>(`${ environment.apiUrl }/contact/${ id }/create`, data);
     }
 
+    update(id: any, data: any) {
+        return this.http.put<any>(`${ environment.apiUrl }/contact/${ id }/update`, data);
+    }
+
     remove(id: number) {
         return this.http.delete<any>(`${ environment.apiUrl }/contact/${ id }/remove`);
     }

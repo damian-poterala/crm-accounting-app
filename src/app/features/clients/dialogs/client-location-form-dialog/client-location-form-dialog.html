@@ -1,1 +1,41 @@
-<p>client-location-form-dialog works!</p>
+<form [formGroup]="form">
+    <div class="dialog-content">
+        <section class="form-section">
+            <div class="form-row">
+                <label for="">Lokalizacja:</label>
+                <p-select appendTo="body" formControlName="addressTypeId" [options]="this.dictionariesList()" optionLabel="label" optionValue="id" placeholder="Wybierz typ lokalizacji"></p-select>
+            </div>
+            <div class="form-row">
+                <label for="">Ulica:</label>
+                <input pInputText formControlName="street" type="text" placeholder="Wpisz ulicę">
+            </div>
+            <div class="form-row">
+                <label for="">Numer budynku:</label>
+                <input pInputText formControlName="buildingNumber" type="text" placeholder="Wpisz numer budynku">
+            </div>
+            <div class="form-row">
+                <label for="">Numer mieszkania:</label>
+                <input pInputText formControlName="apartmentNumber" type="text" placeholder="Wpisz numer mieszkania">
+            </div>
+            <div class="form-row">
+                <label for="">Kod pocztowy:</label>
+                <input pInputText formControlName="postalCode" type="text" placeholder="Wpisz kod pocztowy">
+            </div>
+            <div class="form-row">
+                <label for="">Miasto:</label>
+                <input pInputText formControlName="city" type="text" placeholder="Wpisz miasto">
+            </div>
+            <div class="form-row">
+                <label for="">Kraj:</label>
+                <input pInputText formControlName="country" type="text" placeholder="Wpisz kraj">
+            </div>
+        </section>
+    </div>
+</form>
+<div class="dialog-footer">
+    <button pButton label="Anuluj" icon="pi pi-times" (click)="close()" severity="danger"></button>
+    <button pButton label="Zapisz" icon="pi pi-save" [loading]="saving()" [disabled]="saving()" (click)="save()" severity="info"></button>
+</div>
+
+<p-toast key="save"></p-toast>
+<p-toast key="invalid"></p-toast>
