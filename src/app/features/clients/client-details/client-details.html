@@ -276,7 +276,7 @@
                             <h2>Dokumenty klienta</h2>
                         </div>
                         <div class="summary-right">
-                            <button pButton label="Dodaj dokument" icon="pi pi-plus" class="add-document-button" (click)="openAddDocumentDialog()"></button>
+                            <button pButton label="Dodaj dokument" icon="pi pi-plus" class="add-document-button" (click)="openClientFileFormDialog()"></button>
                         </div>
                     </div>
                     @if(files().length > 0) {
@@ -288,7 +288,7 @@
                                             <i class="pi" [ngClass]="getFileIcon(file)"></i>
                                         </div>
                                     </div>
-                                    <div class="document-name" [pTooltip]="file.original_name" tooltipPosition="top">
+                                    <div class="document-name">
                                         {{ file.original_name }}
                                     </div>
                                     <div class="document-meta">
@@ -317,7 +317,7 @@
                                 <strong>Brak dokumentów</strong>
                                 <span>Nie dodano jeszcze żadnych dokumentów do klienta.</span>
                             </div>
-                            <button pButton label="Dodaj pierwszy dokument" icon="pi pi-plus" severity="info" (click)="openAddDocumentDialog()"></button>
+                            <button pButton label="Dodaj pierwszy dokument" icon="pi pi-plus" severity="info" (click)="openClientFileFormDialog()"></button>
                         </div>
                     }
                 </div>

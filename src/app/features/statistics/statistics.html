@@ -1,0 +1,104 @@
+<div class="statistics-section">
+    <div class="section-header">
+        <div>
+            <h2>Statystyki</h2>
+            <span>Statystyki klientów i pracowników</span>
+        </div>
+    </div>
+    <div class="statistics-kpi-grid">
+        <div class="statistics-card kpi-card">
+            <div class="card-header">
+                <h3>Wszyscy klienci</h3>
+                <span class="card-description">
+                    Łączna liczba klientów w systemie
+                </span>
+            </div>
+            <div class="kpi-value">
+                {{ statistics().all_clients }}
+            </div>
+        </div>
+        <div class="statistics-card kpi-card">
+            <div class="card-header">
+                <h3>Aktywni klienci</h3>
+                <span class="card-description">
+                    Klienci z aktywną współpracą
+                </span>
+            </div>
+            <div class="kpi-value">
+                {{ statistics().active_clients }}
+            </div>
+        </div>
+        <div class="statistics-card kpi-card">
+            <div class="card-header">
+                <h3>Nowi klienci w tym miesiącu</h3>
+                <span class="card-description">
+                    Klienci pozyskani w miesiącu: {{ getCurrentMonthName() }}
+                </span>
+            </div>
+            <div class="kpi-value">
+                {{ statistics().new_clients_current_month }}
+            </div>
+        </div>
+        <div class="statistics-card kpi-card">
+            <div class="card-header">
+                <h3>Suma abonamentów</h3>
+                <span class="card-description">
+                    Aktywni klienci
+                </span>
+            </div>
+            <div class="kpi-value">
+                {{ statistics().monthly_fee_sum }} PLN
+            </div>
+        </div>
+    </div>
+    <div class="statistics-charts-grid">
+        <div class="statistics-card chart-card">
+            <div class="card-header">
+                <h3>Ilość klientów pozyskanych w danym miesiącu</h3>
+                <span class="card-description">Bieżący rok</span>
+            </div>
+            <div class="chart-content">
+                <div class="chart-wrapper">
+                    <p-chart type="bar" [data]="monthChartData" [options]="monthChartOptions"></p-chart>
+                </div>
+            </div>
+        </div>
+        <div class="statistics-card chart-card">
+            <div class="card-header">
+                <h3>Status klientów</h3>
+                <span class="card-description">Podział według statusu</span>
+            </div>
+            <div class="chart-content">
+                <div class="chart-wrapper">
+                    <p-chart type="bar" [data]="cooperationStatusChartData" [options]="cooperationStatusChartOptions"></p-chart>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="statistics-charts-grid">
+        <div class="statistics-card chart-card">
+            <div class="card-header">
+                <h3>Źródło pozyskania klientów</h3>
+                <span class="card-description">Podział według źródła</span>
+            </div>
+            <div class="chart-content">
+                <div class="chart-wrapper">
+                    <p-chart type="bar" [data]="leadSourceChartData" [options]="leadSourceChartOptions"></p-chart>
+                </div>
+            </div>
+        </div>
+        <div class="statistics-card chart-card">
+            <div class="card-header">
+                <h3>Klienci według opiekuna</h3>
+                <span class="card-description">
+                    Liczba przypisanych klientów do opiekuna
+                </span>
+            </div>
+            <div class="chart-content">
+                <div class="chart-wrapper">
+                    <p-chart type="bar" [data]="managerChartData" [options]="managerChartOptions"></p-chart>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

@@ -15,6 +15,7 @@ export const routes: Routes = [
             { path: 'client/:id'  , canActivate: [authGuard], loadComponent: () => import('./features/clients/client-details/client-details')           .then(cd => cd.ClientDetails) },
             { path: 'files'       , canActivate: [authGuard], loadComponent: () => import('./features/files/files-view/files-view')                     .then(fv => fv.FilesView) },
             { path: 'reports'     , canActivate: [authGuard], loadComponent: () => import('./features/reports/reports-view/reports-view')               .then(rv => rv.ReportsView) },
+            { path: 'statistics'  , canActivate: [authGuard], loadComponent: () => import('./features/statistics/statistics')                           .then(s  => s.Statistics) },
         ]
     }
 ];

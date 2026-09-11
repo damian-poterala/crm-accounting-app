@@ -21,6 +21,7 @@ import { MessageService } from 'primeng/api';
 import { ClientDetailsFormDialog  } from '../../clients/dialogs/client-details-form-dialog/client-details-form-dialog';
 import { ClientContactFormDialog  } from '../dialogs/client-contact-form-dialog/client-contact-form-dialog';
 import { ClientLocationFormDialog } from '../dialogs/client-location-form-dialog/client-location-form-dialog';
+import { ClientFileFormDialog     } from '../dialogs/client-file-form-dialog/client-file-form-dialog';
 
 @Component({
   selector: 'app-client-details',
@@ -233,8 +234,26 @@ export class ClientDetails {
     });
   }
 
-  openAddDocumentDialog() {
+  openClientFileFormDialog() {
+    this.dialogRef = this.dialogService.open(ClientFileFormDialog, {
+      header      : 'Dodaj plik do klienta',
+      width       : '600px',
+      modal       : true,
+      closable    : true,
+      maximizable : false,
+      draggable   : false,
+      data: {
+        clientId: this.clientId
+      }
+    });
 
+    this.dialogRef?.onClose.subscribe((result: any) => {
+      if(!result) {
+        return;
+      }
+
+      this.loadFiles();
+    })
   }
 
   getFileIcon(file: any) {
@@ -265,11 +284,39 @@ export class ClientDetails {
   }
 
   downloadFile(file: any) {
+    this.fileService.download(this.clientId, file.id).subscribe({
+      next: (response) => {
+        const blob = response?.body;
 
+        if(!blob) {
+          return;
+        }
+
+        const url = window.URL.createObjectURL(blob);
+        const link = document.createElement('a');
+
+        link.href = url;
+        link.download = file.original_name;
+
+        link.click();
+
+        window.URL.revokeObjectURL(url);
+      },
+      error: (error) => {
+        console.log(error);
+      }
+    })
   }
 
   removeFile(file: any) {
-    
+    this.fileService.remove(this.clientId, file.id).subscribe({
+      next: () => {
+        this.files.update(files => files.filter((item: any) => item?.id !== file.id));
+      },
+      error: (error) => {
+        console.log(error);
+      }
+    })
   }
 
 }

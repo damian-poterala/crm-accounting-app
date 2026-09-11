@@ -91,18 +91,7 @@ export class Dashboard {
     this.loadingService.show();
     this.loadingService.show();
 
-    this.clientService.getClients().subscribe({
-      next: (response: any) => {
-        this.clientsList.set(response);
-        console.log(this.clientsList());
-      }, 
-      error: (error: any) => {
-        console.log('Błąd podczas pobierania klientów: ', error);
-      },
-      complete: () => {
-        this.loadingService.hide();
-      }
-    });
+    this.loadClients();
 
     this.dictionaryService.getDictionary().subscribe({
       next: (response: any) => {
@@ -113,6 +102,21 @@ export class Dashboard {
       }, 
       error: (error: any) => {
         console.log('Błąd podczas pobierania słowniku: ', error);
+      },
+      complete: () => {
+        this.loadingService.hide();
+      }
+    });
+  }
+
+  private loadClients() {
+    this.clientService.getClients().subscribe({
+      next: (response: any) => {
+        this.clientsList.set(response);
+        console.log(this.clientsList());
+      }, 
+      error: (error: any) => {
+        console.log('Błąd podczas pobierania klientów: ', error);
       },
       complete: () => {
         this.loadingService.hide();
@@ -207,7 +211,7 @@ export class Dashboard {
 
       this.messageService.add({ key: 'edit-client', severity: 'success', summary: 'Komunikat', detail: result.message });
 
-      this.search();
+      this.loadClients();
     });
   }
 
@@ -228,7 +232,7 @@ export class Dashboard {
 
       this.messageService.add({ key: 'create-client', severity: 'success', summary: 'Komunikat', detail: result.message });
 
-      this.search();
+      this.loadClients();
     });
   }
 
