@@ -45,6 +45,12 @@
                 <span>Kalkulator stawki</span>
             }
         </a>
+        <a routerLink="/task" routerLinkActive="active" class="nav-item">
+            <i class="pi pi-calendar" pTooltip="Zadania"></i>
+            @if(!collapsed()) {
+                <span>Zadania</span>
+            }
+        </a>
         <a routerLink="/statistics" routerLinkActive="active" class="nav-item">
             <i class="pi pi-chart-bar" pTooltip="Statystyki"></i>
             @if(!collapsed()) {

@@ -1,0 +1,68 @@
+<div class="tasks-section">
+    <div class="section-header">
+        <h2>Zadania</h2>
+        <span>Lista zadań przypisanych do użytkownika</span>
+    </div>
+    <div class="section-actions">
+        <div class="task-toolbar">
+            <div class="task-filters">
+                <div class="filter-checkbox">
+                    <p-checkbox inputId="onlyMine" [binary]="true"></p-checkbox>
+                    <label for="onlyMine">Tylko moje</label>
+                </div>
+                <p-datepicker placeholder="Data od" dateFormat="yy-mm-dd"></p-datepicker>
+                <p-datepicker placeholder="Data do" dateFormat="yy-mm-dd"></p-datepicker>
+                <button pButton label="Filtruj" icon="pi pi-filter" severity="info"></button>
+                <button pButton label="Usuń filtry" icon="pi pi-trash" severity="danger"></button>
+            </div>
+            <button pButton label="Nowe zadanie" icon="pi pi-plus" severity="success"></button>
+        </div>
+    </div>
+    <div class="week-navigation">
+        <button pButton icon="pi pi-chevron-left" severity="secondary" (click)="previosWeek()"></button>
+        <button pButton label="Dzisiaj" severity="secondary" (click)="today()"></button>
+        <div class="week-title">
+            <span>
+                {{ weekDays[0]?.dayNumber }}
+                {{ weekDays[0]?.month }}
+            </span>
+            <span>-</span>
+            <span>
+                {{ weekDays[4]?.dayNumber }}
+                {{ weekDays[4]?.month }}
+            </span>
+        </div>
+        <button pButton icon="pi pi-chevron-right" severity="secondary" (click)="nextWeek()"></button>
+    </div>
+    <div class="task-calendar">
+        @for(day of weekDays; track day.date.toISOString()) {
+            <div class="day-column">
+                <div class="day-header">
+                    <div class="day-name">
+                        {{ day.dayName }}
+                    </div>
+                    <div class="day-date">
+                        {{ day.dayNumber }} {{ day.month }}
+                    </div>
+                </div>
+                <div class="day-content">
+                    <div class="employee-column">
+                        <div class="employee-name">
+                            Pracownik 1
+                        </div>
+                    </div>
+                    <div class="employee-column">
+                        <div class="employee-name">
+                            Pracownik 2
+                        </div>
+                    </div>
+                    <div class="employee-column">
+                        <div class="employee-name">
+                            Pracownik 3
+                        </div>
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+</div>

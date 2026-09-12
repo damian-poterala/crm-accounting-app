@@ -1,0 +1,139 @@
+.tasks-section {
+    padding: 24px;
+}
+
+.section-header {
+    margin-bottom: 24px;
+}
+
+.section-header h2 {
+    margin: 0;
+    font-size: 20px;
+    font-weight: 700;
+    color: var(--color-text);
+}
+
+.section-header span {
+    display: block;
+    margin-top: 4px;
+    font-size: 12px;
+    color: var(--color-text-secondary);
+}
+
+.task-toolbar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width: 100%;
+}
+
+.tash-toolbar > button {
+    flex-shrink: 0;
+}
+
+.section-actions {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.task-filters {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.filter-checkbox {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-right: 8px;
+}
+
+.filter-checkbox label {
+    font-size: 12px;
+    color: var(--color-text);
+    cursor: pointer;
+}
+
+.week-navigation {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-top: 24px;
+    margin-bottom: 16px;
+}
+
+.week-title {
+    min-width: 180px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--color-text);
+}
+
+.task-calendar {
+    display: grid;
+    grid-template-columns: repeat(5, minmax(0, 1fr));
+    width: 100%;
+    border: 1px solid var(--color-border);
+    border-radius: 10px;
+    overflow: hidden;
+    background: #fff;
+}
+
+.day-column {
+    min-width: 0;
+    border-right: 1px solid var(--color-border);
+}
+
+.day-column:last-child {
+    border-right: none;
+}
+
+.day-header {
+    padding: 12px 14px;
+    border-bottom: 1px solid var(--color-border);
+    background: #fafafa;
+    text-align: center;
+}
+
+.day-name {
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--color-text);
+}
+
+.day-date {
+    margin-top: 3px;
+    font-size: 12px;
+    color: var(--color-text-secondary);
+}
+
+.day-content {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr)); // zmienić ilość 3 na ilość pracowników
+    min-height: 500px;
+}
+
+.employee-column {
+    min-width: 0;
+    border-right: 1px solid var(--color-border);
+}
+
+.employee-column:last-child {
+    border-right: none;
+}
+
+.employee-name {
+    padding: 10px 8px;
+    border-bottom: 1px solid var(--color-border);
+    font-size: 12px;
+    font-weight: 600;
+    text-align: center;
+    color: var(--color-text);
+    background: #fff;
+}
+
