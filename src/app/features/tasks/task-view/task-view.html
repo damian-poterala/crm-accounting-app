@@ -3,66 +3,59 @@
         <h2>Zadania</h2>
         <span>Lista zadań przypisanych do użytkownika</span>
     </div>
-    <div class="section-actions">
+    <div class="task-view">
         <div class="task-toolbar">
             <div class="task-filters">
                 <div class="filter-checkbox">
-                    <p-checkbox inputId="onlyMine" [binary]="true"></p-checkbox>
-                    <label for="onlyMine">Tylko moje</label>
+                    <p-checkbox [binary]="true" inputId="onlyMine"></p-checkbox>
+                    <label for="">Tylko moje</label>
                 </div>
                 <p-datepicker placeholder="Data od" dateFormat="yy-mm-dd"></p-datepicker>
                 <p-datepicker placeholder="Data do" dateFormat="yy-mm-dd"></p-datepicker>
                 <button pButton label="Filtruj" icon="pi pi-filter" severity="info"></button>
                 <button pButton label="Usuń filtry" icon="pi pi-trash" severity="danger"></button>
             </div>
-            <button pButton label="Nowe zadanie" icon="pi pi-plus" severity="success"></button>
+            <button pButton label="Nowe zadanie" icon="pi pi-plus" severity="info"></button>
         </div>
-    </div>
-    <div class="week-navigation">
-        <button pButton icon="pi pi-chevron-left" severity="secondary" (click)="previosWeek()"></button>
-        <button pButton label="Dzisiaj" severity="secondary" (click)="today()"></button>
-        <div class="week-title">
-            <span>
-                {{ weekDays[0]?.dayNumber }}
-                {{ weekDays[0]?.month }}
-            </span>
-            <span>-</span>
-            <span>
-                {{ weekDays[4]?.dayNumber }}
-                {{ weekDays[4]?.month }}
-            </span>
-        </div>
-        <button pButton icon="pi pi-chevron-right" severity="secondary" (click)="nextWeek()"></button>
-    </div>
-    <div class="task-calendar">
-        @for(day of weekDays; track day.date.toISOString()) {
-            <div class="day-column">
-                <div class="day-header">
-                    <div class="day-name">
-                        {{ day.dayName }}
-                    </div>
-                    <div class="day-date">
-                        {{ day.dayNumber }} {{ day.month }}
-                    </div>
-                </div>
-                <div class="day-content">
-                    <div class="employee-column">
-                        <div class="employee-name">
-                            Pracownik 1
-                        </div>
-                    </div>
-                    <div class="employee-column">
-                        <div class="employee-name">
-                            Pracownik 2
-                        </div>
-                    </div>
-                    <div class="employee-column">
-                        <div class="employee-name">
-                            Pracownik 3
-                        </div>
-                    </div>
-                </div>
+        <div class="week-navigation">
+            <button pButton icon="pi pi-chevron-left" severity="secondary" (click)="previosWeek()"></button>
+            <button pButton label="Dzisiaj" severity="secondary" (click)="today()"></button>
+            <div class="week-title">
+                <span>
+                    {{ weekDays[0]?.dayNumber }}.{{ weekDays[0]?.month }}.{{ weekDays[0]?.date?.getFullYear() }}
+                </span>
+                <span>-</span>
+                <span>{{ weekDays[4]?.dayNumber }}.{{ weekDays[4]?.month }}.{{ weekDays[0]?.date?.getFullYear() }}</span>
             </div>
-        }
+            <button pButton icon="pi pi-chevron-right" severity="secondary" (click)="nextWeek()"></button>
+        </div>
+        <div class="tash-calendar-wrapper">
+            <div class="task-calendar">
+                <div class="calendar-corner">
+
+                </div>
+                @for(day of weekDays; track day.fullDate) {
+                    <div class="calendar-day-header">
+                        <div class="day-date">
+                            {{ day.dayNumber }}.{{ day.month }}.{{ day.date.getFullYear() }}
+                        </div>
+                        <div class="day-name">
+                            {{ day.dayName }}
+                        </div>
+                    </div>
+                }
+
+                @for(employee of employees(); track employee.id) {
+                    <div class="employee-name">
+                        {{ employee.name }}
+                    </div>
+                    @for(day of weekDays; track day.fullDate) {
+                        <div class="task-cell">
+
+                        </div>
+                    }
+                }
+            </div>
+        </div>
     </div>
 </div>

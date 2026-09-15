@@ -20,120 +20,246 @@
     color: var(--color-text-secondary);
 }
 
+.task-view {
+    width: 100%;
+}
+
+
+/* =========================
+   HEADER
+========================= */
+
+.task-header {
+    margin-bottom: 24px;
+}
+
+.task-header h1 {
+    margin: 0;
+
+    font-size: 24px;
+    font-weight: 600;
+
+    color: var(--color-text);
+}
+
+.task-header p {
+    margin: 6px 0 0;
+
+    font-size: 13px;
+
+    color: var(--color-text-secondary);
+}
+
+
+/* =========================
+   TOOLBAR
+========================= */
+
 .task-toolbar {
     display: flex;
     align-items: center;
     justify-content: space-between;
+
     width: 100%;
-}
-
-.tash-toolbar > button {
-    flex-shrink: 0;
-}
-
-.section-actions {
-    display: flex;
-    align-items: center;
-    gap: 12px;
 }
 
 .task-filters {
     display: flex;
     align-items: center;
+
     gap: 8px;
 }
 
 .filter-checkbox {
     display: flex;
     align-items: center;
+
     gap: 8px;
+
     margin-right: 8px;
 }
 
 .filter-checkbox label {
     font-size: 12px;
+
     color: var(--color-text);
+
     cursor: pointer;
 }
+
+
+/* =========================
+   WEEK NAVIGATION
+========================= */
 
 .week-navigation {
     display: flex;
     align-items: center;
     justify-content: center;
+
+    gap: 8px;
+
     margin-top: 24px;
     margin-bottom: 16px;
 }
 
 .week-title {
-    min-width: 180px;
     display: flex;
-    justify-content: center;
     align-items: center;
+    justify-content: center;
+
+    min-width: 220px;
+
+    gap: 5px;
+
     font-size: 14px;
     font-weight: 600;
+
     color: var(--color-text);
 }
+
+
+/* =========================
+   CALENDAR WRAPPER
+========================= */
+
+.task-calendar-wrapper {
+    width: 100%;
+
+    overflow-x: auto;
+
+    border: 1px solid var(--color-border);
+    border-radius: 10px;
+}
+
+
+/* =========================
+   CALENDAR GRID
+========================= */
 
 .task-calendar {
     display: grid;
-    grid-template-columns: repeat(5, minmax(0, 1fr));
+
+    /*
+     * 1. kolumna = pracownik
+     *
+     * 2-6. kolumna = poniedziałek - piątek
+     */
+    grid-template-columns:
+        170px
+        repeat(5, minmax(160px, 1fr));
+
     width: 100%;
-    border: 1px solid var(--color-border);
-    border-radius: 10px;
-    overflow: hidden;
+
+    /*
+     * Zapobiega zbytniemu ściskaniu
+     * kolumn dni.
+     */
+    min-width: 970px;
+
     background: #fff;
 }
 
-.day-column {
-    min-width: 0;
-    border-right: 1px solid var(--color-border);
-}
 
-.day-column:last-child {
-    border-right: none;
-}
+/* =========================
+   TOP LEFT CORNER
+========================= */
 
-.day-header {
-    padding: 12px 14px;
-    border-bottom: 1px solid var(--color-border);
+.calendar-corner {
+    min-height: 58px;
+
     background: #fafafa;
+
+    border-right: 1px solid var(--color-border);
+    border-bottom: 1px solid var(--color-border);
+}
+
+
+/* =========================
+   DAY HEADER
+========================= */
+
+.calendar-day-header {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+
+    min-height: 58px;
+
+    padding: 8px 10px;
+
+    background: #fafafa;
+
+    border-right: 1px solid var(--color-border);
+    border-bottom: 1px solid var(--color-border);
+
     text-align: center;
 }
 
-.day-name {
-    font-size: 12px;
+
+.day-date {
+    font-size: 13px;
     font-weight: 600;
+
     color: var(--color-text);
 }
 
-.day-date {
+
+.day-name {
     margin-top: 3px;
-    font-size: 12px;
+
+    font-size: 11px;
+
     color: var(--color-text-secondary);
 }
 
-.day-content {
-    display: grid;
-    grid-template-columns: repeat(3, minmax(0, 1fr)); // zmienić ilość 3 na ilość pracowników
-    min-height: 500px;
-}
 
-.employee-column {
-    min-width: 0;
-    border-right: 1px solid var(--color-border);
-}
-
-.employee-column:last-child {
-    border-right: none;
-}
+/* =========================
+   EMPLOYEE
+========================= */
 
 .employee-name {
-    padding: 10px 8px;
-    border-bottom: 1px solid var(--color-border);
-    font-size: 12px;
-    font-weight: 600;
-    text-align: center;
-    color: var(--color-text);
+    display: flex;
+    align-items: flex-end;
+
+    min-height: 130px;
+
+    padding: 12px 8px;
+
     background: #fff;
+
+    border-right: 1px solid var(--color-border);
+    border-bottom: 1px solid var(--color-border);
+
+    font-size: 12px;
+    font-weight: 500;
+
+    color: var(--color-text);
+}
+
+
+/* =========================
+   TASK CELL
+========================= */
+
+.task-cell {
+    min-height: 130px;
+
+    padding: 8px;
+
+    background: #fff;
+
+    border-right: 1px solid var(--color-border);
+    border-bottom: 1px solid var(--color-border);
+}
+
+
+/* =========================
+   LAST COLUMN
+========================= */
+
+.task-calendar > :nth-child(6n) {
+    border-right: none;
 }
 
