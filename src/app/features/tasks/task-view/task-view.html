@@ -51,7 +51,19 @@
                     </div>
                     @for(day of weekDays; track day.fullDate) {
                         <div class="task-cell">
-
+                            @for(task of getTasksForDay(employee.id, day.fullDate); track task.id) {
+                                <div class="task-item" [class.priority-normal]="task.priority_id == 99" [class.priority-high]="task.priority_id == 100" [class.priority-urgent]="task.priority_id == 101" [attr.title]="task.priority">
+                                    <div class="task-description">
+                                        {{ task.description }}
+                                    </div>
+                                    @if(task.client) {
+                                        <div class="task-client">
+                                            <i class="pi pi-building"></i>
+                                            {{ task.client }}
+                                        </div>
+                                    }
+                                </div>
+                            }
                         </div>
                     }
                 }

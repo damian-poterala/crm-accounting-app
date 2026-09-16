@@ -8,7 +8,10 @@ import { ToastModule } from 'primeng/toast';
 
 import { MessageService } from 'primeng/api';
 
+import { Task } from '../../../core/models/task.model';
+
 import { AuthService } from '../../../core/services/auth.service';
+import { TaskService } from '../../../core/services/task.service';
 
 interface TaskDay {
   date      : Date;
@@ -37,9 +40,11 @@ interface TaskDay {
 })
 export class TaskView {
   private readonly authService = inject(AuthService);
+  private readonly taskService = inject(TaskService);
 
   currentWeekStart : Date = this.getMonday(new Date());
   weekDays         : TaskDay[] = [];
+  tasks = signal<Task[]>([]);
 
   employees = computed<any[]>(() => {
     const user = this.authService.currentUser();
@@ -55,6 +60,10 @@ export class TaskView {
 
   constructor() {
     this.generateWeek();
+  }
+
+  ngOnInit(): void {
+    this.loadTasks();
   }
 
   generateWeek(): void {
@@ -75,6 +84,14 @@ export class TaskView {
         fullDate: this.formatDate(date),
       });
     }
+  }
+
+  loadTasks(): void {
+    this.taskService.getTasksPerUser(1).subscribe({
+      next: (response: Task[]) => {
+        this.tasks.set(response);
+      }
+    })
   }
 
   previosWeek(): void {
@@ -98,6 +115,10 @@ export class TaskView {
   today(): void {
     this.currentWeekStart = this.getMonday(new Date());
     this.generateWeek();
+  }
+
+  getTasksForDay(userId: number, date: string): Task[] {
+    return this.tasks().filter((task: any) => task.user_id == userId && task.due_date == date && task.is_active == 1);
   }
 
   private getMonday(date: Date): Date {
