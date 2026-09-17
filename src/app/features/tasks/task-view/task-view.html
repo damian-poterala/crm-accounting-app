@@ -15,7 +15,7 @@
                 <button pButton label="Filtruj" icon="pi pi-filter" severity="info"></button>
                 <button pButton label="Usuń filtry" icon="pi pi-trash" severity="danger"></button>
             </div>
-            <button pButton label="Nowe zadanie" icon="pi pi-plus" severity="info"></button>
+            <button pButton (click)="openTaskFormDialog()" label="Nowe zadanie" icon="pi pi-plus" severity="info"></button>
         </div>
         <div class="week-navigation">
             <button pButton icon="pi pi-chevron-left" severity="secondary" (click)="previosWeek()"></button>

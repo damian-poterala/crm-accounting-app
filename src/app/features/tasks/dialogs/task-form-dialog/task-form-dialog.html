@@ -1,0 +1,33 @@
+<form [formGroup]="form">
+    <div class="dialog-content">
+        <section class="form-section">
+            <div class="form-row">
+                <label for="">Pracownik:</label>
+                <p-select formControlName="userId" appendTo="body" [options]="usersList()" optionLabel="username" optionValue="id" placeholder="Wybierz użytkownika"></p-select>
+            </div>
+            <div class="form-row">
+                <label for="">Klient:</label>
+                <p-autoComplete formControlName="clientId" [suggestions]="clientsList()" optionLabel="company_name" optionValue="id" (completeMethod)="searchClient($event)" placeholder="Wybierz jakiego klienta dotyczy zadanie"></p-autoComplete>
+            </div>
+            <div class="form-row">
+                <label for="">Data:</label>
+                <p-datepicker formControlName="dueDate" dataType="string" appendTo="body" dateFormat="yy-mm-dd" placeholder="Wybierz datę realizacji zadania"></p-datepicker>
+            </div>
+            <div class="form-row">
+                <label for="">Priorytet:</label>
+                <p-select formControlName="priorityId" appendTo="body" [options]="dictionariesList()" optionLabel="label" optionValue="id" placeholder="Wybierz priorytet zadania"></p-select>
+            </div>
+            <div class="form-row-full">
+                <label for="">Zadanie:</label>
+                <textarea formControlName="description" pTextarea rows="5" placeholder="Wpisz treść zadania"></textarea>
+            </div>
+        </section>
+    </div>
+</form>
+<div class="dialog-footer">
+    <button pButton label="Anuluj" icon="pi pi-times" (click)="close()" severity="danger"></button>
+    <button pButton label="Zapisz" icon="pi pi-save" (click)="save()" [loading]="saving()" [disabled]="saving()" severity="info"></button>
+</div>
+
+<p-toast key="save"   ></p-toast>
+<p-toast key="invalid"></p-toast>

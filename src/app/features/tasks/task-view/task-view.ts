@@ -5,6 +5,7 @@ import { CheckboxModule } from 'primeng/checkbox';
 import { DatePickerModule } from 'primeng/datepicker';
 import { ButtonModule } from 'primeng/button';
 import { ToastModule } from 'primeng/toast';
+import { DialogService, DynamicDialogRef } from 'primeng/dynamicdialog';
 
 import { MessageService } from 'primeng/api';
 
@@ -12,6 +13,8 @@ import { Task } from '../../../core/models/task.model';
 
 import { AuthService } from '../../../core/services/auth.service';
 import { TaskService } from '../../../core/services/task.service';
+
+import { TaskFormDialog } from '../dialogs/task-form-dialog/task-form-dialog';
 
 interface TaskDay {
   date      : Date;
@@ -41,6 +44,9 @@ interface TaskDay {
 export class TaskView {
   private readonly authService = inject(AuthService);
   private readonly taskService = inject(TaskService);
+  private readonly dialogService = inject(DialogService);
+
+  private dialogRef ?: DynamicDialogRef | null = null;
 
   currentWeekStart : Date = this.getMonday(new Date());
   weekDays         : TaskDay[] = [];
@@ -119,6 +125,25 @@ export class TaskView {
 
   getTasksForDay(userId: number, date: string): Task[] {
     return this.tasks().filter((task: any) => task.user_id == userId && task.due_date == date && task.is_active == 1);
+  }
+
+  openTaskFormDialog() {
+    this.dialogRef = this.dialogService.open(TaskFormDialog, {
+      header      : 'Utwórz nowe zadanie',
+      width       : '500px',
+      modal       : true,
+      closable    : true,
+      maximizable : false,
+      draggable   : false,
+    });
+
+    this.dialogRef?.onClose.subscribe((result: any) => {
+      if(!result) {
+        return;
+      }
+
+      this.loadTasks();
+    });
   }
 
   private getMonday(date: Date): Date {
