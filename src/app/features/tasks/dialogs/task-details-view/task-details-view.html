@@ -1,0 +1,90 @@
+<div class="task-details">
+    <div class="task-summary-header">
+        <div class="task-details-id">
+            Zadanie #{{ task().id }}
+        </div>
+        <div class="task-status" [class.completed]="task().is_complete == 1">
+            @if (task().is_complete == 1) {
+                Zakończone
+            } @else {
+                Aktywne
+            }
+        </div>
+    </div>
+    <div class="task-info-grid">
+        <div class="task-info-item">
+            <div class="task-info-label">
+                Utworzył zadanie
+            </div>
+            <div class="task-info-value">
+                <i class="pi pi-user"></i>
+                Damian Poterała
+            </div>
+        </div>
+        <div class="task-info-item">
+            <div class="task-info-label">
+                Data utworzenia zadania
+            </div>
+            <div class="task-info-value">
+                <i class="pi pi-calendar"></i>
+                {{ formatDateTimeToPl(task().created_at) }}
+            </div>
+        </div>
+        <div class="task-info-item">
+            <div class="task-info-label">
+                Przypisane do
+            </div>
+            <div class="task-info-value">
+                <i class="pi pi-user"></i>
+                {{ task().username }}
+            </div>
+        </div>
+        <div class="task-info-item">
+            <div class="task-info-label">
+                Dotyczy klienta
+            </div>
+            <div class="task-info-value">
+                @if (task().client) {
+                    <i class="pi pi-building"></i>
+                    {{ task().client }}
+                } @else {
+                    <span class="empty-value">
+                        Brak przypisanego klienta
+                    </span>
+                }
+            </div>
+        </div>
+        <div class="task-info-item">
+            <div class="task-info-label">
+                Priorytet
+            </div>
+            <div class="task-info-value">
+                <span class="priority-badge" [class.priority-normal]="task().priority === 'Normalny'" [class.priority-high]="task().priority === 'Wysoki'" [class.priority-urgent]="task().priority === 'Pilny'" [class.priority-low]="task().priority === 'Niski'">
+                    {{ task().priority }}
+                </span>
+            </div>
+        </div>
+        <div class="task-info-item">
+            <div class="task-info-label">
+                Data na wykonanie zadania
+            </div>
+            <div class="task-info-value">
+                <i class="pi pi-calendar-clock"></i>
+                {{ formatDateToPl(task().due_date) }}
+            </div>
+        </div>
+    </div>
+    <div class="task-description-section">
+        <div class="task-info-label">
+            Treść zadania
+        </div>
+        <div class="task-description">
+            {{ task().description }}
+        </div>
+    </div>
+    <div class="task-dialog-footer">
+        <button pButton type="button" label="Zakończ zadanie" icon="pi pi-check" [loading]="saving()" [disabled]="task().is_complete == 1 || saving()" (click)="completeTask()"></button>
+    </div>
+</div>
+
+<p-toast key="complete"></p-toast>

@@ -108,8 +108,6 @@ export class TaskFormDialog {
       dueDate: formatDateToYmd(formData.dueDate),
     }
 
-    console.log(data);
-
     this.taskService.create(data).subscribe({
       next: (response: any) => {
         this.saving.set(false);

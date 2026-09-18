@@ -51,6 +51,6 @@
     border-color: #ef4444 !important;
 }
 
-:host ::ng-deep p-datepicker.ng-invalid.ng-touched {
+:host ::ng-deep p-datepicker.ng-invalid.ng-touched input {
     border-color: #ef4444 !important;
 }

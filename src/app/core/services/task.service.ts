@@ -18,4 +18,12 @@ export class TaskService {
     create(data: any): Observable<any> {
         return this.http.post(`${ environment.apiUrl }/task/create`, data);
     }
+
+    remove(id: any): Observable<any> {
+        return this.http.put(`${ environment.apiUrl }/task/${ id }/remove`, null);
+    }
+
+    complete(id: any): Observable<any> {
+        return this.http.put(`${ environment.apiUrl }/task/${ id }/complete`, null);
+    }
 }

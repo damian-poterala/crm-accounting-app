@@ -14,7 +14,8 @@ import { Task } from '../../../core/models/task.model';
 import { AuthService } from '../../../core/services/auth.service';
 import { TaskService } from '../../../core/services/task.service';
 
-import { TaskFormDialog } from '../dialogs/task-form-dialog/task-form-dialog';
+import { TaskFormDialog  } from '../dialogs/task-form-dialog/task-form-dialog';
+import { TaskDetailsView } from '../dialogs/task-details-view/task-details-view';
 
 interface TaskDay {
   date      : Date;
@@ -135,6 +136,26 @@ export class TaskView {
       closable    : true,
       maximizable : false,
       draggable   : false,
+    });
+
+    this.dialogRef?.onClose.subscribe((result: any) => {
+      if(!result) {
+        return;
+      }
+
+      this.loadTasks();
+    });
+  }
+
+  openTaskDetailsDialog(item: any) {
+    this.dialogRef = this.dialogService.open(TaskDetailsView, {
+      header      : 'Szczegóły zadania',
+      width       : '500px',
+      modal       : true,
+      closable    : true,
+      maximizable : false,
+      draggable   : false,
+      data: { item }
     });
 
     this.dialogRef?.onClose.subscribe((result: any) => {
