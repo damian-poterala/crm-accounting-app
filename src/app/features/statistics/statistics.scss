@@ -80,6 +80,20 @@
     margin-bottom: 18px;
 }
 
+.statistics-charts-grid-3 {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 18px;
+    margin-bottom: 18px;
+}
+
+.statistics-charts-grid-1 {
+    display: grid;
+    grid-template-columns: repeat(1, minmax(0, 1fr));
+    gap: 18px;
+    margin-bottom: 18px;
+}
+
 .chart-card {
     min-height: 340px;
     display: flex;

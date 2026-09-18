@@ -75,6 +75,19 @@
             </div>
         </div>
     </div>
+    <div class="statistics-charts-grid-1">
+        <div class="statistics-card chart-card">
+            <div class="card-header">
+                <h3>Typy klientów</h3>
+                <span class="card-description">Liczba klientów według typu firmy</span>
+            </div>
+            <div class="chart-content">
+                <div class="chart-wrapper">
+                    <p-chart type="bar" [data]="companyTypeChartData" [options]="companyTypeChartOptions"></p-chart>
+                </div>
+            </div>
+        </div>
+    </div>
     <div class="statistics-charts-grid">
         <div class="statistics-card chart-card">
             <div class="card-header">

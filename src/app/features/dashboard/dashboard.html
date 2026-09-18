@@ -41,6 +41,7 @@
                 <ng-template pTemplate="header">
                     <tr>
                         <th>ID</th>
+                        <th></th>
                         <th>Typ firmy</th>
                         <th>Nazwa firmy</th>
                         <th>NIP</th>
@@ -50,6 +51,7 @@
                         <th>Aktywny</th>
                         <th>Opiekun</th>
                         <th>Data utworzenia</th>
+                        <th>Ilość zadań</th>
                         <th>Edytuj</th>
                         <th></th>
                     </tr>
@@ -57,6 +59,11 @@
                 <ng-template pTemplate="body" let-item>
                     <tr (click)="redirectToClientDetails(item?.id)">
                         <td>{{ item?.id }}</td>
+                        <td>
+                            @if(item?.details == 0) {
+                                <i pTooltip="Brak uzupełnionych szczegółów klienta" tooltipPosition="right" class="pi pi-exclamation-triangle no-details"></i>
+                            }
+                        </td>
                         <td>{{ item?.company_type }}</td>
                         <td>{{ item?.company_name }}</td>
                         <td>{{ item?.nip }}</td>
@@ -66,6 +73,14 @@
                         <td>{{ item?.cooperation_status }}</td>
                         <td>{{ item?.account_manager }}</td>
                         <td>{{ item?.created_at | date: 'yyyy-MM-dd' }}</td>
+                        <td>
+                            @if(item?.tasks > 0) {
+                                <!-- <p-overlaybadge [value]="item?.tasks" severity="danger">
+                                    <svg data-p-icon="calendar" size="24"></svg>
+                                </p-overlaybadge> -->
+                                <p-badge [value]="item?.tasks" severity="danger"></p-badge>
+                            }
+                        </td>
                         <td>
                             <button pButton (click)="$event.stopPropagation(); openEditBasicClientDialog(item)" icon="pi pi-pencil" severity="warn" text rounded></button>
                         </td>

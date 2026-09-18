@@ -9,7 +9,7 @@ import {
   OwnerAutocomplete, 
   CompanyTypeSelect,
   CooperationStatus,
-  Client 
+  // Client 
 } from '../../core/models';
 
 import { removeEmptyProperties } from '../../core/utils/object.utils';
@@ -32,6 +32,9 @@ import { ButtonModule                                         } from 'primeng/bu
 import { TagModule                                            } from 'primeng/tag';
 import { CheckboxModule                                       } from 'primeng/checkbox';
 import { DialogService, DynamicDialogRef, DynamicDialogModule } from 'primeng/dynamicdialog';
+import { TooltipModule                                        } from 'primeng/tooltip';
+import { BadgeModule } from 'primeng/badge';
+import { OverlayBadgeModule } from 'primeng/overlaybadge';
 
 @Component({
   selector: 'app-dashboard',
@@ -49,6 +52,9 @@ import { DialogService, DynamicDialogRef, DynamicDialogModule } from 'primeng/dy
     TagModule,
     CheckboxModule,
     DynamicDialogModule,
+    TooltipModule,
+    BadgeModule,
+    OverlayBadgeModule,
   ],
   providers: [
     DialogService,
@@ -77,7 +83,7 @@ export class Dashboard {
     cooperationStatus : [null as CooperationStatus | null],
   });
 
-  clientsList      = signal<Client[]>([]); 
+  clientsList      = signal<any[]>([]); 
   dictionariesList = signal<any>({});
 
   companyTypeList   : any = [];
@@ -113,7 +119,7 @@ export class Dashboard {
     this.clientService.getClients().subscribe({
       next: (response: any) => {
         this.clientsList.set(response);
-        console.log(this.clientsList());
+        console.log('Clients list: ', this.clientsList());
       }, 
       error: (error: any) => {
         console.log('Błąd podczas pobierania klientów: ', error);

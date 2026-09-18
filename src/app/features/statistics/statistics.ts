@@ -27,6 +27,11 @@ interface CooperationStatus {
   cooperation_status: string;
 }
 
+interface ClientByCompanyType {
+  amount: number;
+  company_type: string;
+}
+
 interface StatisticsResponse {
   all_clients: number;
   active_clients: number;
@@ -36,6 +41,7 @@ interface StatisticsResponse {
   client_by_lead_source: ClientByLeadSource[];
   client_by_month: ClientByMonth[];
   client_by_cooperation_status: CooperationStatus[];
+  client_by_company_type: ClientByCompanyType[];
 }
 
 @Component({
@@ -55,6 +61,7 @@ export class Statistics {
   leadSourceChartData : any;
   monthChartData      : any;
   cooperationStatusChartData: any;
+  companyTypeChartData: any;
 
   managerChartOptions = {
     responsive: true,
@@ -128,6 +135,24 @@ export class Statistics {
     }
   }
 
+  companyTypeChartOptions = {
+    responsive: true,
+    maintainAspectRatio: false,
+    plugins: {
+      legend: {
+        display: false
+      }
+    },
+    scales: {
+      y: {
+        beginAtZero: true,
+        ticks: {
+          precision: 0
+        }
+      }
+    }
+  }
+
   getCurrentMonthName(): string {
     const month = new Intl.DateTimeFormat('pl-PL', { month: 'long' }).format(new Date());
 
@@ -148,6 +173,7 @@ export class Statistics {
         this.prepareLeadSourceChart(response?.client_by_lead_source);
         this.prepareMonthSourceChart(response?.client_by_month);
         this.prepareCooperationStatusChart(response?.client_by_cooperation_status);
+        this.prepareCompanyTypeChart(response?.client_by_company_type);
       }, 
       error: (error) => {
         console.log(error);
@@ -196,6 +222,18 @@ export class Statistics {
       labels: data.map(item => item.cooperation_status),
       datasets: [
         {
+          label: 'Ilość',
+          data: data.map(item => item.amount)
+        }
+      ]
+    }
+  }
+
+  private prepareCompanyTypeChart(data: ClientByCompanyType[]): void {
+    this.companyTypeChartData = {
+      labels: data.map(item => item.company_type),
+      datasets: [
+        { 
           label: 'Ilość',
           data: data.map(item => item.amount)
         }

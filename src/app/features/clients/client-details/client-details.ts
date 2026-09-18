@@ -10,11 +10,13 @@ import { TableModule                     } from 'primeng/table';
 import { TooltipModule                   } from 'primeng/tooltip';
 import { ToastModule                     } from 'primeng/toast';
 import { MessageModule                   } from 'primeng/message';
+import { BadgeModule                     } from 'primeng/badge';
 
 import { ClientService   } from '../../../core/services/client.service';
 import { ContactService  } from '../../../core/services/contact.service';
 import { LocationService } from '../../../core/services/location.service';
 import { FileService     } from '../../../core/services/file.service';
+import { TaskService     } from '../../../core/services/task.service';
 
 import { MessageService } from 'primeng/api';
 
@@ -36,6 +38,7 @@ import { ClientFileFormDialog     } from '../dialogs/client-file-form-dialog/cli
     TooltipModule,
     ToastModule,
     MessageModule,
+    BadgeModule,
   ],
   providers: [
     MessageService
@@ -49,6 +52,7 @@ export class ClientDetails {
   private readonly contactService  = inject(ContactService);
   private readonly locationService = inject(LocationService);
   private readonly fileService     = inject(FileService);
+  private readonly taskService     = inject(TaskService);
   private readonly messageService  = inject(MessageService);
 
   private  route = inject(ActivatedRoute);
@@ -59,6 +63,9 @@ export class ClientDetails {
   contacts  = signal<any>([]);
   locations = signal<any>([]);
   files     = signal<any>([]);
+  tasks     = signal<any>([]);
+
+  savingTask = signal<any>(false);
 
   private dialogRef ?: DynamicDialogRef | null = null;
 
@@ -76,6 +83,7 @@ export class ClientDetails {
     this.loadContacts();
     this.loadLocations();
     this.loadFiles();
+    this.loadTasks();
   }
 
   private loadFiles() {
@@ -112,6 +120,18 @@ export class ClientDetails {
         console.log(error);
       }
     });
+  }
+
+  private loadTasks(): void {
+    this.taskService.getTaskPerClient(this.clientId).subscribe({
+      next: (response: any) => {
+        this.tasks.set(response);
+        console.log('Tasks list: ', this.tasks());
+      },
+      error: (error: any) => {
+        console.log(error);
+      }
+    })
   }
 
   openClientDetailsFormDialog() {
@@ -319,4 +339,19 @@ export class ClientDetails {
     })
   }
 
+  completeTask(id: any) {
+    this.savingTask.set(true);
+
+    this.taskService.complete(id).subscribe({
+      next: (response) => {
+        this.savingTask.set(false);
+        this.messageService.add({ key: 'complete-task', severity: 'success', summary: 'Komunikat', detail: response?.message });
+        this.loadTasks();
+      },
+      error: (error) => {
+        this.savingTask.set(false);
+        this.messageService.add({ key: 'complete-task', severity: 'error', summary: 'Komunikat', detail: error?.message });
+      }
+    })
+  }
 }

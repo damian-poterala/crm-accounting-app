@@ -15,6 +15,10 @@ export class TaskService {
         return this.http.get<any>(`${ environment.apiUrl }/task/${ id }`);
     }
 
+    getTaskPerClient(id: any): Observable<any> {
+        return this.http.get<any>(`${ environment.apiUrl }/task/client/${ id }`);
+    }
+
     create(data: any): Observable<any> {
         return this.http.post(`${ environment.apiUrl }/task/create`, data);
     }
