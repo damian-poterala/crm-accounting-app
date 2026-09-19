@@ -13,4 +13,8 @@ export class UserService {
     getUsers() {
         return this.http.get(`${ environment.apiUrl }/users`);
     }
+
+    getDashboardInformation() {
+        return this.http.get(`${ environment.apiUrl }/users/dashboard`);
+    }
 }
