@@ -9,8 +9,14 @@
         </button>
     </div>
     <nav class="sidebar-nav">
+        <a routerLink="/user-dashboard" routerLinkActive="active" class="nav-item">
+            <i class="pi pi-home" pTooltip="Pulpit pracownika"></i>
+            @if(!collapsed()) {
+                <span>Pulpit pracownika</span>
+            }
+        </a>
         <a routerLink="/dashboard" routerLinkActive="active" class="nav-item">
-            <i class="pi pi-home" pTooltip="Lista klientów"></i>
+            <i class="pi pi-list" pTooltip="Lista klientów"></i>
             @if(!collapsed()) {
                 <span>Lista klientów</span>
             }

@@ -44,7 +44,7 @@ export class Login {
         console.log(response);
         this.authService.saveTokens(response.accessToken, response.refreshToken);
         this.authService.setCurrentUser(response.user);
-        this.router.navigate(['/dashboard']);
+        this.router.navigate(['/user-dashboard']);
       },
       error: (error: any) => {
         console.error(error);

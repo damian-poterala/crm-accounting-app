@@ -13,7 +13,11 @@ export class ClientService {
     private http = inject(HttpClient);
 
     getClients() {
-        return this.http.get<Client[]>(`${ environment.apiUrl }/clients`)
+        return this.http.get<Client[]>(`${ environment.apiUrl }/clients`);
+    }
+
+    getClientsPerUser() {
+        return this.http.get<any[]>(`${ environment.apiUrl }/clients/user`);
     }
 
     getDetails(id: any) {

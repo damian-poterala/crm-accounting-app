@@ -20,58 +20,94 @@
     color: var(--color-text-secondary);
 }
 
-.files-grid {
+.documents-grid {
     display: grid;
     grid-template-columns: repeat(4, minmax(0, 1fr));
-    gap: 20px;
+    gap: 18px;
 }
 
-.file-card {
-    min-height: 220px;
+.document-card {
+    min-width: 0;
+    min-height: 210px;
     display: flex;
     flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    padding: 24px;
+    padding: 18px;
     background: #fff;
     border: 1px solid var(--color-border);
-    border-radius: 12px;
-    transition: transform .2s ease, box-shadow .2s ease, border-color .2s ease;
+    border-radius: 10px;
+    transition: border-color .2s ease, box-shadow .2s ease, transform .2s ease;
 }
 
-.file-card:hover {
-    transform: translateY(-2px);
+.document-card:hover {
+    transform: translateY(-1px);
     border-color: rgba(18, 59, 102, .25);
-    box-shadow: 0 8px 24px rgba(0, 0, 0, .06);
+    box-shadow: 0 6px 18px rgba(0, 0, 0, .05);
+}
+
+.document-card-header {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    margin-bottom: 16px;
 }
 
 .file-icon {
-    width: 72px;
-    height: 72px;
+    width: 48px;
+    height: 48px;
     display: flex;
     align-items: center;
     justify-content: center;
-    margin-bottom: 16px;
-    border-radius: 12px;
+    border-radius: 9px;
     background: rgba(18, 59, 102, .08);
     color: var(--color-primary);
 }
 
 .file-icon i {
-    font-size: 36px;
+    font-size: 25px;
+} 
+
+.document-name {
+    overflow: hidden;
+    margin-bottom: 12px;
+    font-size: 13px;
+    font-weight: 600;
+    line-height: 1.4;
+    color: var(--color-text);
+    white-space: nowrap;
+    text-overflow: ellipsis;
 }
 
-.file-name {
-    min-height: 38px;
+.document-meta {
+    display: flex;
+    flex-direction: column;
+    gap: 7px;
+    margin-bottom: auto;
+}
+
+.meta-row {
+    min-width: 0;
     display: flex;
     align-items: center;
-    margin-bottom: 18px;
-    font-size: 12px;
-    font-weight: 600;
-    color: var(--color-text);
-    text-align: center;
+    gap: 7px;
+    font-size: 11px;
+    color: var(--color-text-secondary);
 }
 
-.download-button {
-    width: 110px;
+.meta-row {
+    flex: 0 0 14px;
+    width: 14px;
+    font-size: 11px;
+}
+
+.meta-row span {
+    // overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+}
+
+.document-actions {
+    display: flex;
+    grid-template-columns: 1fr 1fr;
+    gap: 8px;
+    margin-top: 18px;
 }

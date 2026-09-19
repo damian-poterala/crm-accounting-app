@@ -10,6 +10,7 @@ export const routes: Routes = [
     {
         path: '', canActivate: [authGuard], loadComponent: () => import('./layout/main-layout/main-layout').then(m => m.MainLayout),
         children: [
+            { path: 'user-dashboard', canActivate: [authGuard], loadComponent: () => import('./features/user-dashboard/user-dashboard').then(ud => ud.UserDashboard) },
             { path: 'dashboard'   , canActivate: [authGuard], loadComponent: () => import('./features/dashboard/dashboard')                             .then(d => d.Dashboard) },
             { path: 'declarations', canActivate: [authGuard], loadComponent: () => import('./features/declarations/declarations-view/declarations-view').then(dv => dv.DeclarationsView) },
             { path: 'client/:id'  , canActivate: [authGuard], loadComponent: () => import('./features/clients/client-details/client-details')           .then(cd => cd.ClientDetails) },

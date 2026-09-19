@@ -18,6 +18,8 @@ import { LocationService } from '../../../core/services/location.service';
 import { FileService     } from '../../../core/services/file.service';
 import { TaskService     } from '../../../core/services/task.service';
 
+import { formatDateTimeToPl } from '../../../core/utils/formatDateTimeToPl.utils';
+
 import { MessageService } from 'primeng/api';
 
 import { ClientDetailsFormDialog  } from '../../clients/dialogs/client-details-form-dialog/client-details-form-dialog';
@@ -56,6 +58,8 @@ export class ClientDetails {
   private readonly messageService  = inject(MessageService);
 
   private  route = inject(ActivatedRoute);
+
+ readonly formatDateTimeToPl = formatDateTimeToPl;
 
   clientId = this.route.snapshot.paramMap.get('id');
 

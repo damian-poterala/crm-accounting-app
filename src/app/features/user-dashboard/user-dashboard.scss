@@ -1,0 +1,255 @@
+.user-dashboard-section {
+    padding: 24px;
+}
+
+.section-header {
+    margin-bottom: 24px;
+}
+
+.section-header h2 {
+    margin: 0;
+    font-size: 20px;
+    font-weight: 700;
+    color: var(--color-text);
+}
+
+.section-header span {
+    display: block;
+    margin-top: 4px;
+    font-size: 12px;
+    color: var(--color-text-secondary);
+}
+
+.user-dashboard {
+    padding: 24px 40px 40px;
+}
+
+.user-dashboard-header {
+    margin-bottom: 24px;
+
+    h1 {
+        margin: 0;
+        font-size: 24px;
+        font-weight: 600;
+        color: var(--color-text);
+    }
+
+    p {
+        margin: 5px 0 0;
+        font-size: 13px;
+        color: var(--color-text-secondary);
+    }
+}
+
+.user-dashboard-layout {
+    display: grid;
+    grid-template-columns: minmax(320px, 0.85fr) minmax(0, 2fr);
+    gap: 20px;
+    align-items: stretch;
+}
+
+.user-dashboard-content {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.user-dashboard-card {
+    min-width: 0;
+    overflow: hidden;
+    border: 1px solid var(--color-border);
+    border-radius: 16px;
+    background: #fff;
+    box-shadow: 0 1px 2px rgb(15 23 42 / 4%);
+}
+
+.clients-card {
+    height: 100%;
+}
+
+.user-dashboard-card-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+    padding: 18px 22px;
+    border-bottom: 1px solid var(--color-border);
+
+    h2 {
+        margin: 0;
+        font-size: 15px;
+        font-weight: 600;
+        color: var(--color-text);
+    }
+}
+
+.card-link {
+    padding: 0;
+    border: 0;
+    background: transparent;
+    font-size: 12px;
+    font-weight: 500;
+    color: #4f8fd8;
+    cursor: pointer;
+
+    &:hover {
+        text-decoration: underline;
+    }
+}
+
+/* KLIENCI */
+
+.table-wrapper {
+    overflow-x: auto;
+}
+
+.clients-table {
+    width: 100%;
+    border-collapse: collapse;
+
+    th,
+    td {
+        padding: 14px 22px;
+        text-align: left;
+        border-bottom: 1px solid #eef1f5;
+    }
+
+    th {
+        font-size: 10px;
+        font-weight: 600;
+        letter-spacing: 0.04em;
+        text-transform: uppercase;
+        color: var(--color-text-secondary);
+    }
+
+    td {
+        font-size: 13px;
+        color: var(--color-text);
+    }
+
+    tbody tr:last-child td {
+        border-bottom: 0;
+    }
+}
+
+.client-name {
+    font-weight: 500;
+}
+
+.client-email {
+    margin-top: 3px;
+    font-size: 11px;
+    color: var(--color-text-secondary);
+}
+
+.status-badge,
+.priority-badge {
+    display: inline-flex;
+    align-items: center;
+    white-space: nowrap;
+    padding: 4px 8px;
+    border-radius: 5px;
+    font-size: 11px;
+    font-weight: 500;
+}
+
+.status-badge.active {
+    background: #edf7f0;
+    color: #4f8a61;
+}
+
+/* ZADANIA */
+
+.tasks-list {
+    padding: 0 22px;
+}
+
+.task-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+    padding: 15px 0;
+    border-bottom: 1px solid #eef1f5;
+
+    &:last-child {
+        border-bottom: 0;
+    }
+}
+
+.task-main {
+    min-width: 0;
+}
+
+.task-title {
+    overflow: hidden;
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--color-text);
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.task-meta {
+    margin-top: 4px;
+    font-size: 11px;
+    color: var(--color-text-secondary);
+}
+
+.priority-badge {
+    background: #f1f2f3;
+    color: #6b7280;
+}
+
+.priority-badge.priority-high {
+    background: #fff7d6;
+    color: #92761c;
+}
+
+.priority-badge.priority-urgent {
+    background: #fff0f0;
+    color: #b85c5c;
+}
+
+/* WYKRESY */
+
+.charts-grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 20px;
+}
+
+.chart-content {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 250px;
+    padding: 20px;
+}
+
+/* RESPONSYWNOŚĆ */
+
+@media (max-width: 1100px) {
+    .dashboard-layout {
+        grid-template-columns: 1fr;
+    }
+
+    .clients-card {
+        height: auto;
+    }
+}
+
+@media (max-width: 700px) {
+    .dashboard {
+        padding: 20px;
+    }
+
+    .charts-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .dashboard-card-header {
+        align-items: flex-start;
+        flex-direction: column;
+    }
+}
