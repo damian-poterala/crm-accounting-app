@@ -69,5 +69,11 @@
                 <span>Raporty</span>
             }
         </a>
+        <a routerLink="/import-clients" routerLinkActive="active" class="nav-item">
+            <i class="pi pi-file-import" pTooltip="Import klientów"></i>
+            @if(!collapsed()) {
+                <span>Import klientów</span>
+            }
+        </a>
     </nav>
 </aside>

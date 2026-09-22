@@ -18,6 +18,7 @@ export const routes: Routes = [
             { path: 'reports'     , canActivate: [authGuard], loadComponent: () => import('./features/reports/reports-view/reports-view')               .then(rv => rv.ReportsView) },
             { path: 'statistics'  , canActivate: [authGuard], loadComponent: () => import('./features/statistics/statistics')                           .then(s  => s.Statistics) },
             { path: 'task'        , canActivate: [authGuard], loadComponent: () => import('./features/tasks/task-view/task-view')                       .then(tv => tv.TaskView) },
+            { path: 'import-clients', canActivate: [authGuard], loadComponent: () => import('./features/clients/clients-import/clients-import')         .then(ci => ci.ClientsImport) },
         ]
     }
 ];
