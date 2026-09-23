@@ -13,6 +13,8 @@ import { ClientImportRow } from '../../../core/models/client-import.model';
 import { DictionaryService } from '../../../core/services/dictionary.service';
 import { UserService } from '../../../core/services/user.service';
 
+import * as XLSX from 'xlsx';
+
 @Component({
   selector: 'app-clients-import',
   imports: [
@@ -32,11 +34,28 @@ export class ClientsImport {
   private readonly userService = inject(UserService);
 
   readonly selectedFile = signal<File | null>(null);
-  readonly rows = signal<ClientImportRow[]>([]);
-  readonly showPreview = signal(false);
+  readonly rows         = signal<ClientImportRow[]>([]);
+  readonly showPreview  = signal(false);
   
   dictionariesList = signal<any>({});
-  usersList = signal<any[]>([]);
+  usersList        = signal<any[]>([]);
+
+  private readonly excelHeaders = [
+    'Typ klienta',
+    'Nazwa firmy',
+    'Imię',
+    'Nazwisko',
+    'NIP',
+    'REGON',
+    'KRS',
+    'PESEL',
+    'E-mail',
+    'Telefon',
+    'Płatnik VAT',
+    'Status współpracy',
+    'Opiekun',
+    'Uwagi'
+  ]
 
   ngOnInit() {
     this.dictionaryService.getDictionary().subscribe({
@@ -72,7 +91,11 @@ export class ClientsImport {
     return this.invalidRows > 0;
   }
 
-  onFileSelected(event: Event): void {
+  getRowErrors(row: ClientImportRow): string {
+    return Object.values(row.errors).join('\n');
+  }
+
+  async onFileSelected(event: Event): Promise<void> {
     const input = event.target as HTMLInputElement;
     const file = input.files?.[0];
 
@@ -80,9 +103,142 @@ export class ClientsImport {
       return;
     }
 
-    this.selectedFile.set(file);
-    this.loadMockData();
-    this.showPreview.set(true);
+    try {
+      const rows = await this.readExcelFile(file);
+
+      this.selectedFile.set(file);
+      this.rows.set(rows);
+      this.showPreview.set(true);
+    } catch (error) {
+      console.log('Excel import error: ', error);
+    }
+  }
+
+  private async readExcelFile(file: File): Promise<ClientImportRow[]> {
+    const arrayBuffer = await file.arrayBuffer();
+    const workbook = XLSX.read(arrayBuffer, { cellDates: false });
+
+    const sheetName = workbook.SheetNames[0];
+    const worksheet = workbook.Sheets[sheetName];
+
+    if(!worksheet) {
+      throw new Error('Nie znaleziono arkusza w pliku Excel');
+    }
+
+    const data = XLSX.utils.sheet_to_json<unknown[]>(worksheet, { 
+      header: 1,
+      defval: '',
+      raw: false,
+      blankrows: false, 
+    });
+
+    if(!data.length) {
+      throw new Error('Arkusz "Klienci" jest pusty.');
+    }
+
+    const headers = data[0].map(value => String(value).trim());
+
+    this.validateExcelHeaders(headers);
+
+    const rows = data.slice(1).filter(row => this.hasExcelData(row));
+
+    return rows.map((row, index) => {
+      const client: ClientImportRow = {
+        id                 : index + 1,
+        company_type       : this.mapCompanyType(row[0]), 
+        company_name       : this.toStringValue(row[1]),
+        first_name         : this.toStringValue(row[2]),
+        last_name          : this.toStringValue(row[3]),
+        nip                : this.toStringValue(row[4]),
+        regon              : this.toStringValue(row[5]),
+        krs                : this.toStringValue(row[6]),
+        pesel              : this.toStringValue(row[7]),
+        email              : this.toStringValue(row[8]),
+        phone              : this.toStringValue(row[9]),
+        is_vat_payer       : this.mapVatPayer(row[10]),
+        cooperation_status : this.mapCooperationStatus(row[11]),
+        account_manager_id : this.mapAccountManager(row[12]),
+        notes              : this.toStringValue(row[13]),
+        errors             : {},
+        valid              : false,
+      }
+
+      this.validateRowData(client);
+
+      return client;
+    });
+  }
+
+  private hasExcelData(row: unknown[]): boolean {
+    return row.some(value => {
+      if(value == null || value == undefined) {
+        return false;
+      }
+
+      return String(value).trim() != '';
+    });
+  }
+
+  private validateExcelHeaders(headers: string[]): void {
+    if(headers.length !== this.excelHeaders.length) {
+      throw new Error(`Nieprawidłowa liczba kolumn. Oczekiwano ${ this.excelHeaders.length }, znaleziono ${ headers.length }.`);
+    }
+
+    this.excelHeaders.forEach((header, index) => {
+      if(headers[index] != header) {
+        throw new Error(`Nieprawidłowa nazwa kolumn ${ index + 1 }. Oczekiwano "${ header }", znaleziono "${ headers[index] || '(pusta)' }".`);
+      }
+    });
+  }
+
+  private toStringValue(value: unknown): string {
+    if(value == null || value == undefined) {
+      return '';
+    }
+
+    return String(value).trim();
+  }
+
+  private mapCompanyType(value: unknown): string {
+    const label = this.toStringValue(value);
+
+    const option = this.dictionariesList().company_type?.find((item: any) => item?.label == label);
+
+    return option?.value ?? label;
+  }
+
+  private mapCooperationStatus(value: unknown): string {
+    const label = this.toStringValue(value);
+
+    const option = this.dictionariesList().cooperation_status?.find((item: any) => item?.label == label);
+
+    return option?.value ?? label;
+  }
+
+  private mapVatPayer(value: unknown): boolean | null {
+    const normalized = this.toStringValue(value).toLowerCase();
+
+    if(normalized == 'tak') {
+      return true;
+    }
+
+    if(normalized == 'nie') {
+      return false;
+    }
+
+    return null;
+  }
+
+  private mapAccountManager(value: unknown): number | null {
+    const username = this.toStringValue(value);
+
+    if(!username) {
+      return null;
+    }
+
+    const user = this.usersList().find(item => item.username == username);
+
+    return user?.id ?? null;
   }
 
   changeFile(): void {
@@ -103,53 +259,6 @@ export class ClientsImport {
     }
 
     console.log('Client import: ', this.rows());
-  }
-
-  private loadMockData(): void {
-    const rows: ClientImportRow[] = [
-      {
-        id: 1,
-        company_type: 'limited_company',
-        company_name: 'ABC Sp. z o.o.',
-        first_name: '',
-        last_name: '',
-        nip: '1234563218',
-        regon: '123456789',
-        krs: '0000123456',
-        pesel: '',
-        email: 'kontakt@abc.pl',
-        phone: '123456789',
-        is_vat_payer: true,
-        cooperation_status: 'active',
-        account_manager_id: 1,
-        notes: '',
-        errors: {},
-        valid: true,
-      },
-      {
-        id: 2,
-        company_type: '',
-        company_name: 'XYZ Sp. z o.o.',
-        first_name: '',
-        last_name: '',
-        nip: '',
-        regon: '',
-        krs: '',
-        pesel: '',
-        email: 'xyz.pl',
-        phone: '',
-        is_vat_payer: true,
-        cooperation_status: 'active',
-        account_manager_id: 2,
-        notes: '',
-        errors: {},
-        valid: false,
-      },
-    ];
-
-    rows.forEach(row => this.validateRowData(row));
-
-    this.rows.set(rows);
   }
 
   validateRow(row: ClientImportRow): void {
@@ -244,21 +353,12 @@ export class ClientsImport {
       errors['nip'] = 'NIP musi zawierać dokładnie 10 cyfr.';
       return;
     }
-
-    const weights = [6, 5, 7, 2, 3, 4, 5, 6, 7];
-
-    const checksum = weights.reduce((sum, weight, index) => sum + Number(value[index]) * weight, 0) % 11;
-
-    if(checksum === 10 || checksum !== Number(value[9])) {
-      errors['nip'] = 'Nieprawidłowy numer NIP.';
-    }
   }
 
   private validateRegon(row: ClientImportRow, errors: Record<string, string>) {
     const value = row.regon?.trim() ?? '';
 
     if (!value) {
-      errors['regon'] = 'REGON jest wymagany';
       return;
     }
 
@@ -266,45 +366,103 @@ export class ClientsImport {
       errors['regon'] = 'REGON musi zawierać dokładnie 9 cyfr.';
       return;
     }
-
-    const weights = [8, 9, 2, 3, 4, 5, 6, 7, 8];
-
-    const checksum = weights.reduce((sum, weight, index) => sum + Number(value[index]) * weight, 0) % 11 % 10;
-
-    if (checksum !== Number(value[8])) {
-      errors['regon'] = 'Nieprawidłowy numer REGON.';
-    }
   }
 
   private validateKrs(row: ClientImportRow, errors: Record<string, string>) {
+    const value = row.krs?.trim() ?? '';
 
+    if(!value) {
+      return;
+    }
+
+    if(!/^\d{10}$/.test(value)) {
+      errors['krs'] = 'KRS musi zawierać dokładnie 10 cyfr.';
+    }
   }
 
   private validatePesel(row: ClientImportRow, errors: Record<string, string>) {
+    const value = row.pesel?.trim() ?? '';
 
+    if(!value) {
+      return;
+    }
+
+    if(!/^\d{11}$/.test(value)) {
+      errors['pesel'] = 'PESEL musi zawierać dokładnie 11 cyfr.';
+    }
   }
 
   private validateEmail(row: ClientImportRow, errors: Record<string, string>) {
+    const value = row.email?.trim() ?? '';
 
+    if(!value) {
+      return;
+    }
+
+    if(value.length > 255) {
+      errors['email'] = 'E-mail może mieć maksymalnie 255 znaków.';
+      return;
+    }
+
+    const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+    if(!emailPattern.test(value)) {
+      errors['email'] = 'Nieprawidłowy adres e-mail.';
+    }
   }
 
   private validatePhone(row: ClientImportRow, errors: Record<string, string>) {
+    const value = row.phone?.trim() ?? '';
 
+    if(!value) {
+      return;
+    }
+
+    if(value.length > 20) {
+      errors['phone'] = 'Telefon może mieć maksymalnie 20 znaków.';
+      return;
+    }
+
+    if(!/^[0-9+()\-\s]+$/.test(value)) {
+      errors['phone'] = 'Nieprawidłowy format numeru telefonu.';
+    }
   }
 
   private validateVatPayer(row: ClientImportRow, errors: Record<string, string>) {
-
+    if(typeof row.is_vat_payer !== 'boolean') {
+      errors['is_vat_payer'] = 'Określ czy klient jest płatnikiem VAT.';
+    } 
   }
 
   private validateCooperationStatus(row: ClientImportRow, errors: Record<string, string>) {
+    if(!row.cooperation_status) {
+      errors['cooperation_status'] = 'Status współpracy jest wymagany.';
+      return;
+    }
 
+    const exists = this.dictionariesList().cooperation_status?.some((item: any) => item.value == row.cooperation_status);
+
+    if(!exists) {
+      errors['cooperation_status'] = 'Wybrany status współpracy nie istnieje.';
+    }
   }
 
   private validateAccountManager(row: ClientImportRow, errors: Record<string, string>) {
+    if(!row.account_manager_id) {
+      errors['account_manager_id'] = 'Opiekun klienta jest wymagany.';
+      return;
+    }
 
+    const exists = this.usersList().some((item: any) => item.id === row.account_manager_id);
+
+    if(!exists) {
+      errors['account_manager_id'] = 'Wybrany opiekun nie istnieje.';
+    }
   }
 
   private validateNotes(row: ClientImportRow, errors: Record<string, string>) {
-
+    if(typeof row.notes !== 'string') {
+      errors['notes'] = 'Nieprawidłowa wartość uwag.';
+    }
   }
 }

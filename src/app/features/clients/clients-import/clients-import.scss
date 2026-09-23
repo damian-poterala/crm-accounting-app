@@ -218,6 +218,25 @@
     border-top: 1px solid var(--color-border);
 }
 
+.import-cell {
+    display: flex;
+    flex-direction: column;
+    gap: 3px;
+}
+
+.cell-error {
+    font-size: 10px;
+    line-height: 1.2;
+    color: #c75b5b;
+    white-space: normal;
+}
+
+.import-cell checkbox {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
 @media (max-width: 700px) {
     .client-import-section {
         padding: 16px;

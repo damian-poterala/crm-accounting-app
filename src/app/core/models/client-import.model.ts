@@ -10,7 +10,7 @@ export interface ClientImportRow {
     pesel: string;
     email: string;
     phone: string;
-    is_vat_payer: boolean;
+    is_vat_payer: boolean | null;
     cooperation_status: string;
     account_manager_id: number | null;
     notes: string;
