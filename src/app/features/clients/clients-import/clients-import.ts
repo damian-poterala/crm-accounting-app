@@ -7,16 +7,20 @@ import { ButtonModule } from 'primeng/button';
 import { TagModule } from 'primeng/tag';
 import { InputTextModule } from 'primeng/inputtext';
 import { SelectModule } from 'primeng/select';
+import { ToastModule } from 'primeng/toast';
 
 import { ClientImportRow } from '../../../core/models/client-import.model';
 
 import { DictionaryService } from '../../../core/services/dictionary.service';
 import { UserService } from '../../../core/services/user.service';
 
+import { MessageService } from 'primeng/api';
+
 import * as XLSX from 'xlsx';
 
 @Component({
   selector: 'app-clients-import',
+  standalone: true,
   imports: [
     FormsModule,
 
@@ -25,13 +29,18 @@ import * as XLSX from 'xlsx';
     TagModule,
     InputTextModule,
     SelectModule,
+    ToastModule,
+  ],
+  providers: [
+    MessageService
   ],
   templateUrl: './clients-import.html',
   styleUrl: './clients-import.scss',
 })
 export class ClientsImport {
   private readonly dictionaryService = inject(DictionaryService);
-  private readonly userService = inject(UserService);
+  private readonly userService       = inject(UserService);
+  private readonly messageService    = inject(MessageService);
 
   readonly selectedFile = signal<File | null>(null);
   readonly rows         = signal<ClientImportRow[]>([]);
@@ -91,6 +100,10 @@ export class ClientsImport {
     return this.invalidRows > 0;
   }
 
+  get canImport(): boolean {
+    return this.rows().length > 0 && !this.hasErrors;
+  }
+
   getRowErrors(row: ClientImportRow): string {
     return Object.values(row.errors).join('\n');
   }
@@ -104,13 +117,30 @@ export class ClientsImport {
     }
 
     try {
+      const fileExtension = file.name.split('.').pop()?.toLowerCase();
+
+      if(fileExtension !== 'xlsx' && fileExtension !== 'xls') {
+        this.messageService.add({ severity: 'error', summary: 'Błąd importu', detail: 'Nieprawidłowy format pliku. Wybierz plik XLSX lub XLS.' });
+      }
+
       const rows = await this.readExcelFile(file);
+
+      if(rows.length == 0) {
+        this.messageService.add({ severity: 'warn', summary: 'Brak danych', detail: 'Wybrany plik nie zawiera żadnych rekordów do importu.' });
+        
+        input.value = '';
+        return;
+      }
 
       this.selectedFile.set(file);
       this.rows.set(rows);
       this.showPreview.set(true);
     } catch (error) {
       console.log('Excel import error: ', error);
+
+      this.messageService.add({ severity: 'error', summary: 'Błąd importu', detail: error instanceof Error ? error.message : 'Nie udało się odczytać pliku Excel.' });
+      
+      input.value = '';
     }
   }
 
@@ -142,30 +172,77 @@ export class ClientsImport {
 
     const rows = data.slice(1).filter(row => this.hasExcelData(row));
 
-    return rows.map((row, index) => {
+    const clients = rows.map((row, index) => {
       const client: ClientImportRow = {
-        id                 : index + 1,
-        company_type       : this.mapCompanyType(row[0]), 
-        company_name       : this.toStringValue(row[1]),
-        first_name         : this.toStringValue(row[2]),
-        last_name          : this.toStringValue(row[3]),
-        nip                : this.toStringValue(row[4]),
-        regon              : this.toStringValue(row[5]),
-        krs                : this.toStringValue(row[6]),
-        pesel              : this.toStringValue(row[7]),
-        email              : this.toStringValue(row[8]),
-        phone              : this.toStringValue(row[9]),
-        is_vat_payer       : this.mapVatPayer(row[10]),
-        cooperation_status : this.mapCooperationStatus(row[11]),
-        account_manager_id : this.mapAccountManager(row[12]),
-        notes              : this.toStringValue(row[13]),
-        errors             : {},
-        valid              : false,
-      }
+        id: index + 1,
+        company_type: this.mapCompanyType(row[0]),
+        company_name: this.toStringValue(row[1]),
+        first_name: this.toStringValue(row[2]),
+        last_name: this.toStringValue(row[3]),
+        nip: this.toStringValue(row[4]),
+        regon: this.toStringValue(row[5]),
+        krs: this.toStringValue(row[6]),
+        pesel: this.toStringValue(row[7]),
+        email: this.toStringValue(row[8]),
+        phone: this.toStringValue(row[9]),
+        is_vat_payer: this.mapVatPayer(row[10]),
+        cooperation_status: this.mapCooperationStatus(row[11]),
+        account_manager_id: this.mapAccountManager(row[12]),
+        notes: this.toStringValue(row[13]),
+        errors: {},
+        valid: false,
+      };
 
       this.validateRowData(client);
-
       return client;
+    });
+
+    this.validateDuplicates(clients);
+    return clients;
+  }
+
+  private validateDuplicates(rows: ClientImportRow[]): void {
+    this.validateDuplicateField(rows, 'nip', 'NIP');
+    this.validateDuplicateField(rows, 'regon', 'REGON');
+    this.validateDuplicateField(rows, 'krs', 'KRS');
+  }
+
+  private validateDuplicateField(rows: ClientImportRow[], field: 'nip' | 'regon' | 'krs', label: string) {
+    const duplicateMessage = `Duplikat ${ label } w pliku importowym.`;
+
+    rows.forEach(row => {
+      if(row.errors[field] == duplicateMessage) {
+        delete row.errors[field];
+      }
+    });
+    
+    const values = new Map<string, ClientImportRow[]>();
+
+    rows.forEach(row => {
+      const value = row[field];
+
+      if(!value) {
+        return;
+      }
+
+      const existing = values.get(value) ?? [];
+      existing.push(row);
+      values.set(value, existing);
+    });
+
+    values.forEach(duplicateRows => {
+      if(duplicateRows.length < 2) {
+        return;
+      }
+
+      duplicateRows.forEach(row => {
+        row.errors[field] = duplicateMessage;
+        row.valid = false;
+      });
+    });
+
+    rows.forEach(row => {
+      row.valid = Object.keys(row.errors).length == 0;
     });
   }
 
@@ -253,6 +330,15 @@ export class ClientsImport {
     this.rows.set([]);
   }
 
+  downloadTemplate(): void {
+    const link = document.createElement('a');
+    
+    link.href = '/templates/clients-import-template.xlsx';
+    link.download = 'clients-import-template.xlsx';
+
+    link.click();
+  }
+
   importClients(): void {
     if(this.hasErrors) {
       return;
@@ -264,7 +350,10 @@ export class ClientsImport {
   validateRow(row: ClientImportRow): void {
     this.validateRowData(row);
 
-    this.rows.update(rows => [...rows]);
+    this.rows.update(rows => {
+      this.validateDuplicates(rows);
+      return [...rows];
+    })
   }
 
   private validateRowData(row: ClientImportRow): void {

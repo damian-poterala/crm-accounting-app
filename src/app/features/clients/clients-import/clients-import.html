@@ -9,12 +9,13 @@
                 <div class="upload-icon">
                     <i class="pi pi-file-excel"></i>
                 </div>
-                <h3>Wybierz plik Excel</h3>
+                <h3>Importuj klinetów z pliku Excel</h3>
                 <p>
-                    Wybierz plik XLS lub XLS zawierający dane klientów.
+                    Pobierz szablon, uzupełnij dane klientów, a następnie wgraj go tutaj, aby rozpocząć import.
                 </p>
                 <input #fileInput type="file" accept=".xlsx,.xls" hidden (change)="onFileSelected($event)" />
                 <button pButton label="Wybierz plik" icon="pi pi-upload" (click)="fileInput.click()"></button>
+                <button pButton label="Pobierz szablon" icon="pi pi-download" text severity="secondary" class="template-button" (click)="downloadTemplate()"></button>
             </div>
         </article>
     } 
@@ -225,8 +226,10 @@
             </div>
             <footer class="client-import-card-footer">
                 <button pButton label="Anuluj" severity="secondary" text (click)="cancelImport()"></button>
-                <button pButton label="Importuj klientów" icon="pi pi-upload" [disabled]="hasErrors" (click)="importClients()"></button>
+                <button pButton label="Importuj klientów" icon="pi pi-upload" [disabled]="!canImport" (click)="importClients()"></button>
             </footer>
         </article>
     }
 </div>
+
+<p-toast></p-toast>
