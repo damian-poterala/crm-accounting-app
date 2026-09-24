@@ -32,20 +32,54 @@
                 </div>
                 <button pButton label="Zmień plik" icon="pi pi-refresh" text (click)="changeFile()"></button>
             </header>
-            <div class="import-summary">
-                <div class="summary-item">
-                    <span>Wszystkie rekordy</span>
-                    <strong>{{ rows().length }}</strong>
+            @if(!isImporting() && !importFinished()) {
+                <div class="import-summary">
+                    <div class="summary-item">
+                        <span>Wszystkie rekordy</span>
+                        <strong>{{ rows().length }}</strong>
+                    </div>
+                    <div class="summary-item summary-valid">
+                        <span>Poprawne</span>
+                        <strong>{{ validRows }}</strong>
+                    </div>
+                    <div class="summary-item summary-invalid">
+                        <span>Błędne</span>
+                        <strong>{{ invalidRows }}</strong>
+                    </div>
                 </div>
-                <div class="summary-item summary-valid">
-                    <span>Poprawne</span>
-                    <strong>{{ validRows }}</strong>
+            }
+
+            @if(isImporting()) {
+                <div class="import-progress">
+                    <div class="import-progress-header">
+                        <span>Importowanie klientów...</span>
+                        <strong>{{ importProgress() }} / {{ importTotal() }}</strong>
+                    </div>
+                    <div class="import-progress-bar">
+                        <div class="import-progress-value" [style.width.%]="importTotal() ? (importProgress() / importTotal()) * 100 : 0"></div>
+                    </div>
                 </div>
-                <div class="summary-item summary-invalid">
-                    <span>Błędne</span>
-                    <strong>{{ invalidRows }}</strong>
+            }
+
+            @if(importFinished()) {
+                <div class="import-result">
+                    <div class="import-result-summary">
+                        <div>
+                            <span>Przetworzono</span>
+                            <strong>{{ importTotal() }}</strong>
+                        </div>
+                        <div class="result-success">
+                            <span>Zaimportowano</span>
+                            <strong>{{ importTotal() - importErrors().length }}</strong>
+                        </div>
+                        <div class="result-error">
+                            <span>Błędy</span>
+                            <strong>{{ importErrors().length }}</strong>
+                        </div>
+                    </div>
                 </div>
-            </div>
+            }
+
             <div class="import-table-wrapper">
                 <p-table [value]="rows()" styleClass="app-table import-table">
                     <ng-template pTemplate="header">
@@ -226,7 +260,7 @@
             </div>
             <footer class="client-import-card-footer">
                 <button pButton label="Anuluj" severity="secondary" text (click)="cancelImport()"></button>
-                <button pButton label="Importuj klientów" icon="pi pi-upload" [disabled]="!canImport" (click)="importClients()"></button>
+                <button pButton label="Importuj klientów" icon="pi pi-upload" [loading]="isImporting()" [disabled]="!canImport || isImporting()" (click)="importClients()"></button>
             </footer>
         </article>
     }

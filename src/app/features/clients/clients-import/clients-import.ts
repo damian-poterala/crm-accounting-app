@@ -2,6 +2,8 @@ import { Component, inject, signal } from '@angular/core';
 
 import { FormsModule } from '@angular/forms';
 
+import { firstValueFrom } from 'rxjs';
+
 import { TableModule } from 'primeng/table';
 import { ButtonModule } from 'primeng/button';
 import { TagModule } from 'primeng/tag';
@@ -9,10 +11,12 @@ import { InputTextModule } from 'primeng/inputtext';
 import { SelectModule } from 'primeng/select';
 import { ToastModule } from 'primeng/toast';
 
-import { ClientImportRow } from '../../../core/models/client-import.model';
+import { ClientImportRow   } from '../../../core/models/client-import.model';
+import { ClientImportError } from '../../../core/models/client-import.model';
 
 import { DictionaryService } from '../../../core/services/dictionary.service';
 import { UserService } from '../../../core/services/user.service';
+import { ClientService } from '../../../core/services/client.service';
 
 import { MessageService } from 'primeng/api';
 
@@ -40,7 +44,14 @@ import * as XLSX from 'xlsx';
 export class ClientsImport {
   private readonly dictionaryService = inject(DictionaryService);
   private readonly userService       = inject(UserService);
-  private readonly messageService    = inject(MessageService);
+  private readonly clientService     = inject(ClientService);
+  private readonly messageService    = inject(MessageService)
+  
+  readonly isImporting    = signal(false);
+  readonly importProgress = signal(0);
+  readonly  importTotal   = signal(0);
+  readonly importErrors   = signal<ClientImportError[]>([]);
+  readonly importFinished = signal(false);
 
   readonly selectedFile = signal<File | null>(null);
   readonly rows         = signal<ClientImportRow[]>([]);
@@ -191,6 +202,7 @@ export class ClientsImport {
         notes: this.toStringValue(row[13]),
         errors: {},
         valid: false,
+        imported: false,
       };
 
       this.validateRowData(client);
@@ -325,9 +337,18 @@ export class ClientsImport {
   }
 
   cancelImport(): void {
+    if(this.isImporting()) {
+      return;
+    }
+
     this.selectedFile.set(null);
     this.showPreview.set(false);
     this.rows.set([]);
+  
+    this.importFinished.set(false);
+    this.importErrors.set([]);
+    this.importProgress.set(0);
+    this.importTotal.set(0);
   }
 
   downloadTemplate(): void {
@@ -339,12 +360,75 @@ export class ClientsImport {
     link.click();
   }
 
-  importClients(): void {
-    if(this.hasErrors) {
+  async importClients(): Promise<void> {
+    if(!this.canImport || this.isImporting()) {
       return;
     }
 
-    console.log('Client import: ', this.rows());
+    const rows = this.rows();
+
+    this.isImporting.set(true);
+    this.importFinished.set(false);
+    this.importErrors.set([]);
+    this.importProgress.set(0);
+    this.importTotal.set(rows.length);
+
+    for(let i = 0; i < rows.length; i++) {
+      const row = rows[i];
+
+      try {
+        await firstValueFrom(
+          this.clientService.importClient({
+            companyType: row.company_type,
+            companyName: row.company_name,
+            firstName: row.first_name,
+            lastName: row.last_name,
+            nip: row.nip,
+            regon: row.regon,
+            krs: row.krs,
+            pesel: row.pesel,
+            email: row.email,
+            phone: row.phone,
+            isVatPayer: row.is_vat_payer,
+            cooperationStatus: row.cooperation_status,
+            accountManager: row.account_manager_id,
+            notes: row.notes,
+          })
+        );
+
+        row.imported = true;
+      } catch (error: any) {
+        this.importErrors.update(errors => [
+          ...errors,
+          {
+            row: row.id,
+            companyName: row.company_name,
+            nip: row.nip,
+            error: this.getImportErrorMessage(error)
+          }
+        ]);
+
+        row.imported = false;
+      }
+
+      this.importProgress.set(i + 1);
+      this.rows.update(currentRows => [...currentRows]);
+    }
+
+    this.isImporting.set(false);
+    this.importFinished.set(true);
+  }
+
+  private getImportErrorMessage(error: any): string {
+    if(error?.error?.message) {
+      return error.error.message;
+    }
+
+    if(error?.message) {
+      return error.message;
+    }
+
+    return 'Nie udało się zaimportować klienta.';
   }
 
   validateRow(row: ClientImportRow): void {

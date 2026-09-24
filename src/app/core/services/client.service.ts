@@ -47,4 +47,23 @@ export class ClientService {
     updateDetails(data: any) {
         return this.http.put<any>(`${ environment.apiUrl }/clients/${ data.clientId }/details`, data);
     }
+
+    importClient(data: {
+        companyType: string;
+        companyName: string;
+        firstName: string;
+        lastName: string;
+        nip: string;
+        regon: string;
+        krs: string;
+        pesel: string;
+        email: string;
+        phone: string;
+        isVatPayer: boolean | null;
+        cooperationStatus: string;
+        accountManager: number | null;
+        notes: string;
+    }) {
+        return this.http.post<{ success: boolean; client_id: number; }>(`${ environment.apiUrl }/clients/import`, data);
+    }
 }

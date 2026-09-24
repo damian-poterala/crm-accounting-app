@@ -18,4 +18,12 @@ export interface ClientImportRow {
         [key: string]: string
     },
     valid: boolean;
+    imported: boolean;
+}
+
+export interface ClientImportError {
+    row: number;
+    companyName: string;
+    nip: string;
+    error: string;
 }
