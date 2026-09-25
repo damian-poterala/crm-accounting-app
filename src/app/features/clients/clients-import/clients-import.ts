@@ -12,7 +12,6 @@ import { SelectModule } from 'primeng/select';
 import { ToastModule } from 'primeng/toast';
 
 import { ClientImportRow   } from '../../../core/models/client-import.model';
-import { ClientImportError } from '../../../core/models/client-import.model';
 
 import { DictionaryService } from '../../../core/services/dictionary.service';
 import { UserService } from '../../../core/services/user.service';
@@ -49,9 +48,14 @@ export class ClientsImport {
   
   readonly isImporting    = signal(false);
   readonly importProgress = signal(0);
-  readonly  importTotal   = signal(0);
-  readonly importErrors   = signal<ClientImportError[]>([]);
+  readonly importTotal   = signal(0);
   readonly importFinished = signal(false);
+
+  readonly importResult = signal<{
+    processed: number;
+    imported: number;
+    errors: number;
+  } | null>(null);
 
   readonly selectedFile = signal<File | null>(null);
   readonly rows         = signal<ClientImportRow[]>([]);
@@ -202,7 +206,6 @@ export class ClientsImport {
         notes: this.toStringValue(row[13]),
         errors: {},
         valid: false,
-        imported: false,
       };
 
       this.validateRowData(client);
@@ -346,7 +349,6 @@ export class ClientsImport {
     this.rows.set([]);
   
     this.importFinished.set(false);
-    this.importErrors.set([]);
     this.importProgress.set(0);
     this.importTotal.set(0);
   }
@@ -369,9 +371,12 @@ export class ClientsImport {
 
     this.isImporting.set(true);
     this.importFinished.set(false);
-    this.importErrors.set([]);
+    this.importResult.set(null);
     this.importProgress.set(0);
     this.importTotal.set(rows.length);
+
+    let importedCount = 0;
+    let errorCount = 0;
 
     for(let i = 0; i < rows.length; i++) {
       const row = rows[i];
@@ -396,24 +401,29 @@ export class ClientsImport {
           })
         );
 
-        row.imported = true;
-      } catch (error: any) {
-        this.importErrors.update(errors => [
-          ...errors,
-          {
-            row: row.id,
-            companyName: row.company_name,
-            nip: row.nip,
-            error: this.getImportErrorMessage(error)
-          }
-        ]);
+        importedCount++;
 
-        row.imported = false;
+        this.rows.update(currentRows => currentRows.filter((currentRow: any) => currentRow.id !== row.id));
+      } catch (error: any) {
+        errorCount++;
+
+        const message = this.getImportErrorMessage(error);
+        const field = this.getImportErrorField(message);
+
+        row.errors[field] = message;
+        row.valid = false;
+
+        this.rows.update(currentRows => [...currentRows]);
       }
 
       this.importProgress.set(i + 1);
-      this.rows.update(currentRows => [...currentRows]);
     }
+
+    this.importResult.set({
+      processed: rows.length,
+      imported: importedCount,
+      errors: errorCount,
+    });
 
     this.isImporting.set(false);
     this.importFinished.set(true);
@@ -429,6 +439,24 @@ export class ClientsImport {
     }
 
     return 'Nie udało się zaimportować klienta.';
+  }
+
+  private getImportErrorField(message: string): string {
+    if(message.includes('NIP')) { return 'nip'; }
+    if(message.includes('REGON')) { return 'regon'; }
+    if(message.includes('KRS')) { return 'krs'; }
+    if(message.includes('PESEL')) { return 'pesel'; }
+    if(message.includes('E-mail')) { return 'email'; }
+    if(message.includes('Telefon')) { return 'phone'; }
+    if(message.includes('Typ klienta')) { return 'company_type'; }
+    if(message.includes('Nazwa firmy')) { return 'company_name'; }
+    if(message.includes('Imię')) { return 'first_name'; }
+    if(message.includes('Nazwisko')) { return 'last_name'; }
+    if(message.includes('Płatnik VAT')) { return 'is_vat_payer'; }
+    if(message.includes('Status współpracy')) { return 'cooperation_status'; }
+    if(message.includes('Opiekun')) { return 'account_manager_id'; }
+    
+    return '_import';
   }
 
   validateRow(row: ClientImportRow): void {
