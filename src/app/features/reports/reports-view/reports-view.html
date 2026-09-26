@@ -5,4 +5,26 @@
             <span>Dostępne raporty do wygenerowania</span>
         </div>
     </div>
+    <div class="report-grid">
+        <div class="documents-grid">
+            @for(report of reports; track report.id) {
+                <div class="document-card">
+                    <div class="document-card-header">
+                        <div class="file-icon">
+                            <i class="pi pi-file-excel"></i>
+                        </div>
+                    </div>
+                    <div class="document-name" [title]="report.title">
+                        {{ report.title }}
+                    </div>
+                    <div class="report-description">
+                        {{ report.description }}
+                    </div>
+                    <div class="document-actions">
+                        <button pButton label="Pobierz" icon="pi pi-download" severity="info" class="download-button" [loading]="downloadingReportId() === report.id" [disabled]="downloadingReportId() !== null" (click)="downloadReport(report)"></button>
+                    </div>
+                </div>
+            }
+        </div>
+    </div>
 </div>
