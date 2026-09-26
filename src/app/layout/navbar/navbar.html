@@ -1,16 +1,58 @@
 <header class="navbar">
     <div class="navbar-left">
-        <!-- <div class="navbar-logo">
-            <img src="./logo.png" alt="HiveTax">
-        </div> -->
+        <div class="navbar-search">
+            <i class="pi pi-search search-icon"></i>
+            <p-autoComplete
+                [ngModel]="selectedClient()"
+                (ngModelChange)="selectedClient.set($event)"
+                [suggestions]="clientSuggestions()"
+                (completeMethod)="searchClients($event)"
+                (onSelect)="openClient($event)"
+                optionLabel="company_name"
+                placeholder="Szukaj klienta po nazwie, NIP lub REGON..."
+                [minLength]="2"
+                [delay]="300"
+                [forceSelection]="false"
+                [showClear]="true"
+                appendTo="body"
+                styleClass="navbar-autocomplete"
+                inputStyleClass="navbar-search-input"
+            >
+                <ng-template let-client pTemplate="item">
+                    <div class="client-search-result">
+                        <div class="client-search-icon">
+                            <i class="pi pi-building"></i>
+                        </div>
+                        <div class="client-search-info">
+                            <span class="client-search-name">
+                                {{ client.company_name }}
+                            </span>
+                            <span class="client-search-meta">
+                                NIP: {{ client.nip || 'Brak NIP' }}
+                            </span>
+                        </div>
+                        <i class="pi pi-arrow-up-right client-search-arrow"></i>
+                    </div>
+                </ng-template>
+            </p-autoComplete>
+        </div>
     </div>
     <div class="navbar-right">
         <div class="navbar-user">
-            <button pButton type="button" class="navbar-user-button" (click)="menu.toggle($event)">
-                {{ user()?.username }}
-                <i class="pi pi-angle-down"></i>
-            </button>
-            <p-menu #menu [popup]="true" [model]="items"></p-menu>
+            <div class="navbar-user-info">
+                <span class="navbar-username">
+                    {{ user()?.username }}
+                </span>
+                <span class="navbar-user-label">Konto użytkownika</span>
+            </div>
+            <div class="navbar-user-icon">
+                <i class="pi pi-user"></i>
+            </div>
         </div>
+        <div class="navbar-divider"></div>
+        <button pButton class="navbar-logout-button" (click)="logout()">
+            <i class="pi pi-sign-out"></i>
+            <span>Wyloguj</span>
+        </button>
     </div>
 </header>

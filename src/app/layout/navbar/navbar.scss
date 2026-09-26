@@ -1,69 +1,254 @@
 :host {
     display: block;
+    min-width: 0;
 }
 
 .navbar {
     height: 64px;
     padding: 0 24px;
     display: flex;
-    justify-content: space-between;
     align-items: center;
-    background: var(--color-background);
+    justify-content: space-between;
+    gap: 24px;
+    background: #fff;
     border-bottom: 1px solid var(--color-border);
 }
 
 .navbar-left {
     display: flex;
     align-items: center;
-    gap: 30px;
     flex: 1;
+    min-width: 0;
+}
+
+.navbar-search {
+    position: relative;
+    display: flex;
+    align-items: center;
+    width: 100%;
+    max-width: 520px;
+    min-width: 0;
+}
+
+.search-icon {
+    position: absolute;
+    left: 14px;
+    top: 50%;
+    transform: translateY(-50%);
+    z-index: 2;
+    font-size: 14px;
+    color: #8492a6;
+    pointer-events: none;
+}
+
+:host ::ng-deep .navbar-autocomplete {
+    display: block;
+    width: 100%;
+    min-width: 0;
+}
+
+:host ::ng-deep .navbar-autocomplete .p-autocomplete-input {
+    display: block;
+    width: 100%;
+    height: 38px;
+    box-sizing: border-box;
+    padding: 0 14px 0 38px;
+    border: 1px solid #dce3ed;
+    border-radius: 9px;
+    background: #f8fafc;
+    color: var(--color-text);
+    font-size: 12px;
 }
 
 .navbar-right {
     display: flex;
     align-items: center;
-    gap: 1rem;
-}
-
-.navbar-logo {
-    display: flex;
-    align-items: center;
-
-    img {
-        height: 32px;
-        width: auto;
-        display: block;
-    }
-}
-
-.navbar-search {
-    flex: 1;
-}
-
-.navbar_-actions {
+    gap: 18px;
     flex-shrink: 0;
+}
+
+.navbar-user {
     display: flex;
     align-items: center;
     gap: 12px;
 }
 
-.navbar-user-button {
+.navbar-user-info {
     display: flex;
-    align-items: center;
-    gap: .65rem;
-    height: 42px;
-    padding: 0 18px;
-    border-radius: var(--radius-md);
-    border: 1px solid var(--color-border);
-    background: #fff;
-    color: var(--color-primary);
-    font-weight: 600;
-    cursor: pointer;
-    transition: .2s;
+    flex-direction: column;
+    align-items: flex-end;
+    gap: 3px;
 }
 
-.navbar-user-button:hover {
-    color: var(--color-primary) !important;
-    border-color: var(--color-primary) !important;
-    background: #f8fbff !important;  
+.navbar-username {
+    font-size: 13px;
+    font-weight: 600;
+    line-height: 1.2;
+    color: var(--color-text);
+}
+
+.navbar-user-label {
+    font-size: 11px;
+    line-height: 1.2;
+    color: var(--color-text-secondary);
+}
+
+.navbar-user-icon {
+    width: 38px;
+    height: 38px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    background: rgba(18, 59, 102, .08);
+    color: var(--color-primary);
+}
+
+.navbar-user-icon i {
+    font-size: 16px;
+}
+
+.navbar-divider {
+    width: 1px;
+    height: 30px;
+    background: var(--color-border);
+}
+
+.navbar-logout-button {
+    height: 38px;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 0 12px;
+    border: 1px solid var(--color-border);
+    border-radius: 8px;
+    background: #fff;
+    color: #475569;
+    font-size: 12px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: background .2s ease, border-color .2s ease, color .2s ease;
+}
+
+.navbar-logout-button:hover {
+    border-color: #f1caca;
+    background: #fff5f5;
+    color: #c75b5b;
+}
+
+.navbar-logout-button i {
+    font-size: 13px;
+}
+
+/* Autocomplete */
+:host ::ng-deep .navbar-autocomplete .p-autocomplete-input:focus {
+    border-color: var(--color-primary);
+    background: #fff;
+    box-shadow: 0 0 0 3px rgba(18, 59, 102, .08);
+    outline: none;
+}
+
+:host ::ng-deep .navbar-autocomplete .p-autocomplete-input::placeholder {
+    color: #8492a6;
+    opacity: 1;
+}
+
+:host ::ng-deep .p-autocomplete-overlay {
+    min-width: 360px;
+    border: 1px solid var(--color-border);
+    border-radius: 10px;
+    box-shadow: 0 8px 24px rgba(15, 23, 42, .10);
+}
+
+:host ::ng-deep .p-autocomplete-list {
+    padding: 5px;
+}
+
+:host ::ng-deep .p-autocomplete-option {
+    padding: 0;
+    border-radius: 7px;
+}
+
+.client-search-result {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 9px 10px;
+}
+
+.client-search-icon {
+    width: 34px;
+    height: 34px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    border-radius: 8px;
+    background: #f1f5f9;
+    color: #64748b;
+}
+
+.client-search-icon i {
+    font-size: 14px;
+}
+
+.client-search-info {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    min-width: 0;
+    flex: 1;
+}
+
+.client-search-name {
+    overflow: hidden;
+    color: var(--color-text);
+    font-size: 12px;
+    font-weight: 600;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.client-search-meta {
+    color: var(--color-text-secondary);
+    font-size: 10px;
+}
+
+.client-search-arrow {
+    color: #94a3b8;
+    font-size: 11px;
+}
+
+@media (max-width: 700px) {
+    .navbar {
+        padding: 0 14px;
+        gap: 12px;
+    }
+
+    .navbar-right {
+        gap: 10px;
+    }
+
+    .navbar-user-info,
+    .navbar-divider {
+        display: none;
+    }
+
+    .navbar-search {
+        max-width: none;
+    }
+
+    :host ::ng-deep .navbar-autocomplete .p-autocomplete-input {
+        font-size: 11px;
+    }
+
+    .navbar-logout-button {
+        width: 38px;
+        justify-content: center;
+        padding: 0;
+    }
+
+    .navbar-logout-button span {
+        display: none;
+    }
 }

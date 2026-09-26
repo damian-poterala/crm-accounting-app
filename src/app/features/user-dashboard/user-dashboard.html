@@ -75,17 +75,14 @@
                                 <td>#{{ item?.id }}</td>
                                 <td>{{ item?.description }}</td>
                                 <td>{{ item?.due_date }}</td>
-                                <td>{{ item?.priority }}</td>
+                                <td>
+                                    <span class="priority-badge" [class.priority-normal]="item.priority === 'Normalny'" [class.priority-high]="item.priority === 'Wysoki'" [class.priority-urgent]="item.priority === 'Pilny'" [class.priority-low]="item.priority === 'Niski'">
+                                        {{ item?.priority }}
+                                    </span>
+                                </td>
                                 <td>{{ formatDateTimeToPl(item?.created_at) }}</td>
                                 <td>
-                                    <button
-                                        pButton
-                                        type="button"
-                                        label="Zakończ zadanie"
-                                        severity="success"
-                                        text
-                                        (click)="completeTask(item?.id)"
-                                    ></button>
+                                    <button pButton type="button" label="Zakończ zadanie" severity="success" text (click)="completeTask(item?.id)"></button>
                                 </td>
                             </tr>
                         </ng-template>
@@ -98,13 +95,8 @@
                     <header class="user-dashboard-card-header">
                         <h2>Status klientów</h2>
                     </header>
-
                     <div class="chart-content">
-                        <p-chart
-                            type="bar"
-                            [data]="companyTypeChartData"
-                            [options]="companyTypeChartOptions"
-                        ></p-chart>
+                        <p-chart type="bar" [data]="companyTypeChartData" [options]="companyTypeChartOptions"></p-chart>
                     </div>
                 </article>
 
@@ -112,13 +104,8 @@
                     <header class="user-dashboard-card-header">
                         <h2>Rodzaj klientów</h2>
                     </header>
-
                     <div class="chart-content">
-                        <p-chart
-                            type="bar"
-                            [data]="cooperationStatusChartData"
-                            [options]="cooperationStatusChartOptions"
-                        ></p-chart>
+                        <p-chart type="bar" [data]="cooperationStatusChartData" [options]="cooperationStatusChartOptions"></p-chart>
                     </div>
                 </article>
             </div>

@@ -10,6 +10,7 @@ import { TooltipModule } from 'primeng/tooltip';
 
 import { AuthService } from '../../core/services/auth.service';
 import { UserService } from '../../core/services/user.service';
+import { TaskService } from '../../core/services/task.service'; 
 
 import { MessageService } from 'primeng/api';
 
@@ -35,6 +36,7 @@ import { formatDateTimeToPl } from '../../core/utils/formatDateTimeToPl.utils';
 export class UserDashboard {
   private readonly authService = inject(AuthService);
   private readonly userService = inject(UserService);
+  private readonly taskService = inject(TaskService);
 
   private readonly messageService = inject(MessageService);
 
@@ -183,18 +185,18 @@ export class UserDashboard {
   }
 
   completeTask(id: any) {
-  //   this.savingTask.set(true);
+    this.savingTask.set(true);
 
-  //   this.taskService.complete(id).subscribe({
-  //     next: (response) => {
-  //       this.savingTask.set(false);
-  //       this.messageService.add({ key: 'complete-task', severity: 'success', summary: 'Komunikat', detail: response?.message });
-  //       this.loadTasks();
-  //     },
-  //     error: (error) => {
-  //       this.savingTask.set(false);
-  //       this.messageService.add({ key: 'complete-task', severity: 'error', summary: 'Komunikat', detail: error?.message });
-  //     }
-  //   })
+    this.taskService.complete(id).subscribe({
+      next: (response: any) => {
+        this.savingTask.set(false);
+        this.messageService.add({ key: 'complete-task', severity: 'success', summary: 'Komunikat', detail: response?.message });
+        this.loadDashboardInformation();
+      },
+      error: (error: any) => {
+        this.savingTask.set(false);
+        this.messageService.add({ key: 'complete-task', severity: 'error', summary: 'Komunikat', detail: error?.message });
+      }
+    })
   }
 }

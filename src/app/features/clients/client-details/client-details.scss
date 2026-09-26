@@ -496,6 +496,35 @@ span, p {
     color: var(--color-text-secondary);
 }
 
+.priority-badge {
+    display: inline-flex;
+    align-items: center;
+    padding: 4px 9px;
+    border-radius: 5px;
+    font-size: 11px;
+    font-weight: 500;
+}
+
+.priority-normal {
+    background: #f1f2f3;
+    color: #6b7280;
+}
+
+.priority-high {
+    background: #fff7d6;
+    color: #92761c;
+}
+
+.priority-urgent {
+    background: #fff0f0;
+    color: #b85c5c;
+}
+
+.priority-low {
+    background: #eef6f1;
+    color: #5f8a6c;
+}
+
 @media (max-width: 1200px) {
 
     .documents-grid {

@@ -1,6 +1,8 @@
-import { Component, inject, signal } from '@angular/core';
+import { Component, inject, signal, DestroyRef } from '@angular/core';
 import { CommonModule              } from '@angular/common';
 import { ActivatedRoute            } from '@angular/router';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { distinctUntilChanged, filter, map } from 'rxjs';
 
 import { TabsModule                      } from 'primeng/tabs';
 import { ButtonModule                    } from 'primeng/button';
@@ -56,12 +58,14 @@ export class ClientDetails {
   private readonly fileService     = inject(FileService);
   private readonly taskService     = inject(TaskService);
   private readonly messageService  = inject(MessageService);
+  private readonly destroyRef = inject(DestroyRef);
 
   private  route = inject(ActivatedRoute);
 
- readonly formatDateTimeToPl = formatDateTimeToPl;
+  readonly formatDateTimeToPl = formatDateTimeToPl;
 
-  clientId = this.route.snapshot.paramMap.get('id');
+  // clientId = this.route.snapshot.paramMap.get('id');
+  clientId: string | null = null;
 
   details   = signal<any>({});
   contacts  = signal<any>([]);
@@ -73,7 +77,42 @@ export class ClientDetails {
 
   private dialogRef ?: DynamicDialogRef | null = null;
 
-  ngOnInit() {
+  // ngOnInit() {
+  //   this.clientService.getDetails(this.clientId).subscribe({
+  //     next: (response: any) => {
+  //       this.details.set(response);
+  //       console.log('Details: ', this.details());
+  //     },
+  //     error: (error: any) => {
+  //       console.log(error);
+  //     }
+  //   });
+
+  //   this.loadContacts();
+  //   this.loadLocations();
+  //   this.loadFiles();
+  //   this.loadTasks();
+  // }
+
+  ngOnInit(): void {
+    this.route.paramMap.pipe(
+      map(params => params.get('id')),
+      filter((id): id is string => !!id),
+      distinctUntilChanged(),
+      takeUntilDestroyed(this.destroyRef),
+    ).subscribe(clientId => {
+      this.clientId = clientId;
+      this.loadClientData();
+    });
+  }
+
+  private loadClientData(): void {
+    this.details.set({});
+    this.contacts.set([]);
+    this.locations.set([]);
+    this.files.set([]);
+    this.tasks.set([]);
+
     this.clientService.getDetails(this.clientId).subscribe({
       next: (response: any) => {
         this.details.set(response);

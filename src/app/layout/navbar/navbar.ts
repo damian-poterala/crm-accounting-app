@@ -1,61 +1,117 @@
-import { Component, ViewChild, inject } from '@angular/core';
-import { RouterLink, Router, RouterLinkActive } from '@angular/router';
+import { Component, signal, inject } from '@angular/core';
+import { Router } from '@angular/router';
+import { FormsModule } from '@angular/forms';
+import { Subject, forkJoin, of } from 'rxjs';
+import { catchError, switchMap, tap, finalize } from 'rxjs/operators';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { DestroyRef } from '@angular/core';
 
 import { AutoCompleteModule } from 'primeng/autocomplete';
 import { ButtonModule } from 'primeng/button';
-import { Menu } from 'primeng/menu';
-import { MenuItem } from 'primeng/api';
 
 import { AuthService } from '../../core/services/auth.service';
+import { ClientService } from '../../core/services/client.service';
+
+interface ClientSearchResult {
+  id: number;
+  company_name: string;
+  nip: string | null;
+}
 
 @Component({
   selector: 'app-navbar',
   standalone: true,
   imports: [
-    // RouterLink,
-    // RouterLinkActive,
+    FormsModule,
 
     AutoCompleteModule,
-    Menu,
     ButtonModule,
   ],
   templateUrl: './navbar.html',
   styleUrl: './navbar.scss',
 })
 export class Navbar {
-  private authService = inject(AuthService);
-  private router = inject(Router);
+  private readonly authService   = inject(AuthService);
+  private readonly clientService = inject(ClientService);
+  private readonly router        = inject(Router);
+  private readonly destroyRef    = inject(DestroyRef);
 
-  user = this.authService.getCurrentUser();
+  readonly user = this.authService.getCurrentUser();
 
-  @ViewChild(Menu) menu!: Menu;
+  readonly selectedClient = signal<string | ClientSearchResult | null>(null);
+  readonly clientSuggestions = signal<ClientSearchResult[]>([]);
+  readonly isSearching = signal(false);
 
-  items: MenuItem[] = [];
+  private readonly searchSubject = new Subject<string>();
 
   constructor() {
-    this.items = [
-      { label: 'Ustawienia', icon: 'pi pi-cog', command: () => { console.log('Przekierowanie do okna ustawień') } },
-      { separator: true },
-      { label: 'Wyloguj', icon: 'pi pi-sign-out', command: () => { this.logout(); } }
-    ];
+    this.searchSubject.pipe(
+      tap(() => this.isSearching.set(true)),
+      switchMap(query => {
+        if(query.length < 2) {
+          return of([]);
+        }
+
+        return forkJoin([
+          this.clientService.autocomplete('company_name', query).pipe(catchError(() => of([]))),
+          this.clientService.autocomplete('nip', query).pipe(catchError(() => of([]))),
+          this.clientService.autocomplete('regon', query).pipe(catchError(() => of([])))
+        ]);
+      }),
+      takeUntilDestroyed(this.destroyRef)
+    ).subscribe(results => {
+      const [byName, byNip, byRegon] = results;
+      const unique = new Map<number, ClientSearchResult>();
+
+      [...byName, ...byNip, ...byRegon].forEach((client: ClientSearchResult) => {
+        if(client.id != null) {
+          unique.set(client.id, client);
+        }
+      })
+
+      this.clientSuggestions.set([...unique.values()].slice(0, 8));
+      this.isSearching.set(false);
+    });
   }
-  
-  ngOnInit() {
-    console.log(this.user());
+
+  searchClients(event: { query: string }): void {
+    const query = event.query.trim();
+
+    if(query.length < 2) {
+      this.clientSuggestions.set([]);
+      this.isSearching.set(false);
+      this.searchSubject.next('');
+      return;
+    }
+
+    this.searchSubject.next(query);
+  }
+
+  openClient(event: { value: ClientSearchResult }): void {
+    const client = event.value;
+
+    if(!client?.id) {
+      return;
+    }
+
+    this.router.navigate(['/client', client.id]);
+    this.selectedClient.set(null);
+    this.clientSuggestions.set([]);
   }
 
   logout(): void {
     this.authService.logout().subscribe({
-      next: () => {
-        this.authService.clearTokens();
-        this.authService.currentUser.set(null);
-        this.router.navigate(['/login']);
-      },
-      error: () => {
-        this.authService.clearTokens();
-        this.authService.currentUser.set(null);
-        this.router.navigate(['/login']);
+      next: () => this.finishLogout(),
+      error: (error) => {
+        console.log('Logout error: ', error);
+        this.finishLogout();
       }
     })
+  }
+
+  private finishLogout(): void {
+    this.authService.clearTokens();
+    this.authService.currentUser.set(null);
+    this.router.navigate(['/login']);
   }
 }

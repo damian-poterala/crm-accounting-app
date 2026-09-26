@@ -455,7 +455,11 @@
                                                 <td>#{{ item?.id }}</td>
                                                 <td>{{ item?.description }}</td>
                                                 <td>{{ item?.due_date }}</td>
-                                                <td>{{ item?.priority }}</td>
+                                                <td>
+                                                    <span class="priority-badge" [class.priority-normal]="item.priority === 'Normalny'" [class.priority-high]="item.priority === 'Wysoki'" [class.priority-urgent]="item.priority === 'Pilny'" [class.priority-low]="item.priority === 'Niski'">
+                                                        {{ item?.priority }}
+                                                    </span>
+                                                </td>
                                                 <td>{{ item?.username }}</td>
                                                 <td>{{ formatDateTimeToPl(item?.created_at) }}</td>
                                                 <td>
