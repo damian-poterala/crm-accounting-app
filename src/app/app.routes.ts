@@ -19,6 +19,8 @@ export const routes: Routes = [
             { path: 'statistics'  , canActivate: [authGuard], loadComponent: () => import('./features/statistics/statistics')                           .then(s  => s.Statistics) },
             { path: 'task'        , canActivate: [authGuard], loadComponent: () => import('./features/tasks/task-view/task-view')                       .then(tv => tv.TaskView) },
             { path: 'import-clients', canActivate: [authGuard], loadComponent: () => import('./features/clients/clients-import/clients-import')         .then(ci => ci.ClientsImport) },
+            { path: 'rate-calculator', canActivate: [authGuard], loadComponent: () => import('./features/calculators/rate-calculator-view/rate-calculator-view').then(rcv => rcv.RateCalculatorView) },
+            { path: 'contract-creator', canActivate: [authGuard], loadComponent: () => import('./features/contract-creator-view/contract-creator-view').then(ccv => ccv.ContractCreatorView) },
         ]
     }
 ];

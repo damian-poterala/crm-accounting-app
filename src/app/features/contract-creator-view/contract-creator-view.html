@@ -1,0 +1,153 @@
+<div class="contract-creator-section">
+    <div class="section-header">
+        <h2>Kreator umowy</h2>
+        <span>Wybierz klienta, uzupełnij dane i przygotuj dokument</span>
+    </div>
+
+    <div class="contract-layout">
+        <section class="contract-card contract-data-card">
+            <div class="contract-card-header">
+                <div>
+                    <h3>Dane umowy</h3>
+                    <span>Informacje, które zostaną wykorzystane w dokumencie</span>
+                </div>
+                <div class="card-header-icon">
+                    <i class="pi pi-user-edit"></i>
+                </div>
+            </div>
+            <div class="contract-form">
+                <div class="form-field">
+                    <label for="contract-client">Wybierz klient</label>
+                    <p-autoComplete appendTo="body" inputId="contract-client" [(ngModel)]="selectedClient" [suggestions]="clientSuggestions" (completeMethod)="searchClients($event)" (onSelect)="onClientSelected($event)" (onClear)="onClientCleared()" optionLabel="company_name" placeholder="Szukaj klienta po nazwie..." [minLength]="2" [delay]="300" [forceSelection]="true" [showClear]="true" styleClass="contract-client-autocomplete" inputStyleClass="contract-client-input">
+                        <ng-template let-client pTemplate="item">
+                            <div class="client-option">
+                                <div class="client-option-icon">
+                                    <i class="pi pi-building"></i>
+                                </div>
+                                <div class="client-option-info">
+                                    <span class="client-option-name">
+                                        {{ client.company_name }}
+                                    </span>
+                                    <span class="client-option-meta">
+                                        {{ client.nip || 'Brak NIP' }}
+                                    </span>
+                                </div>
+                            </div>
+                        </ng-template>
+                    </p-autoComplete>
+                    <small>Wybór klienta automatycznie uzupełni dostępne dane.</small>
+                </div>
+                <div class="form-divider"></div>
+                <div class="form-section-heading">
+                    <h4>Dane podmiotu</h4>
+                    <span>Możesz edytować wartości przed wygenerowaniem umowy.</span>
+                </div>
+                <div class="form-field">
+                    <label for="company_name">Nazwa firmy</label>
+                    <input pInputText id="company_name" name="companyName" [(ngModel)]="form.companyName" placeholder="Nazwa firmy" type="text">
+                </div>
+                <div class="form-two-columns">
+                    <div class="form-field">
+                        <label for="company-nip">NIP</label>
+                        <input pInputText id="company-nip" name="nip" [(ngModel)]="form.nip" placeholder="NIP" type="text">
+                    </div>
+                    <div class="form-field">
+                        <label for="company-regon">REGON</label>
+                        <input pInputText id="company-regon" name="regon" [(ngModel)]="form.regon" placeholder="REGON" type="text">
+                    </div>
+                </div>
+                <div class="form-two-columns">
+                    <div class="form-field">
+                        <label for="first-name">Imię</label>
+                        <input pInputText id="first-name" name="firstName" [(ngModel)]="form.firstName" placeholder="Imię" type="text">
+                    </div>
+                    <div class="form-field">
+                        <label for="last-name">Nazwisko</label>
+                        <input pInputText id="last-name" name="lastName" [(ngModel)]="form.lastName" placeholder="Nazwisko" type="text">
+                    </div>
+                </div>
+                <div class="form-field">
+                    <label for="company-address">Adres</label>
+                    <input pInputText id="company-address" name="address" [(ngModel)]="form.address" placeholder="Adres firmy" type="text">
+                </div>
+                <div class="form-two-columns">
+                    <div class="form-field">
+                        <label for="company-email">E-mail</label>
+                        <input pInputText id="company-email" name="email" [(ngModel)]="form.email" placeholder="E-mail" type="text">
+                    </div>
+                    <div class="form-field">
+                        <label for="company-phone">Telefon</label>
+                        <input pInputText id="company-phone" name="phone" [(ngModel)]="form.phone" placeholder="Telefon" type="text">
+                    </div>
+                </div>
+            </div>
+        </section>
+        <section class="contract-card contract-preview-card">
+            <div class="contract-card-header">
+                <div>
+                    <h3>Podgląd umowy</h3>
+                    <span>Wgraj wzór PDF, aby zobaczyć dokument</span>
+                </div>
+                <div class="card-header-icon">
+                    <i class="pi pi-file-pdf"></i>
+                </div>
+            </div>
+            <div class="contract-upload-area" [class.has-file]="selectedFile">
+                @if(!selectedFile) {
+                    <div class="upload-content">
+                        <div class="upload-icon">
+                            <i class="pi pi-cloud-upload"></i>
+                        </div>
+                        <h4>Dodaj wzór umowy</h4>
+                        <p>Przeciągnij plik PDF tutaj albo wybierz go z dysku.</p>
+                        <label class="upload-button">
+                            <i class="pi pi-folder-open"></i>
+                            Wybierz plik
+                            <input #fileInput type="file" accept="application/pdf,.pdf" (change)="onFileSelected($event)">
+                        </label>
+                        <small>Obsługiwany format: PDF</small>
+                    </div>
+                } @else {
+                    <div class="pdf-toolbar">
+                        <div class="pdf-file-info">
+                            <div class="pdf-file-icon">
+                                <i class="pi pi-file-pdf"></i>
+                            </div>
+                            <div class="pdf-file-text">
+                                <strong [title]="selectedFile.name">{{ selectedFile.name }}</strong>
+                                <span>Dokument PDF</span>
+                            </div>
+                        </div>
+                        <button pButton icon="pi pi-times" severity="secondary" [text]="true" [rounded]="true" aria-label="Usuń plik" (click)="removeFile()"></button>
+                    </div>
+                    <div class="pdf-viewer">
+                        @if(pdfPreviewUrl) {
+                            <iframe [src]="pdfPreviewUrl" title="Podgląd umowy PDF"></iframe>
+                        }
+                    </div>
+                }
+            </div>
+            @if(errorMessage) {
+                <div class="inline-message error">
+                    <i class="pi pi-exclamation-circle"></i>
+                    <span>{{ errorMessage }}</span>
+                </div>
+            }
+
+            @if(successMessage) {
+                <div class="inline-message success">
+                    <i class="pi pi-check-circle"></i>
+                    <span>{{ successMessage }}</span>
+                </div>
+            }
+
+            <div class="contract-preview-footer">
+                <div class="preview-hint">
+                    <i class="pi pi-info-circle"></i>
+                    <span>Wypełnianie dnaych w PDF zostanie uruchomione po skonfigurowaniu wzoru.</span>
+                </div>
+                <button pButton label="Przygotuj umowę" icon="pi pi-file-check" [disabled]="!selectedClient || !selectedFile" (click)="prepareContract()"></button>
+            </div>
+        </section>
+    </div>
+</div>
